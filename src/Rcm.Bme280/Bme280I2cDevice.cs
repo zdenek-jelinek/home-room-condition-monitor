@@ -11,9 +11,9 @@ namespace Rcm.Bme280
     {
         private readonly byte _address;
         private readonly I2cBus _bus;
+        private readonly IClock _clock;
         private readonly Lazy<CompensationParameters> _compensationParameters;
         private readonly ILogger<Bme280I2cDevice> _logger;
-        private readonly IClock _clock;
 
         public Bme280I2cDevice(ILogger<Bme280I2cDevice> logger, IClock clock, I2cBus bus, byte address)
         {
@@ -64,7 +64,7 @@ namespace Rcm.Bme280
             var humidityCalculator = new HumidityCalculator(compensationParameters.Humidity);
 
             var (resultingTemperature, fineTemperature) = temperatureCalculator.CalculateTemperature(rawTemperature);
-            
+
             var pressure = CompensatePressure(rawPressure, fineTemperature, compensationParameters.Pressure);
 
             var humidity = humidityCalculator.CalculateHumidity(rawHumidity, fineTemperature);
@@ -78,14 +78,20 @@ namespace Rcm.Bme280
                 pressure);
         }
 
-        private decimal CompensatePressure(int rawPressure, int fineTemperature, PressureCompensationParameters compensation)
+        private decimal CompensatePressure(
+            int rawPressure,
+            int fineTemperature,
+            PressureCompensationParameters compensation)
         {
-            var v1 = fineTemperature - 128000L; 
+            var v1 = fineTemperature - 128000L;
             var v1_sq = v1 * v1;
-            var v2 = v1_sq * compensation.Pressure6 + ((v1 * compensation.Pressure5) << 17) + (compensation.Pressure4 << 35);
+            var v2 = v1_sq * compensation.Pressure6
+                + ((v1 * compensation.Pressure5) << 17)
+                + (compensation.Pressure4 << 35);
 
             v1 = ((v1_sq * compensation.Pressure3) >> 8) + ((v1 * compensation.Pressure2) << 12);
             v1 = (((1L << 47) + v1) * compensation.Pressure1) >> 33;
+
             if (v1 == 0)
             {
                 return 0m;
@@ -121,13 +127,14 @@ namespace Rcm.Bme280
         {
             const byte humiditySettingsRegisterAddress = 0xF2;
             Write(humiditySettingsRegisterAddress, (byte)Oversampling.X8);
-            
+
             const byte measurementControlRegisterAddress = 0xF4;
             const byte temperatureOversampling = (byte)Oversampling.X8;
             const byte pressureOversampling = (byte)Oversampling.X16;
             const int forcedMode = 0b10;
-            
-            const byte controlValue = ((temperatureOversampling << 5) | (pressureOversampling << 2) | forcedMode) & 0xFF;
+
+            const byte controlValue =
+                ((temperatureOversampling << 5) | (pressureOversampling << 2) | forcedMode) & 0xFF;
             Write(measurementControlRegisterAddress, controlValue);
         }
 
@@ -212,134 +219,59 @@ namespace Rcm.Bme280
         {
             _bus.Dispose();
         }
-    }
 
-    public enum Oversampling
-    {
-        None = 0b000,
-        X1 = 0b001,
-        X2 = 0b010,
-        X4 = 0b011,
-        X8 = 0b100,
-        X16 = 0b101
-    }
-
-    public class TemperatureCompensationParameters
-    {
-        public int Temperature1 { get; }
-        public int Temperature2 { get; }
-        public int Temperature3 { get; }
-
-        public TemperatureCompensationParameters(int temperature1, int temperature2, int temperature3)
+        public enum Oversampling
         {
-            Temperature1 = temperature1;
-            Temperature2 = temperature2;
-            Temperature3 = temperature3;
-        }
-    }
-
-    public class PressureCompensationParameters
-    {
-        public long Pressure1 { get; }
-        public long Pressure2 { get; }
-        public long Pressure3 { get; }
-        public long Pressure4 { get; }
-        public long Pressure5 { get; }
-        public long Pressure6 { get; }
-        public long Pressure7 { get; }
-        public long Pressure8 { get; }
-        public long Pressure9 { get; }
-
-        public PressureCompensationParameters(
-            long pressure1,
-            long pressure2,
-            long pressure3,
-            long pressure4,
-            long pressure5,
-            long pressure6,
-            long pressure7,
-            long pressure8,
-            long pressure9)
-        {
-            Pressure1 = pressure1;
-            Pressure2 = pressure2;
-            Pressure3 = pressure3;
-            Pressure4 = pressure4;
-            Pressure5 = pressure5;
-            Pressure6 = pressure6;
-            Pressure7 = pressure7;
-            Pressure8 = pressure8;
-            Pressure9 = pressure9;
-        }
-    }
-
-    public class HumidityCompensationParameters
-    {
-        public int Humidity1 { get; }
-        public int Humidity2 { get; }
-        public int Humidity3 { get; }
-        public int Humidity4 { get; }
-        public int Humidity5 { get; }
-        public int Humidity6 { get; }
-
-        public HumidityCompensationParameters(
-            int humidity1,
-            int humidity2,
-            int humidity3,
-            int humidity4,
-            int humidity5,
-            int humidity6)
-        {
-            Humidity1 = humidity1;
-            Humidity2 = humidity2;
-            Humidity3 = humidity3;
-            Humidity4 = humidity4;
-            Humidity5 = humidity5;
-            Humidity6 = humidity6;
-        }
-    }
-
-    public class CompensationParameters
-    {
-        public TemperatureCompensationParameters Temperature { get; }
-        public PressureCompensationParameters Pressure { get; }
-        public HumidityCompensationParameters Humidity { get; }
-
-        public CompensationParameters(
-            TemperatureCompensationParameters temperature,
-            PressureCompensationParameters pressure,
-            HumidityCompensationParameters humidity)
-        {
-            Temperature = temperature;
-            Pressure = pressure;
-            Humidity = humidity;
+            None = 0b000,
+            X1 = 0b001,
+            X2 = 0b010,
+            X4 = 0b011,
+            X8 = 0b100,
+            X16 = 0b101
         }
 
-        public string ToString(string separator)
+        public class CompensationParameters
         {
-            return $"T1: {Temperature.Temperature1:X4}{separator}"
-                + $"T2: {Temperature.Temperature2:X4}{separator}"
-                + $"T3: {Temperature.Temperature3:X4}{separator}"
-                + $"P1: {Pressure.Pressure1:X4}{separator}"
-                + $"P2: {Pressure.Pressure2:X4}{separator}"
-                + $"P3: {Pressure.Pressure3:X4}{separator}"
-                + $"P4: {Pressure.Pressure4:X4}{separator}"
-                + $"P5: {Pressure.Pressure5:X4}{separator}"
-                + $"P6: {Pressure.Pressure6:X4}{separator}"
-                + $"P7: {Pressure.Pressure7:X4}{separator}"
-                + $"P8: {Pressure.Pressure8:X4}{separator}"
-                + $"P9: {Pressure.Pressure9:X4}{separator}"
-                + $"H1: {Humidity.Humidity1:X2}{separator}"
-                + $"H2: {Humidity.Humidity2:X4}{separator}"
-                + $"H3: {Humidity.Humidity3:X2}{separator}"
-                + $"H4: {Humidity.Humidity4:X4}{separator}"
-                + $"H5: {Humidity.Humidity5:X4}{separator}"
-                + $"H6: {Humidity.Humidity6:X2}";
-        }
+            public TemperatureCompensationParameters Temperature { get; }
+            public PressureCompensationParameters Pressure { get; }
+            public HumidityCompensationParameters Humidity { get; }
 
-        public override string ToString()
-        {
-            return ToString(", ");
+            public CompensationParameters(
+                TemperatureCompensationParameters temperature,
+                PressureCompensationParameters pressure,
+                HumidityCompensationParameters humidity)
+            {
+                Temperature = temperature;
+                Pressure = pressure;
+                Humidity = humidity;
+            }
+
+            public string ToString(string separator)
+            {
+                return $"T1: {Temperature.Temperature1:X4}{separator}"
+                    + $"T2: {Temperature.Temperature2:X4}{separator}"
+                    + $"T3: {Temperature.Temperature3:X4}{separator}"
+                    + $"P1: {Pressure.Pressure1:X4}{separator}"
+                    + $"P2: {Pressure.Pressure2:X4}{separator}"
+                    + $"P3: {Pressure.Pressure3:X4}{separator}"
+                    + $"P4: {Pressure.Pressure4:X4}{separator}"
+                    + $"P5: {Pressure.Pressure5:X4}{separator}"
+                    + $"P6: {Pressure.Pressure6:X4}{separator}"
+                    + $"P7: {Pressure.Pressure7:X4}{separator}"
+                    + $"P8: {Pressure.Pressure8:X4}{separator}"
+                    + $"P9: {Pressure.Pressure9:X4}{separator}"
+                    + $"H1: {Humidity.Humidity1:X2}{separator}"
+                    + $"H2: {Humidity.Humidity2:X4}{separator}"
+                    + $"H3: {Humidity.Humidity3:X2}{separator}"
+                    + $"H4: {Humidity.Humidity4:X4}{separator}"
+                    + $"H5: {Humidity.Humidity5:X4}{separator}"
+                    + $"H6: {Humidity.Humidity6:X2}";
+            }
+
+            public override string ToString()
+            {
+                return ToString(", ");
+            }
         }
     }
 }

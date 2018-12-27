@@ -12,11 +12,15 @@ namespace Rcm.I2c
 {
     public class I2cBus : IDisposable
     {
-        private readonly ILogger<I2cBus> _logger;
+        private const int OpenFlagsReadWrite = 2;
+        private const int SelectI2cSlave = 0x703;
+
         private readonly FileHandle _i2cBusHandle;
+        private readonly ILogger<I2cBus> _logger;
+
+        private bool _disposed;
 
         private byte? _selectedDeviceAddress;
-        private bool _disposed;
 
         private I2cBus(ILogger<I2cBus> logger, FileHandle i2cBusHandle)
         {
@@ -24,19 +28,15 @@ namespace Rcm.I2c
             _i2cBusHandle = i2cBusHandle;
         }
 
-        
-        private const int OpenFlagsReadWrite = 2;
-        private const int SelectI2cSlave = 0x703;
-
         [DllImport("libc.so.6", EntryPoint = "open", SetLastError = true)]
         private static extern FileHandle Open(string fileName, int flags);
 
         [DllImport("libc.so.6", EntryPoint = "close", SetLastError = true)]
         private static extern int Close(IntPtr handle);
- 
+
         [DllImport("libc.so.6", EntryPoint = "ioctl", SetLastError = true)]
         private static extern int Ioctl(FileHandle handle, int request, int data);
- 
+
         [DllImport("libc.so.6", EntryPoint = "read", SetLastError = true)]
         private static extern int Read(FileHandle handle, in byte data, int length);
 
@@ -45,10 +45,12 @@ namespace Rcm.I2c
 
         internal static I2cBus Open(ILogger<I2cBus> logger, string i2cBus)
         {
-	        var i2cBusHandle = Open(i2cBus, OpenFlagsReadWrite);
+            var i2cBusHandle = Open(i2cBus, OpenFlagsReadWrite);
             if (i2cBusHandle.IsInvalid)
             {
-                throw new IOException($"Could not open I2C bus \"{i2cBus}\".", new Win32Exception(Marshal.GetLastWin32Error()));
+                throw new IOException(
+                    $"Could not open I2C bus \"{i2cBus}\".",
+                    new Win32Exception(Marshal.GetLastWin32Error()));
             }
 
             logger.LogDebug($"I2C bus \"{i2cBus}\" initialized.");
@@ -66,7 +68,9 @@ namespace Rcm.I2c
             var selectionResult = Ioctl(_i2cBusHandle, SelectI2cSlave, address);
             if (selectionResult == -1)
             {
-                throw new IOException($"Could not select I2C device at \"{address}\"", new Win32Exception(Marshal.GetLastWin32Error()));
+                throw new IOException(
+                    $"Could not select I2C device at \"{address}\"",
+                    new Win32Exception(Marshal.GetLastWin32Error()));
             }
 
             _selectedDeviceAddress = address;
@@ -84,11 +88,16 @@ namespace Rcm.I2c
 
             if (read == -1)
             {
-                throw new IOException($"Could not read from I2C device at \"{_selectedDeviceAddress}\"", new Win32Exception(Marshal.GetLastWin32Error()));
+                throw new IOException(
+                    $"Could not read from I2C device at \"{_selectedDeviceAddress}\"",
+                    new Win32Exception(Marshal.GetLastWin32Error()));
             }
-            else if (read != buffer.Length)
+
+            if (read != buffer.Length)
             {
-                throw new IOException($"Failed to read expected data from I2C device at \"{_selectedDeviceAddress}\".\nExpected: {buffer.Length}\nRead: {read}");
+                throw new IOException(
+                    $"Failed to read expected data from I2C device at \"{_selectedDeviceAddress}\".\n"
+                    + $"Expected: {buffer.Length}\nRead: {read}");
             }
 
             if (_logger.IsEnabled(LogLevel.Trace))
@@ -113,16 +122,22 @@ namespace Rcm.I2c
 
             if (written == -1)
             {
-                throw new IOException($"Could not write to I2C device at \"{_selectedDeviceAddress}\"", new Win32Exception(Marshal.GetLastWin32Error()));
+                throw new IOException(
+                    $"Could not write to I2C device at \"{_selectedDeviceAddress}\"",
+                    new Win32Exception(Marshal.GetLastWin32Error()));
             }
-            else if (written != data.Length)
+
+            if (written != data.Length)
             {
-                throw new IOException($"Failed to write all data to I2C device at \"{_selectedDeviceAddress}\".\nExpected: {data.Length}\nWritten: {written}");
+                throw new IOException(
+                    $"Failed to write all data to I2C device at \"{_selectedDeviceAddress}\".\n"
+                    + $"Expected: {data.Length}\nWritten: {written}");
             }
 
             if (_logger.IsEnabled(LogLevel.Trace))
             {
-                _logger.LogTrace($"Written {written} bytes to I2C bus.\n{PrintBuffer(data, written)}");
+                _logger.LogTrace($"Written {written} bytes to I2C bus.\n"
+                    + PrintBuffer(data, written));
             }
         }
 
@@ -142,7 +157,7 @@ namespace Rcm.I2c
             _disposed = true;
             _i2cBusHandle.Dispose();
 
-            _logger.LogDebug($"I2C bus closed.");
+            _logger.LogDebug("I2C bus closed.");
         }
 
         private static string PrintBuffer(ReadOnlySpan<byte> buffer, int length)
