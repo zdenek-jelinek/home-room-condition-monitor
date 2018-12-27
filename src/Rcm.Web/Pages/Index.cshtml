@@ -1,0 +1,10 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<p>Measurement at @($"{Model.MeasurementTime:g}")</p>
+<p>Temperature: @(Model.Temperature)°C</p>
+<p>Pressure: @($"{Model.Pressure:0.00}")hPa</p>
+<p>Relative humidity: @($"{Model.Humidity:0.00}")%</p>

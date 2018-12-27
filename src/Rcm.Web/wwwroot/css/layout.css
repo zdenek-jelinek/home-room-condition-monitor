@@ -1,0 +1,41 @@
+﻿* {
+    box-sizing: border-box;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    height: 100%;
+}
+
+body {
+    height: 100%;
+    background-color: whitesmoke;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    grid-template-columns: 1fr 4fr 1fr;
+    grid-template-areas:
+        "header header header"
+        ". content ."
+        "footer footer footer"
+}
+
+header, footer, .content {
+    background-color: white;
+}
+
+header {
+    grid-area: header;
+}
+
+footer {
+    grid-area: footer;
+}
+
+.content {
+    grid-area: content;
+    min-width: 1024px;
+}

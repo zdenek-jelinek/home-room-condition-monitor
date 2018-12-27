@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <LangVersion>8.0</LangVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Rcm.Common\Rcm.Common.csproj" />
+    <ProjectReference Include="..\Rcm.I2c\Rcm.I2c.csproj" />
+    <ProjectReference Include="..\Rcm.Measurement.Api\Rcm.Measurement.Api.csproj" />
+  </ItemGroup>
+
+</Project>
