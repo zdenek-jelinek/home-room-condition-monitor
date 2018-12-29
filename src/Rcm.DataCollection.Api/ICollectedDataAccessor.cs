@@ -4,7 +4,7 @@ using Rcm.Common;
 
 namespace Rcm.DataCollection.Api
 {
-    public interface ICollectedDataProvider
+    public interface ICollectedDataAccessor
     {
         IEnumerable<MeasurementEntry> GetCollectedDataAsync(DateTimeOffset start, DateTimeOffset end);
     }

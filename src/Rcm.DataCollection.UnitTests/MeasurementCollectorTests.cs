@@ -23,7 +23,7 @@ namespace Rcm.DataCollection.UnitTests
                     new DummyLogger<MeasurementCollector>(),
                     new Clock(),
                     blockingSpyMeasurementProvider,
-                    new DummyCollectedDataStorage());
+                    new DummyCollectedDataWriter());
 
                 // when
                 var firstMeasurementTask = measurementCollector.MeasureAsync();
@@ -48,7 +48,7 @@ namespace Rcm.DataCollection.UnitTests
                     new DummyLogger<MeasurementCollector>(),
                     new Clock(),
                     throwingSpyMeasurementProvider,
-                    new DummyCollectedDataStorage());
+                    new DummyCollectedDataWriter());
 
                 // when
                 await IgnoreExceptions(() => measurementCollector.MeasureAsync());
@@ -70,7 +70,7 @@ namespace Rcm.DataCollection.UnitTests
                 var secondMeasurementWithinSameMinute = new MeasurementEntry(secondMeasurementTimeWithinSameMinute, 20m, 40m, 1050m);
                 var measurementInNextMinute = new MeasurementEntry(measurementTimeInNextMinute, 35m, 35m, 970m);
 
-                var spyCollectedDataStorage = new SpyCollectedDataStorage();
+                var spyCollectedDataStorage = new SpyCollectedDataWriter();
 
                 var measurementCollector = new MeasurementCollector(
                     new DummyLogger<MeasurementCollector>(),
@@ -144,7 +144,7 @@ namespace Rcm.DataCollection.UnitTests
                 }
             }
 
-            public class SpyCollectedDataStorage : ICollectedDataStorage
+            public class SpyCollectedDataWriter : ICollectedDataWriter
             {
                 public MeasurementEntry StoredEntry { get; private set; }
 
@@ -200,7 +200,7 @@ namespace Rcm.DataCollection.UnitTests
                     new DummyLogger<MeasurementCollector>(),
                     clock,
                     new DummyMeasurementProvider(),
-                    new DummyCollectedDataStorage());
+                    new DummyCollectedDataWriter());
 
                 // when
                 var timings = measurementCollector.MeasurementTimings;
@@ -221,7 +221,7 @@ namespace Rcm.DataCollection.UnitTests
                     new DummyLogger<MeasurementCollector>(),
                     clock,
                     new DummyMeasurementProvider(),
-                    new DummyCollectedDataStorage());
+                    new DummyCollectedDataWriter());
 
                 // when
                 var timings = measurementCollector.MeasurementTimings;
@@ -237,7 +237,7 @@ namespace Rcm.DataCollection.UnitTests
             public Task<MeasurementEntry> MeasureAsync() => throw new NotImplementedException();
         }
 
-        public class DummyCollectedDataStorage : ICollectedDataStorage
+        public class DummyCollectedDataWriter : ICollectedDataWriter
         {
             public Task StoreAsync(MeasurementEntry value) => Task.CompletedTask;
         }
