@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Rcm.Common;
-using Rcm.DataCollection.Api;
 
 namespace Rcm.DataCollection
 {
-    public class CollectedDataRepository : ICollectedDataWriter, ICollectedDataAccessor
+    public class InMemoryCollectedDataStorage : ICollectedDataStorage
     {
         private readonly ICollection<MeasurementEntry> _entries = new List<MeasurementEntry>();
 
