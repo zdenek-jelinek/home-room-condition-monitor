@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Rcm.Common;
 using Rcm.DataCollection.Api;
 
 namespace Rcm.Web.Pages
@@ -9,10 +10,7 @@ namespace Rcm.Web.Pages
     {
         private readonly ICollectedDataAccessor _collectedDataAccessor;
 
-        public DateTimeOffset MeasurementTime { get; private set; }
-        public decimal Temperature { get; private set; }
-        public decimal Pressure { get; private set; }
-        public decimal Humidity { get; private set; }
+        public MeasurementEntry LatestMeasurement { get; private set; }
                 
         public IndexModel(ICollectedDataAccessor collectedDataAccessor)
         {
@@ -22,19 +20,10 @@ namespace Rcm.Web.Pages
         
         public void OnGet()
         {
-            var latestMeasurement = _collectedDataAccessor
+            LatestMeasurement = _collectedDataAccessor
                 .GetCollectedDataAsync(DateTimeOffset.MinValue, DateTimeOffset.MaxValue)
+                .OrderBy(m => m.Time)
                 .LastOrDefault();
-
-            if (latestMeasurement is null)
-            {
-                return;
-            }
-
-            MeasurementTime = latestMeasurement.Time;
-            Temperature = latestMeasurement.CelsiusTemperature;
-            Pressure = latestMeasurement.HpaPressure;
-            Humidity = latestMeasurement.RelativeHumidity;
         }
     }
 }
