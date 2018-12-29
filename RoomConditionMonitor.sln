@@ -13,9 +13,19 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rcm.I2c", "src\Rcm.I2c\Rcm.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rcm.Bme280.UnitTests", "src\Rcm.Bme280.UnitTests\Rcm.Bme280.UnitTests.csproj", "{C9F52BDC-B8D0-4B39-912C-87BF870F6D28}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rcm.Measurement.Stubs", "src\Rcm.Measurement.Stubs\Rcm.Measurement.Stubs.csproj", "{254C8931-010C-4375-A87D-B10D3BC64CFD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rcm.Measurement.Stubs", "src\Rcm.Measurement.Stubs\Rcm.Measurement.Stubs.csproj", "{254C8931-010C-4375-A87D-B10D3BC64CFD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rcm.Common", "src\Rcm.Common\Rcm.Common.csproj", "{EB1E7FED-74F3-4E06-90C6-E3BB193FF83A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rcm.Common", "src\Rcm.Common\Rcm.Common.csproj", "{EB1E7FED-74F3-4E06-90C6-E3BB193FF83A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Measurements", "Measurements", "{AA6975CE-88E1-4D55-AA40-F9880CEB61F0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DataCollection", "DataCollection", "{FC3A186F-299A-49D1-96E2-F761BDEA3682}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rcm.DataCollection.Api", "src\Rcm.DataCollection.Api\Rcm.DataCollection.Api.csproj", "{28309CE3-A31E-4668-B035-04EA6FF5BB26}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rcm.DataCollection", "src\Rcm.DataCollection\Rcm.DataCollection.csproj", "{1A78C8B8-45EB-4A7A-AEE0-936E60B7E06D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rcm.DataCollection.UnitTests", "src\Rcm.DataCollection.UnitTests\Rcm.DataCollection.UnitTests.csproj", "{97518401-C08A-494C-9024-203703397A37}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,9 +61,31 @@ Global
 		{EB1E7FED-74F3-4E06-90C6-E3BB193FF83A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EB1E7FED-74F3-4E06-90C6-E3BB193FF83A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EB1E7FED-74F3-4E06-90C6-E3BB193FF83A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{28309CE3-A31E-4668-B035-04EA6FF5BB26}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{28309CE3-A31E-4668-B035-04EA6FF5BB26}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{28309CE3-A31E-4668-B035-04EA6FF5BB26}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{28309CE3-A31E-4668-B035-04EA6FF5BB26}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1A78C8B8-45EB-4A7A-AEE0-936E60B7E06D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1A78C8B8-45EB-4A7A-AEE0-936E60B7E06D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1A78C8B8-45EB-4A7A-AEE0-936E60B7E06D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1A78C8B8-45EB-4A7A-AEE0-936E60B7E06D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{97518401-C08A-494C-9024-203703397A37}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{97518401-C08A-494C-9024-203703397A37}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{97518401-C08A-494C-9024-203703397A37}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{97518401-C08A-494C-9024-203703397A37}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{0E88CD9B-A30E-40FD-BE7D-6307E8A1840C} = {AA6975CE-88E1-4D55-AA40-F9880CEB61F0}
+		{7F17B05C-DFFB-42EA-8E21-5A7E5237BDC2} = {AA6975CE-88E1-4D55-AA40-F9880CEB61F0}
+		{F0FC83A8-8379-4DA2-9E88-4F4EF3AE54BF} = {AA6975CE-88E1-4D55-AA40-F9880CEB61F0}
+		{C9F52BDC-B8D0-4B39-912C-87BF870F6D28} = {AA6975CE-88E1-4D55-AA40-F9880CEB61F0}
+		{254C8931-010C-4375-A87D-B10D3BC64CFD} = {AA6975CE-88E1-4D55-AA40-F9880CEB61F0}
+		{28309CE3-A31E-4668-B035-04EA6FF5BB26} = {FC3A186F-299A-49D1-96E2-F761BDEA3682}
+		{1A78C8B8-45EB-4A7A-AEE0-936E60B7E06D} = {FC3A186F-299A-49D1-96E2-F761BDEA3682}
+		{97518401-C08A-494C-9024-203703397A37} = {FC3A186F-299A-49D1-96E2-F761BDEA3682}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9CB9B0C3-BCE7-4E86-84BC-7FDA82CAF8AD}

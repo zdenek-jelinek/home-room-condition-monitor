@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Rcm.Common;
 
 namespace Rcm.Measurement.Api
 {
