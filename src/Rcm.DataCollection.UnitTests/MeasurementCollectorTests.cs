@@ -86,6 +86,7 @@ namespace Rcm.DataCollection.UnitTests
                 // then
                 Assert.IsNotNull(spyCollectedDataStorage.StoredEntry);
 
+#pragma warning disable CS8602 // Possible dereference of a null reference.
                 Assert.AreEqual(firstMeasurementTime.Offset, spyCollectedDataStorage.StoredEntry.Time.Offset);
                 Assert.AreEqual(firstMeasurementTime.Year, spyCollectedDataStorage.StoredEntry.Time.Year);
                 Assert.AreEqual(firstMeasurementTime.Month, spyCollectedDataStorage.StoredEntry.Time.Month);
@@ -105,6 +106,7 @@ namespace Rcm.DataCollection.UnitTests
                 Assert.AreEqual(
                     (firstMeasurement.RelativeHumidity + secondMeasurementWithinSameMinute.RelativeHumidity) / 2,
                     spyCollectedDataStorage.StoredEntry.RelativeHumidity);
+#pragma warning restore CS8602 // Possible dereference of a null reference.
             }
 
             private async Task IgnoreExceptions(Func<Task> f)
@@ -146,7 +148,7 @@ namespace Rcm.DataCollection.UnitTests
 
             public class SpyCollectedDataWriter : ICollectedDataWriter
             {
-                public MeasurementEntry StoredEntry { get; private set; }
+                public MeasurementEntry? StoredEntry { get; private set; }
 
                 public Task StoreAsync(MeasurementEntry value)
                 {
@@ -203,11 +205,11 @@ namespace Rcm.DataCollection.UnitTests
                     new DummyCollectedDataWriter());
 
                 // when
-                var timings = measurementCollector.MeasurementTimings;
+                var (nextMeasurementDelay, measurementPeriod) = measurementCollector.MeasurementTimings;
 
                 // then
-                Assert.AreEqual(TimeSpan.FromSeconds(60 - nonZeroSecondsTime.Second), timings.nextMeasurementDelay);
-                Assert.AreEqual(TimeSpan.FromSeconds(6), timings.measurementPeriod);
+                Assert.AreEqual(TimeSpan.FromSeconds(60 - nonZeroSecondsTime.Second), nextMeasurementDelay);
+                Assert.AreEqual(TimeSpan.FromSeconds(6), measurementPeriod);
             }
 
             [Test]
@@ -224,11 +226,11 @@ namespace Rcm.DataCollection.UnitTests
                     new DummyCollectedDataWriter());
 
                 // when
-                var timings = measurementCollector.MeasurementTimings;
+                var (nextMeasurementDelay, measurementPeriod) = measurementCollector.MeasurementTimings;
 
                 // then
-                Assert.AreEqual(TimeSpan.Zero, timings.nextMeasurementDelay);
-                Assert.AreEqual(TimeSpan.FromSeconds(6), timings.measurementPeriod);
+                Assert.AreEqual(TimeSpan.Zero, nextMeasurementDelay);
+                Assert.AreEqual(TimeSpan.FromSeconds(6), measurementPeriod);
             }
         }
 
