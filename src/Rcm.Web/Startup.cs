@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Rcm.Web.Configuration;
 using Rcm.Web.Configuration.Common;
+using Rcm.Web.Configuration.DataCollection;
 using Rcm.Web.Configuration.Measurements;
 
 namespace Rcm.Web
@@ -24,7 +25,8 @@ namespace Rcm.Web
 
             services
                 .Install<CommonServicesInstaller>()
-                .Install<ModeBasedMeasurementServicesInstaller>();
+                .Install<ModeBasedMeasurementServicesInstaller>()
+                .Install<DataCollectionServicesInstaller>();
         }
         
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)

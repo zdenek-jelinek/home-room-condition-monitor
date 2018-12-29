@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Rcm.Bme280\Rcm.Bme280.csproj" />
+    <ProjectReference Include="..\Rcm.DataCollection\Rcm.DataCollection.csproj" />
     <ProjectReference Include="..\Rcm.I2c\Rcm.I2c.csproj" />
     <ProjectReference Include="..\Rcm.Measurement.Stubs\Rcm.Measurement.Stubs.csproj" />
   </ItemGroup>
