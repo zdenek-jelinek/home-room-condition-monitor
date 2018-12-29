@@ -6,6 +6,7 @@
     <IsPackable>false</IsPackable>
 
     <LangVersion>8.0</LangVersion>
+    <NullableReferenceTypes>true</NullableReferenceTypes>
   </PropertyGroup>
 
   <ItemGroup>
