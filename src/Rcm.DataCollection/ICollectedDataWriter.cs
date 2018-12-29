@@ -3,7 +3,7 @@ using Rcm.Common;
 
 namespace Rcm.DataCollection
 {
-    public interface ICollectedDataStorage
+    public interface ICollectedDataWriter
     {
         Task StoreAsync(MeasurementEntry value);
     }

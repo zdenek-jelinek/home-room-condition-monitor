@@ -20,7 +20,7 @@ namespace Rcm.DataCollection
         private readonly ILogger<MeasurementCollector> _logger;
         private readonly IClock _clock;
         private readonly IMeasurementProvider _measurementProvider;
-        private readonly ICollectedDataStorage _collectedDataStorage;
+        private readonly ICollectedDataWriter _collectedDataWriter;
 
         private readonly List<MeasurementEntry> _entries = new List<MeasurementEntry>(MeasurementsPerMinute);
 
@@ -30,12 +30,12 @@ namespace Rcm.DataCollection
             ILogger<MeasurementCollector> logger,
             IClock clock,
             IMeasurementProvider measurementProvider,
-            ICollectedDataStorage collectedDataStorage)
+            ICollectedDataWriter collectedDataWriter)
         {
             _logger = logger;
             _clock = clock;
             _measurementProvider = measurementProvider;
-            _collectedDataStorage = collectedDataStorage;
+            _collectedDataWriter = collectedDataWriter;
         }
 
         public async Task MeasureAsync()
@@ -77,7 +77,7 @@ namespace Rcm.DataCollection
 
             var averageValue = GetAverageValue(entries);
 
-            return _collectedDataStorage.StoreAsync(averageValue);
+            return _collectedDataWriter.StoreAsync(averageValue);
         }
 
         private MeasurementEntry GetAverageValue(IReadOnlyCollection<MeasurementEntry> entries)
