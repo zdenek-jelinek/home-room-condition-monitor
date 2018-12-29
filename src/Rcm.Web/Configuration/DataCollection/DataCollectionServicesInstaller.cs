@@ -11,9 +11,9 @@ namespace Rcm.Web.Configuration.DataCollection
         {
             services
                 .AddTransient<IMeasurementCollector, MeasurementCollector>()
-                .AddSingleton<CollectedDataRepository>()
-                .AddTransient<ICollectedDataWriter>(s => s.GetRequiredService<CollectedDataRepository>())
-                .AddTransient<ICollectedDataAccessor>(s => s.GetRequiredService<CollectedDataRepository>());
+                .AddSingleton<ICollectedDataStorage, InMemoryCollectedDataStorage>()
+                .AddTransient<ICollectedDataWriter>(s => s.GetRequiredService<ICollectedDataStorage>())
+                .AddTransient<ICollectedDataAccessor>(s => s.GetRequiredService<ICollectedDataStorage>());
 
             services.AddHostedService<PeriodicDataCollectionService>();
         }
