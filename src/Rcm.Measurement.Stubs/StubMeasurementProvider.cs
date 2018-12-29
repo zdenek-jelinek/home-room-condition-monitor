@@ -27,7 +27,7 @@ namespace Rcm.Measurement.Stubs
                 new MeasurementEntry(
                     time: now,
                     celsiusTemperature: (decimal)temperature,
-                    relativeHumidity: _random.Next(30, 60) / 100m,
+                    relativeHumidity: _random.Next(3000, 6000) / 100m,
                     hpaPressure: _random.Next(95000, 105000) / 100m));
         }
     }
