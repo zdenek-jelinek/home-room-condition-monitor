@@ -4,7 +4,14 @@
     ViewData["Title"] = "Home page";
 }
 
-<p>Measurement at @($"{Model.MeasurementTime:g}")</p>
-<p>Temperature: @(Model.Temperature)°C</p>
-<p>Pressure: @($"{Model.Pressure:0.00}")hPa</p>
-<p>Relative humidity: @($"{Model.Humidity:0.00}")%</p>
+@if (Model.LatestMeasurement is null)
+{
+    <p>No measurement data yet.</p>
+}
+else
+{
+    <p>Measurement at @(Model.LatestMeasurement.Time.ToString("g"))</p>
+    <p>Temperature: @(Model.LatestMeasurement.CelsiusTemperature.ToString("0.0"))°C</p>
+    <p>Pressure: @(Model.LatestMeasurement.HpaPressure.ToString("0.00"))hPa</p>
+    <p>Relative humidity: @(Model.LatestMeasurement.RelativeHumidity.ToString("0.0"))%</p>
+}
