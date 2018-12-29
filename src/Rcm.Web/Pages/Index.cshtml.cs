@@ -10,7 +10,7 @@ namespace Rcm.Web.Pages
     {
         private readonly ICollectedDataAccessor _collectedDataAccessor;
 
-        public MeasurementEntry LatestMeasurement { get; private set; }
+        public MeasurementEntry? LatestMeasurement { get; private set; }
                 
         public IndexModel(ICollectedDataAccessor collectedDataAccessor)
         {
