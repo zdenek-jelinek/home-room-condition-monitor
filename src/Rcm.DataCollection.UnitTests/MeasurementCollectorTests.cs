@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using NUnit.Framework;
 using Rcm.Common;
 using Rcm.Measurement.Api;
+using Rcm.TestDoubles.Common;
 
 namespace Rcm.DataCollection.UnitTests
 {

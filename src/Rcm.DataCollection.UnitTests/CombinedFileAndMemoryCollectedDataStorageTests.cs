@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using NUnit.Framework;
 using Rcm.Common;
 using Rcm.DataCollection.Files;
+using Rcm.TestDoubles.Common;
 
 namespace Rcm.DataCollection.UnitTests
 {
@@ -244,7 +245,7 @@ namespace Rcm.DataCollection.UnitTests
         }
 
         [Test]
-        public async Task RetrievedDataOnlyContainsYesterdayOnce()
+        public async Task RetrievedDataOnlyContainsYesterdayOnceEvenIfNoOtherMeasurementWasSubsequentlyAdded()
         {
             // given
             var now = new DateTimeOffset(2018, 12, 30, 12, 0, 0, TimeSpan.Zero);
@@ -255,7 +256,6 @@ namespace Rcm.DataCollection.UnitTests
             var fixedClock = new FixedClock(now);
 
             var entryOnYesterday = new MeasurementEntry(startTimeOnYesterday.AddMinutes(30), 10m, 45m, 980m);
-            var entryOnToday = new MeasurementEntry(endTimeOnToday.AddMinutes(-30), 15m, 40m, 1020m);
 
             var stubCollectedDataFileAccess = new StubCollectedDataFileAccess { Entries = new[] { entryOnYesterday } };
 
@@ -265,13 +265,12 @@ namespace Rcm.DataCollection.UnitTests
                 stubCollectedDataFileAccess);
             
             await combinedStorage.StoreAsync(entryOnYesterday);
-            await combinedStorage.StoreAsync(entryOnToday);
 
             // when
             var entries = combinedStorage.GetCollectedDataAsync(startTimeOnYesterday, endTimeOnToday);
 
             // then
-            CollectionAssert.AreEquivalent(new[] { entryOnYesterday, entryOnToday }, entries);
+            CollectionAssert.AreEquivalent(new[] { entryOnYesterday }, entries);
         }
 
         [Test]

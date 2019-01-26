@@ -1,9 +1,9 @@
 ﻿using System;
 using Rcm.Common;
 
-namespace Rcm.DataCollection.UnitTests
+namespace Rcm.TestDoubles.Common
 {
-    internal class FixedClock : IClock
+    public class FixedClock : IClock
     {
         public DateTimeOffset Now { get; }
 

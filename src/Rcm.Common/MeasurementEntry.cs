@@ -16,5 +16,11 @@ namespace Rcm.Common
             RelativeHumidity = relativeHumidity;
             HpaPressure = hpaPressure;
         }
+
+        public override string ToString()
+        {
+            return $"time: {Time:o}, temperature: {CelsiusTemperature:0.0}°C, "
+                + $"humidity: {RelativeHumidity:0.0}%, pressure: {HpaPressure:0.0}hPa";
+        }
     }
 }
