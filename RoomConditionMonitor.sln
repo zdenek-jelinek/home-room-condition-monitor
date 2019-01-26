@@ -21,11 +21,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Measurements", "Measurement
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DataCollection", "DataCollection", "{FC3A186F-299A-49D1-96E2-F761BDEA3682}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rcm.DataCollection.Api", "src\Rcm.DataCollection.Api\Rcm.DataCollection.Api.csproj", "{28309CE3-A31E-4668-B035-04EA6FF5BB26}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rcm.DataCollection.Api", "src\Rcm.DataCollection.Api\Rcm.DataCollection.Api.csproj", "{28309CE3-A31E-4668-B035-04EA6FF5BB26}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rcm.DataCollection", "src\Rcm.DataCollection\Rcm.DataCollection.csproj", "{1A78C8B8-45EB-4A7A-AEE0-936E60B7E06D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rcm.DataCollection", "src\Rcm.DataCollection\Rcm.DataCollection.csproj", "{1A78C8B8-45EB-4A7A-AEE0-936E60B7E06D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rcm.DataCollection.UnitTests", "src\Rcm.DataCollection.UnitTests\Rcm.DataCollection.UnitTests.csproj", "{97518401-C08A-494C-9024-203703397A37}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rcm.DataCollection.UnitTests", "src\Rcm.DataCollection.UnitTests\Rcm.DataCollection.UnitTests.csproj", "{97518401-C08A-494C-9024-203703397A37}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
