@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.Extensions.Logging;
 
-namespace Rcm.DataCollection.UnitTests
+namespace Rcm.TestDoubles.Common
 {
     public class DummyLogger<T> : ILogger<T>
     {

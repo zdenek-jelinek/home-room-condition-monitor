@@ -18,6 +18,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Rcm.DataCollection.Api\Rcm.DataCollection.Api.csproj" />
     <ProjectReference Include="..\Rcm.DataCollection\Rcm.DataCollection.csproj" />
+    <ProjectReference Include="..\Rcm.TestDoubles\Rcm.TestDoubles.csproj" />
   </ItemGroup>
 
 </Project>

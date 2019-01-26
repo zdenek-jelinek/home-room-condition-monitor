@@ -76,7 +76,7 @@ namespace Rcm.DataCollection
             {
                 return _fileAccess
                     .Read(start, todayMidnight.AddSeconds(-1))
-                    .Concat(GetTodaysData(start, end));
+                    .Concat(GetTodaysData(todayMidnight, end));
             }
             else
             {
