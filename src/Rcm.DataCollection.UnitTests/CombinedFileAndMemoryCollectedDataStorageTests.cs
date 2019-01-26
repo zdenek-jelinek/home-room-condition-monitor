@@ -74,7 +74,7 @@ namespace Rcm.DataCollection.UnitTests
             // then
             Assert.IsNotNull(spyCollectedDataFileAccess.ReadRange);
 
-            var (fileReadStart, fileReadEnd) = spyCollectedDataFileAccess.ReadRange.Value;
+            var (fileReadStart, fileReadEnd) = spyCollectedDataFileAccess.ReadRange.GetValueOrDefault();
             Assert.AreEqual(startTimeBeforeToday, fileReadStart);
             Assert.AreEqual(todayMidnight.AddSeconds(-1), fileReadEnd);
 
@@ -106,7 +106,7 @@ namespace Rcm.DataCollection.UnitTests
             // then
             Assert.IsNotNull(spyCollectedDataFileAccess.ReadRange);
 
-            var (readStart, readEnd) = spyCollectedDataFileAccess.ReadRange.Value;
+            var (readStart, readEnd) = spyCollectedDataFileAccess.ReadRange.GetValueOrDefault();
             Assert.AreEqual(startTimeBeforeToday, readStart);
             Assert.AreEqual(endTimeBeforeToday, readEnd);
         }
@@ -172,7 +172,7 @@ namespace Rcm.DataCollection.UnitTests
             // then
             Assert.IsNotNull(spyCollectedDataFileAccess.ReadRange);
 
-            var (fileReadStart, fileReadEnd) = spyCollectedDataFileAccess.ReadRange.Value;
+            var (fileReadStart, fileReadEnd) = spyCollectedDataFileAccess.ReadRange.GetValueOrDefault();
             Assert.AreEqual(startTimeBeforeToday, fileReadStart);
             Assert.AreEqual(todayMidnight.AddSeconds(-1), fileReadEnd);
 
