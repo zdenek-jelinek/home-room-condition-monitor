@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Rcm.DataCollection;
 using Rcm.DataCollection.Api;
+using Rcm.DataCollection.Files;
 using Rcm.Web.Services;
 
 namespace Rcm.Web.Configuration.DataCollection
@@ -11,9 +12,11 @@ namespace Rcm.Web.Configuration.DataCollection
         {
             services
                 .AddTransient<IMeasurementCollector, MeasurementCollector>()
-                .AddSingleton<ICollectedDataStorage, InMemoryCollectedDataStorage>()
-                .AddTransient<ICollectedDataWriter>(s => s.GetRequiredService<ICollectedDataStorage>())
-                .AddTransient<ICollectedDataAccessor>(s => s.GetRequiredService<ICollectedDataStorage>());
+                .AddSingleton<ICollectedDataStorage, CombinedFileAndMemoryCollectedDataStorage>()
+                .AddSingleton<ICollectedDataWriter>(s => s.GetRequiredService<ICollectedDataStorage>())
+                .AddSingleton<ICollectedDataAccessor>(s => s.GetRequiredService<ICollectedDataStorage>())
+                .AddTransient<ICollectedDataFileAccess, CollectedDataFileAccess>()
+                .AddTransient<IDataStorageLocation, EnvironmentDataStorageLocation>();
 
             services.AddHostedService<PeriodicDataCollectionService>();
         }
