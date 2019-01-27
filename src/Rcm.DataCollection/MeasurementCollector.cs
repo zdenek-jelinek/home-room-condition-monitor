@@ -15,7 +15,7 @@ namespace Rcm.DataCollection
         private static readonly TimeSpan MeasurementPeriod = TimeSpan.FromSeconds(6);
 
         private static readonly int MeasurementsPerMinute =
-            (int)Math.Ceiling(TimeSpan.FromMinutes(1) / MeasurementPeriod);
+            (int)Math.Ceiling((double)TimeSpan.FromMinutes(1).Ticks / MeasurementPeriod.Ticks);
 
         private readonly ILogger<MeasurementCollector> _logger;
         private readonly IClock _clock;

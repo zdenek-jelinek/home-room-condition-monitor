@@ -1,0 +1,12 @@
+{
+  "version": "1.0.0",
+  "name": "Rcm.Web",
+  "private": true,
+  "devDependencies": {
+    "gulp": "^4.0.0",
+    "gulp-concat": "^2.6.1",
+    "gulp-uglify": "^3.0.1",
+    "rimraf": "^2.6.3",
+    "flatpickr": "^4.5.2"
+  }
+}
