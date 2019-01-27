@@ -21,7 +21,7 @@ namespace Rcm.Web.Pages
         public void OnGet()
         {
             LatestMeasurement = _collectedDataAccessor
-                .GetCollectedDataAsync(DateTimeOffset.MinValue, DateTimeOffset.MaxValue)
+                .GetCollectedDataAsync(DateTimeOffset.Now.AddDays(-7), DateTimeOffset.Now)
                 .OrderBy(m => m.Time)
                 .LastOrDefault();
         }
