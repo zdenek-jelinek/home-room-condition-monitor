@@ -31,7 +31,7 @@ namespace Rcm.DataCollection.Files
         {
             foreach (var (date, path) in _filesNavigator.GetFilePaths(start, end))
             {
-                if (!_file.TryOpenText(path, out var file, CannotOpenFile))
+                if (!_file.TryOpenText(path, out var file, (Action<string, Exception>)CannotOpenFile))
                 {
                     _logger.LogTrace($"Skipping read from \"{Path.GetFullPath(path)}\" as the file does not exist");
                     continue;

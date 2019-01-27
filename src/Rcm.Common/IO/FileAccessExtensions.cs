@@ -10,8 +10,10 @@ namespace Rcm.Common.IO
         public static bool TryOpenText(
             this IFileAccess file,
             string path,
-            [NotNullWhenTrue] out StreamReader? reader,
-            Action<string, Exception>? exceptionHandler = null)
+            // TODO: Make nullable
+            [NotNullWhenTrue] out StreamReader reader,
+            // TODO: Make nullable
+            Action<string, Exception> exceptionHandler = null)
         {
             try
             {
@@ -39,19 +41,27 @@ namespace Rcm.Common.IO
 
         public static string ReadAllText(this IFileAccess file, string path)
         {
-            using var stream = file.Open(path, FileMode.Open, FileAccess.Read, FileShare.Read);
-            using var reader = new StreamReader(stream);
-            return reader.ReadToEnd();
+            using (var stream = file.Open(path, FileMode.Open, FileAccess.Read, FileShare.Read))
+            {
+                using (var reader = new StreamReader(stream))
+                {
+                    return reader.ReadToEnd();
+                }
+            }
         }
 
         public static void WriteAllLines(this IFileAccess file, string path, IEnumerable<string> lines)
         {
-            using var stream = file.Open(path, FileMode.Open, FileAccess.Write, FileShare.Read);
-            using var writer = new StreamWriter(stream);
-            
-            foreach (var line in lines)
+            using (var stream = file.Open(path, FileMode.Open, FileAccess.Write, FileShare.Read))
             {
-                writer.WriteLine(line);
+                using (var writer = new StreamWriter(stream))
+                {
+
+                    foreach (var line in lines)
+                    {
+                        writer.WriteLine(line);
+                    }
+                }
             }
         }
     }

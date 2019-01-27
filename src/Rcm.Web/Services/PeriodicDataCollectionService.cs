@@ -14,8 +14,11 @@ namespace Rcm.Web.Services
 
         private readonly object _sync = new Object();
 
-        private Task? _pendingMeasurement;
-        private Timer? _timer;
+        // TODO: Make nullable
+        private Task _pendingMeasurement;
+
+        // TODO: Make nullable
+        private Timer _timer;
 
         public PeriodicDataCollectionService(
             ILogger<PeriodicDataCollectionService> logger,

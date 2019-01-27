@@ -1,15 +1,31 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
     <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
-    <LangVersion>8.0</LangVersion>
+    <LangVersion>7.3</LangVersion>
     <NullableContextOptions>enable</NullableContextOptions>
     <UseAppHost>false</UseAppHost>
+    <TypeScriptToolsVersion>Latest</TypeScriptToolsVersion>
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="gulpfile.js" />
+    <None Remove="Scripts\Index.ts" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="gulpfile.js" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="wwwroot\lib\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="2.2.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -17,6 +33,10 @@
     <ProjectReference Include="..\Rcm.DataCollection\Rcm.DataCollection.csproj" />
     <ProjectReference Include="..\Rcm.I2c\Rcm.I2c.csproj" />
     <ProjectReference Include="..\Rcm.Measurement.Stubs\Rcm.Measurement.Stubs.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <TypeScriptCompile Include="Scripts\Index.ts" />
   </ItemGroup>
 
 
