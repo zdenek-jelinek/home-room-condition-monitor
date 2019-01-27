@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Rcm.Common;
@@ -32,6 +33,7 @@ namespace Rcm.DataCollection.Files
             {
                 if (!_file.TryOpenText(path, out var file, CannotOpenFile))
                 {
+                    _logger.LogTrace($"Skipping read from \"{Path.GetFullPath(path)}\" as the file does not exist");
                     continue;
                 }
 
@@ -46,6 +48,7 @@ namespace Rcm.DataCollection.Files
 
                         if (entry.Time >= start && entry.Time <= end)
                         {
+                            _logger.LogTrace($"Read record of {entry} from \"{Path.GetFullPath(path)}\"");
                             yield return entry;
                         }
                     }
@@ -55,17 +58,29 @@ namespace Rcm.DataCollection.Files
 
         private void CannotOpenFile(string path, Exception e)
         {
-            _logger.LogWarning($"Could not open measurements file \"{path}\" for reading", e);
+            _logger.LogWarning($"Could not open measurements file \"{path}\"(\"{Path.GetFullPath(path)}\") for reading", e);
         }
 
         public async Task SaveAsync(MeasurementEntry entry)
         {
             var record = _serializer.Serialize(entry);
             var path = _filesNavigator.GetFilePath(entry.Time);
+            EnsureDirectoryExists(path);
+
+            _logger.LogTrace($"Storing record of {entry} to \"{Path.GetFullPath(path)}\"");
 
             using (var file = _file.AppendText(path))
             {
                 await file.WriteLineAsync(record);
+            }
+        }
+
+        private void EnsureDirectoryExists(string path)
+        {
+            var directory = Path.GetDirectoryName(path);
+            if (!String.IsNullOrEmpty(directory) && !Directory.Exists(directory))
+            {
+                Directory.CreateDirectory(directory);
             }
         }
     }
