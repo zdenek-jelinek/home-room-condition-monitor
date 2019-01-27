@@ -33,7 +33,7 @@ namespace Rcm.Common.IO
 
         public static StreamWriter AppendText(this IFileAccess file, string path)
         {
-            var fileStream = file.Open(path, FileMode.Append, FileAccess.Write, FileShare.None);
+            var fileStream = file.Open(path, FileMode.Append, FileAccess.Write, FileShare.Read);
             return new StreamWriter(fileStream);
         }
 
@@ -46,7 +46,7 @@ namespace Rcm.Common.IO
 
         public static void WriteAllLines(this IFileAccess file, string path, IEnumerable<string> lines)
         {
-            using var stream = file.Open(path, FileMode.Open, FileAccess.Write, FileShare.None);
+            using var stream = file.Open(path, FileMode.Open, FileAccess.Write, FileShare.Read);
             using var writer = new StreamWriter(stream);
             
             foreach (var line in lines)
