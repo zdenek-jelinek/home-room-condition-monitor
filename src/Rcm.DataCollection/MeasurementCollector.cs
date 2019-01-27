@@ -59,12 +59,16 @@ namespace Rcm.DataCollection
 
         private async Task AddMeasurementAsync(MeasurementEntry measurement)
         {
+            _logger.LogTrace($"Adding new record of {measurement}");
+
             if (_entries.Count != 0 && _entries[0].Time.Minute != measurement.Time.Minute)
             {
+                _logger.LogTrace($"Persisting previous minute measurement records");
                 await PropagateCollectedDataAsync(_entries);
                 _entries.Clear();
             }
 
+            _logger.LogTrace($"Storing record for further processing");
             _entries.Add(measurement);
         }
 
