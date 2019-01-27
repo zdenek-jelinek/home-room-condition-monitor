@@ -18,6 +18,8 @@ namespace Rcm.DataCollection
         private readonly List<MeasurementEntry> _currentDayRecords = new List<MeasurementEntry>(24 * 60);
         private readonly ReaderWriterLockSlim _lock = new ReaderWriterLockSlim();
 
+        private bool _disposed;
+
         public CombinedFileAndMemoryCollectedDataStorage(
             ILogger<CombinedFileAndMemoryCollectedDataStorage> logger,
             IClock clock,
@@ -57,7 +59,8 @@ namespace Rcm.DataCollection
 
             var now = _clock.Now;
             var todayMidnight = new DateTimeOffset(now.Date, now.Offset);
-            if (start.Date > todayMidnight)
+            var startMidnight = new DateTimeOffset(start.Date, start.Offset);
+            if (startMidnight > todayMidnight)
             {
                 return Enumerable.Empty<MeasurementEntry>();
             }
@@ -104,7 +107,11 @@ namespace Rcm.DataCollection
 
         public void Dispose()
         {
-            _lock.Dispose();
+            if (!_disposed)
+            {
+                _disposed = true;
+                _lock.Dispose();
+            }
         }
     }
 }
