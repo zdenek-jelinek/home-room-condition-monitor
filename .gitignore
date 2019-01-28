@@ -331,3 +331,6 @@ ASALocalRun/
 
 # Custom RCM extensions
 *.mst
+
+# Generated
+**/wwwroot/js/*.js
