@@ -333,4 +333,5 @@ ASALocalRun/
 *.mst
 
 # Generated
-**/wwwroot/js/*.js
+**/wwwroot/js/compiled.js*
+**/wwwroot/lib/

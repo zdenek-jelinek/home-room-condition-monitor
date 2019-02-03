@@ -2,16 +2,35 @@
 @model IndexModel
 @{
     ViewData["Title"] = "Latest Measurement";
+    ViewData["Module"] = "Index";
 }
 
-@if (Model.LatestMeasurement is null)
-{
-    <p>No measurement data yet.</p>
+@section Styles {
+    <link rel="stylesheet" href="~/css/index.css" />
 }
-else
-{
-    <p>Measurement at @(Model.LatestMeasurement.Time.ToString("g"))</p>
-    <p>Temperature: @(Model.LatestMeasurement.CelsiusTemperature.ToString("0.0"))°C</p>
-    <p>Pressure: @(Model.LatestMeasurement.HpaPressure.ToString("0.00"))hPa</p>
-    <p>Relative humidity: @(Model.LatestMeasurement.RelativeHumidity.ToString("0.0"))%</p>
-}
+
+<label for="time-range">Period shown</label>
+<input id="time-range" />
+
+<div id="measurements-loading">
+    <h2>Loading...</h2>
+</div>
+
+<div id="measurements-none">
+    <p>No measurement data available for selected period.</p>
+</div>
+
+<div id="measurements-available">
+    <table>
+        <thead>
+            <tr>
+                <td>Time</td>
+                <td>Temperature [°C]</td>
+                <td>Pressure [hPa]</td>
+                <td>Relative humidity [%]</td>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+</div>

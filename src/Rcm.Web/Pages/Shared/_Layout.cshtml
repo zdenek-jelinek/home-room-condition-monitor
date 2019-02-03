@@ -5,15 +5,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"]</title>
     <link rel="stylesheet" href="~/css/layout.css" />
+    <environment names="Development">
+        <link rel="stylesheet" href="~/lib/flatpickr/dist/flatpickr.css" />
+    </environment>
+    <environment names="Staging,Production">
+        <link rel="stylesheet" href="~/lib/flatpickr/dist/flatpickr.min.css" />
+    </environment>
+    @RenderSection("Styles", false)
 </head>
 <body>
-   
+
     <div class="content">
-            @RenderBody()
+        @RenderBody()
     </div>
 
-    <script src="~/js/site.js" asp-append-version="true"></script>
-
+    <script type="text/javascript">
+        const pageModule = "@ViewData["Module"]";
+    </script>
+    <script data-main="./js/bootstrap.js" src="~/lib/requirejs/require.js"></script>
     @RenderSection("Scripts", required: false)
 </body>
 </html>
