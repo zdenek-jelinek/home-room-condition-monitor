@@ -7,15 +7,11 @@
     <NullableContextOptions>enable</NullableContextOptions>
     <UseAppHost>false</UseAppHost>
     <TypeScriptToolsVersion>Latest</TypeScriptToolsVersion>
+    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="gulpfile.js" />
-    <None Remove="Scripts\Index.ts" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Include="gulpfile.js" />
+    <Content Remove="wwwroot\js\DateRangePicker.ts" />
   </ItemGroup>
 
   <ItemGroup>
@@ -36,8 +32,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <TypeScriptCompile Include="Scripts\Index.ts" />
+    <TypeScriptCompile Include="wwwroot\js\DateRangePicker.ts" />
+    <TypeScriptCompile Include="wwwroot\js\Index.ts" />
   </ItemGroup>
+
+  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+    <Exec Command="echo Copying npm packages to wwwroot/lib&#xD;&#xA;robocopy node_modules\flatpickr wwwroot\lib\flatpickr /mir &gt; nul&#xD;&#xA;robocopy node_modules\requirejs wwwroot\lib\requirejs require.js &gt; nul&#xD;&#xA;echo Finished copying npm packages to wwwroot/lib" />
+  </Target>
 
 
 

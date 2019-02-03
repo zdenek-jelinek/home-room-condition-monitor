@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "noEmitOnError": true,
+    "removeComments": false,
+    "sourceMap": true,
+    "target": "es6",
+    "baseUrl": "wwwroot/lib",
+    "diagnostics": true,
+    "module": "amd",
+    "moduleResolution": "node",
+    "outFile": "wwwroot/js/compiled.js",
+    "esModuleInterop": true
+  },
+
+  "include": [ "wwwroot/js/*.ts"]
+}

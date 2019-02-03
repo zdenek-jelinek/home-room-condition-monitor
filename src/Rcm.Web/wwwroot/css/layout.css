@@ -36,6 +36,8 @@ footer {
 }
 
 .content {
+    padding: 1rem 2rem;
+    position: relative;
     grid-area: content;
     min-width: 1024px;
 }
