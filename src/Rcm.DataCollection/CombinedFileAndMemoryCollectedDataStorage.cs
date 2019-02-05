@@ -50,7 +50,7 @@ namespace Rcm.DataCollection
             await _fileAccess.SaveAsync(value);
         }
 
-        public IEnumerable<MeasurementEntry> GetCollectedDataAsync(DateTimeOffset start, DateTimeOffset end)
+        public IEnumerable<MeasurementEntry> GetCollectedData(DateTimeOffset start, DateTimeOffset end)
         {
             if (start > end)
             {
