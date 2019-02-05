@@ -18,13 +18,44 @@
 }
 
 input#time-range {
+    font-size: 1rem;
     margin-left: 1rem;
     border: none;
     border-bottom: 2px solid #dadada;
-    width: 10rem;
+    width: 12rem;
     text-align: end;
 
     /* Hide caret: Make text transparent and show it via shadow */
     color: transparent;
     text-shadow: 0 0 0 black;
+}
+
+.time-input {
+    margin-bottom: 1rem;
+}
+
+#measurements-available table {
+    border-collapse: collapse;
+    border: 2px solid black;
+}
+
+#measurements-available table thead td {
+    border-bottom: 1px solid black;
+}
+
+#measurements-available table td {
+    padding: 0.2rem 1rem;
+}
+
+#measurements-available table thead {
+    background-color: lightskyblue;
+}
+
+#measurements-available table tbody tr:nth-child(even)
+{
+    background-color: whitesmoke;
+}
+
+#measurements-available table tbody tr:nth-child(odd) {
+    background-color: ghostwhite;
 }
