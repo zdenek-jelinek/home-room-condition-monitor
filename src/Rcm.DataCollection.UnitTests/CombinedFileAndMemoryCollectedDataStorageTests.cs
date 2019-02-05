@@ -70,7 +70,7 @@ namespace Rcm.DataCollection.UnitTests
             await combinedStorage.StoreAsync(todaysEntry);
 
             // when
-            var entries = combinedStorage.GetCollectedDataAsync(startTimeBeforeToday, endTimeInFuture).ToList();
+            var entries = combinedStorage.GetCollectedData(startTimeBeforeToday, endTimeInFuture).ToList();
 
             // then
             Assert.IsNotNull(spyCollectedDataFileAccess.ReadRange);
@@ -102,7 +102,7 @@ namespace Rcm.DataCollection.UnitTests
 
             // when
             // ReSharper disable once ReturnValueOfPureMethodIsNotUsed
-            combinedStorage.GetCollectedDataAsync(startTimeBeforeToday, endTimeBeforeToday).ToList();
+            combinedStorage.GetCollectedData(startTimeBeforeToday, endTimeBeforeToday).ToList();
 
             // then
             Assert.IsNotNull(spyCollectedDataFileAccess.ReadRange);
@@ -135,7 +135,7 @@ namespace Rcm.DataCollection.UnitTests
             await combinedStorage.StoreAsync(storedEntry);
 
             // when
-            var entries = combinedStorage.GetCollectedDataAsync(startTimeOnToday, endTimeOnToday).ToList();
+            var entries = combinedStorage.GetCollectedData(startTimeOnToday, endTimeOnToday).ToList();
 
             // then
             Assert.IsNull(spyCollectedDataFileAccess.ReadRange);
@@ -168,7 +168,7 @@ namespace Rcm.DataCollection.UnitTests
             await combinedStorage.StoreAsync(todaysEntry);
 
             // when
-            var entries = combinedStorage.GetCollectedDataAsync(startTimeBeforeToday, endTimeOnToday).ToList();
+            var entries = combinedStorage.GetCollectedData(startTimeBeforeToday, endTimeOnToday).ToList();
 
             // then
             Assert.IsNotNull(spyCollectedDataFileAccess.ReadRange);
@@ -211,7 +211,7 @@ namespace Rcm.DataCollection.UnitTests
             await combinedStorage.StoreAsync(entryAfterEnd);
 
             // when
-            var entries = combinedStorage.GetCollectedDataAsync(startTimeOnToday, endTimeOnToday).ToList();
+            var entries = combinedStorage.GetCollectedData(startTimeOnToday, endTimeOnToday).ToList();
 
             // then
             CollectionAssert.AreEquivalent(new[] { entryOnStart, entryInsideRange, entryOnEnd }, entries);
@@ -236,7 +236,7 @@ namespace Rcm.DataCollection.UnitTests
                 spyCollectedDataFileAccess);
 
             // when
-            var entries = combinedStorage.GetCollectedDataAsync(futureStartTime, futureEndTime).ToList();
+            var entries = combinedStorage.GetCollectedData(futureStartTime, futureEndTime).ToList();
 
             // then
             Assert.IsNull(spyCollectedDataFileAccess.ReadRange);
@@ -267,7 +267,7 @@ namespace Rcm.DataCollection.UnitTests
             await combinedStorage.StoreAsync(entryOnYesterday);
 
             // when
-            var entries = combinedStorage.GetCollectedDataAsync(startTimeOnYesterday, endTimeOnToday);
+            var entries = combinedStorage.GetCollectedData(startTimeOnYesterday, endTimeOnToday);
 
             // then
             CollectionAssert.AreEquivalent(new[] { entryOnYesterday }, entries);
@@ -290,7 +290,7 @@ namespace Rcm.DataCollection.UnitTests
             // when
             void RetrieveDataForInvalidTimeRange()
             {
-                combinedStorage.GetCollectedDataAsync(startTime, endTime);
+                combinedStorage.GetCollectedData(startTime, endTime);
             }
 
             // then

@@ -16,7 +16,7 @@ namespace Rcm.DataCollection
             return Task.CompletedTask;
         }
 
-        public IEnumerable<MeasurementEntry> GetCollectedDataAsync(DateTimeOffset start, DateTimeOffset end)
+        public IEnumerable<MeasurementEntry> GetCollectedData(DateTimeOffset start, DateTimeOffset end)
         {
             return _entries.Where(e => e.Time >= start && e.Time <= end);
         }
