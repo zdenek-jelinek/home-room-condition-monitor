@@ -9,7 +9,7 @@ export interface DateRange
 export class DateRangePicker
 {
     private readonly _instance:flatpickr.Instance;
-    private readonly _listeners: Array<(dates?:DateRange) => void> = [];
+    private readonly _listeners:Array<(dates?:DateRange) => void> = [];
 
     public get selectedRange():{start:Date, end:Date}|undefined
     {
@@ -35,7 +35,7 @@ export class DateRangePicker
             });
     }
 
-    private dateRangeChanged(this: DateRangePicker, dates:Date[]):void
+    private dateRangeChanged(this:DateRangePicker, dates:Date[]):void
     {
         const newRange = dates.length === 2
             ? { start: dates[0], end: dates[1] }
@@ -49,7 +49,7 @@ export class DateRangePicker
         this._listeners.push(listener);
     }
 
-    public removeListener(listener: (dates?: DateRange) => void):void
+    public removeListener(listener:(dates?:DateRange) => void):void
     {
         const index = this._listeners.indexOf(listener);
         if (index >= 0)
