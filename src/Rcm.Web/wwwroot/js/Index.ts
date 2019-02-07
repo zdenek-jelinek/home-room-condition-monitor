@@ -121,9 +121,9 @@ class IndexPage
             const row = body.insertRow();
             
             this.createCell(row, measurement.time.toLocaleString());
-            this.createCell(row, measurement.temperature.toLocaleString());
-            this.createCell(row, measurement.pressure.toLocaleString());
-            this.createCell(row, measurement.humidity.toLocaleString());
+            this.createCell(row, (Math.round(measurement.temperature * 10) / 10).toFixed(1));
+            this.createCell(row, Math.round(measurement.pressure).toFixed(0));
+            this.createCell(row, (Math.round(measurement.humidity * 100) / 100).toFixed(2));
         }
     }
 
