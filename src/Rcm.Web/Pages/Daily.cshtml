@@ -1,0 +1,18 @@
+﻿@page
+@model Rcm.Web.Pages.LatestModel
+@{
+    ViewData["Title"] = "Today's measurements";
+    ViewData["Module"] = "Daily";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/daily.css" />
+}
+
+<div class="daily-grid">
+    <partial name="_DailyEntry" model="@(new { Name = "Latest" })" />
+    <partial name="_DailyEntry" model="@(new { Name = "First" })" />
+    <partial name="_DailyEntry" model="@(new { Name = "Min" })" />
+    <partial name="_DailyEntry" model="@(new { Name = "Max" })" />
+</div>
+

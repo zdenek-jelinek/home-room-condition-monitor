@@ -8,6 +8,10 @@ html, body {
     padding: 0;
 }
 
+p {
+    margin: 0;
+}
+
 a, a:hover, a:visited {
     text-decoration: none;
 }

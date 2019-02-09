@@ -48,7 +48,7 @@ input#time-range {
 }
 
 #measurements-available table thead {
-    background-color: lightskyblue;
+    background-color: palegoldenrod;
 }
 
 #measurements-available table tbody tr:nth-child(even)
