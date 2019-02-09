@@ -4,7 +4,7 @@
         "flatpickr", { name: "flatpickr", location: "../lib/flatpickr/dist", main: "flatpickr" }
     ],
     bundles: {
-        "compiled": ["Index"]
+        "compiled": ["History", "Latest"]
     }
 });
 

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.329
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28531.58
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rcm.Web", "src\Rcm.Web\Rcm.Web.csproj", "{A5F9D1D0-C963-4650-A5E9-955CF679F03F}"
 EndProject
@@ -33,11 +33,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rcm.TestDoubles", "src\Rcm.
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Aggregates", "Aggregates", "{FEA048C8-224E-4FBF-8A28-DC8CA46E5792}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rcm.Aggregates", "src\Rcm.Aggregates\Rcm.Aggregates.csproj", "{1A15F655-8988-4D96-8EAB-0601E673C600}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rcm.Aggregates", "src\Rcm.Aggregates\Rcm.Aggregates.csproj", "{1A15F655-8988-4D96-8EAB-0601E673C600}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rcm.Aggregates.Api", "src\Rcm.Aggregates.Api\Rcm.Aggregates.Api.csproj", "{12F0F9D1-C57C-481A-B9A6-88B878EB1E15}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rcm.Aggregates.Api", "src\Rcm.Aggregates.Api\Rcm.Aggregates.Api.csproj", "{12F0F9D1-C57C-481A-B9A6-88B878EB1E15}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RcmAggregates.Tests", "src\RcmAggregates.Tests\RcmAggregates.Tests.csproj", "{136D1929-EC18-4848-A371-9463553FBAC2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RcmAggregates.Tests", "src\RcmAggregates.Tests\RcmAggregates.Tests.csproj", "{136D1929-EC18-4848-A371-9463553FBAC2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -11,6 +11,7 @@
 
   <ItemGroup>
     <Content Remove="wwwroot\js\DateRangePicker.ts" />
+    <Content Remove="wwwroot\js\Latest.ts" />
     <Content Remove="wwwroot\js\Measurement.ts" />
     <Content Remove="wwwroot\js\MeasurementsClient.ts" />
   </ItemGroup>
@@ -35,7 +36,8 @@
 
   <ItemGroup>
     <TypeScriptCompile Include="wwwroot\js\DateRangePicker.ts" />
-    <TypeScriptCompile Include="wwwroot\js\Index.ts" />
+    <TypeScriptCompile Include="wwwroot\js\History.ts" />
+    <TypeScriptCompile Include="wwwroot\js\Latest.ts" />
     <TypeScriptCompile Include="wwwroot\js\Measurement.ts" />
     <TypeScriptCompile Include="wwwroot\js\MeasurementsClient.ts" />
   </ItemGroup>
