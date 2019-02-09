@@ -116,8 +116,9 @@ class IndexPage
 
         const body = measurementsTable.createTBody();
         
-        for (const measurement of measurements)
+        for (let i = measurements.length - 1; i >= 0; --i)
         {
+            const measurement = measurements[i];
             const row = body.insertRow();
             
             this.createCell(row, measurement.time.toLocaleString());
