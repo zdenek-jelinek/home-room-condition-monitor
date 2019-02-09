@@ -8,6 +8,10 @@ html, body {
     padding: 0;
 }
 
+a, a:hover, a:visited {
+    text-decoration: none;
+}
+
 html {
     height: 100%;
 }
@@ -16,10 +20,11 @@ body {
     height: 100%;
     background-color: whitesmoke;
     display: grid;
-    grid-template-rows: auto 1fr auto;
+    grid-template-rows: auto auto 1fr auto;
     grid-template-columns: 1fr 4fr 1fr;
     grid-template-areas:
         "header header header"
+        ". navigation ."
         ". content ."
         "footer footer footer"
 }
@@ -34,6 +39,37 @@ header {
 
 footer {
     grid-area: footer;
+}
+
+nav {
+    padding: 0.5rem 1rem;
+    background-color: maroon;
+    color: white;
+    font-weight: bold;
+    letter-spacing: 0.02rem;
+    grid-area: navigation;
+}
+
+nav ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-flow: row nowrap;
+}
+
+nav li {
+    flex: 0 0 auto;
+}
+
+nav a {
+    padding: 1rem 1rem;
+    color: lightgray;
+    display: inline-block;
+}
+
+nav a:hover, nav a.active {
+    color: whitesmoke;
 }
 
 .content {

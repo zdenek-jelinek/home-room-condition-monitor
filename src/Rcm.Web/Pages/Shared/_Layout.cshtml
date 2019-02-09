@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@using Rcm.Web.Extensions;
+
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -14,6 +16,16 @@
     @RenderSection("Styles", false)
 </head>
 <body>
+    <nav>
+        <ul>
+            <li>
+                <a asp-page="/Latest" class="@(Html.GetActiveClass("/Latest"))">Latest</a>
+            </li>
+            <li>
+                <a asp-page="/History" class="@(Html.GetActiveClass("/History"))">History</a>
+            </li>
+        </ul>
+    </nav>
 
     <div class="content">
         @RenderBody()
