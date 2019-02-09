@@ -25,7 +25,7 @@ namespace Rcm.Web
             services
                 .AddMvc()
                 .SetCompatibilityVersion(CompatibilityVersion.Latest)
-                .AddRazorPagesOptions(o => o.Conventions.AddPageRoute("/Latest", ""));
+                .AddRazorPagesOptions(o => o.Conventions.AddPageRoute("/Daily", ""));
 
             services
                 .Install<CommonServicesInstaller>()

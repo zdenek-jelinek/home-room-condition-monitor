@@ -1,0 +1,54 @@
+﻿.daily-grid {
+    display: grid;
+    grid-template-rows: repeat(2, auto);
+    grid-template-columns: repeat(2, auto);
+    grid-gap: 2rem 4rem;
+
+    max-width: 50%;
+    margin-top: 2rem;
+}
+
+.daily-entry {
+    display: grid;
+    grid-template-rows: repeat(5, auto);
+    grid-template-columns: repeat(2, auto);
+    
+    padding: 1rem;
+    border: solid 2px brown;
+    background-color: cornsilk;
+}
+
+.daily-entry h2 {
+    grid-row: 1;
+    grid-column: 1 / 2;
+
+    margin: 0 0 0.5rem 0;
+}
+
+.daily-entry p {
+    margin-top: 0.5rem;
+}
+
+.daily-entry p.label {
+    grid-column: 1;
+}
+
+.daily-entry p.value {
+    grid-column: 2;
+}
+
+.daily-entry p.time {
+    grid-row: 2;
+}
+
+.daily-entry p.temperature {
+    grid-row: 3;
+}
+
+daily-entry p.pressure {
+    grid-row: 4;
+}
+
+daily-entry p.humidity {
+    grid-row: 5;
+}
