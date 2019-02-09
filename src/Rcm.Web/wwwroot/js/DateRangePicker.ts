@@ -37,11 +37,19 @@ export class DateRangePicker
 
     private dateRangeChanged(this:DateRangePicker, dates:Date[]):void
     {
-        const newRange = dates.length === 2
-            ? { start: dates[0], end: dates[1] }
-            : undefined;
+        const newRange = this.extractRange(dates);
 
         this._listeners.forEach(l => l(newRange));
+    }
+
+    private extractRange(dates:Date[]):DateRange|undefined
+    {
+        if (dates.length === 2)
+        {
+            return { start: dates[0], end: new Date(dates[1].getTime() + 86400 * 1000) };
+        }
+
+        return undefined;
     }
 
     public addListener(listener:(dates?:DateRange) => void):void
