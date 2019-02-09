@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Rcm.Web.Configuration;
+using Rcm.Web.Configuration.Aggregates;
 using Rcm.Web.Configuration.Common;
 using Rcm.Web.Configuration.DataCollection;
 using Rcm.Web.Configuration.Measurements;
@@ -26,7 +27,8 @@ namespace Rcm.Web
             services
                 .Install<CommonServicesInstaller>()
                 .Install<ModeBasedMeasurementServicesInstaller>()
-                .Install<DataCollectionServicesInstaller>();
+                .Install<DataCollectionServicesInstaller>()
+                .Install<AggregatesServicesInstaller>();
         }
         
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)

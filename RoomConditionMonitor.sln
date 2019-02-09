@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.28407.52
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.329
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rcm.Web", "src\Rcm.Web\Rcm.Web.csproj", "{A5F9D1D0-C963-4650-A5E9-955CF679F03F}"
 EndProject
@@ -29,7 +29,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rcm.DataCollection.UnitTest
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{B22B8FEC-3D43-4EFA-B198-0D8EADBFB0D2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rcm.TestDoubles", "src\Rcm.TestDoubles\Rcm.TestDoubles.csproj", "{517E5BB0-2FF8-4582-A80B-33D91B464551}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rcm.TestDoubles", "src\Rcm.TestDoubles\Rcm.TestDoubles.csproj", "{517E5BB0-2FF8-4582-A80B-33D91B464551}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Aggregates", "Aggregates", "{FEA048C8-224E-4FBF-8A28-DC8CA46E5792}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rcm.Aggregates", "src\Rcm.Aggregates\Rcm.Aggregates.csproj", "{1A15F655-8988-4D96-8EAB-0601E673C600}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rcm.Aggregates.Api", "src\Rcm.Aggregates.Api\Rcm.Aggregates.Api.csproj", "{12F0F9D1-C57C-481A-B9A6-88B878EB1E15}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RcmAggregates.Tests", "src\RcmAggregates.Tests\RcmAggregates.Tests.csproj", "{136D1929-EC18-4848-A371-9463553FBAC2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -81,6 +89,18 @@ Global
 		{517E5BB0-2FF8-4582-A80B-33D91B464551}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{517E5BB0-2FF8-4582-A80B-33D91B464551}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{517E5BB0-2FF8-4582-A80B-33D91B464551}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1A15F655-8988-4D96-8EAB-0601E673C600}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1A15F655-8988-4D96-8EAB-0601E673C600}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1A15F655-8988-4D96-8EAB-0601E673C600}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1A15F655-8988-4D96-8EAB-0601E673C600}.Release|Any CPU.Build.0 = Release|Any CPU
+		{12F0F9D1-C57C-481A-B9A6-88B878EB1E15}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{12F0F9D1-C57C-481A-B9A6-88B878EB1E15}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{12F0F9D1-C57C-481A-B9A6-88B878EB1E15}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{12F0F9D1-C57C-481A-B9A6-88B878EB1E15}.Release|Any CPU.Build.0 = Release|Any CPU
+		{136D1929-EC18-4848-A371-9463553FBAC2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{136D1929-EC18-4848-A371-9463553FBAC2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{136D1929-EC18-4848-A371-9463553FBAC2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{136D1929-EC18-4848-A371-9463553FBAC2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -96,6 +116,9 @@ Global
 		{1A78C8B8-45EB-4A7A-AEE0-936E60B7E06D} = {FC3A186F-299A-49D1-96E2-F761BDEA3682}
 		{97518401-C08A-494C-9024-203703397A37} = {FC3A186F-299A-49D1-96E2-F761BDEA3682}
 		{517E5BB0-2FF8-4582-A80B-33D91B464551} = {B22B8FEC-3D43-4EFA-B198-0D8EADBFB0D2}
+		{1A15F655-8988-4D96-8EAB-0601E673C600} = {FEA048C8-224E-4FBF-8A28-DC8CA46E5792}
+		{12F0F9D1-C57C-481A-B9A6-88B878EB1E15} = {FEA048C8-224E-4FBF-8A28-DC8CA46E5792}
+		{136D1929-EC18-4848-A371-9463553FBAC2} = {FEA048C8-224E-4FBF-8A28-DC8CA46E5792}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9CB9B0C3-BCE7-4E86-84BC-7FDA82CAF8AD}
