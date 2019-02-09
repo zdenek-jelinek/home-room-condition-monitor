@@ -14,7 +14,7 @@ export function initialize():void
 
     const measurementsClient = new MeasurementsClient();
     
-    instance = new IndexPage(
+    instance = new HistoryPage(
         getElement("#measurements-loading"),
         getElement("#measurements-none"),
         getElement("#measurements-available"),
@@ -33,9 +33,9 @@ function getElement(selector:string):HTMLElement
     return element;
 }
 
-let instance:IndexPage;
+let instance:HistoryPage;
 
-class IndexPage
+class HistoryPage
 {
     private readonly measurementsLoading:HTMLElement;
     private readonly measurementsNone:HTMLElement;
@@ -61,7 +61,7 @@ class IndexPage
         this.loadData(dateRangePicker.selectedRange);
     }
 
-    private dateTimeRangeChanged(this:IndexPage, dates?:DateRange):void
+    private dateTimeRangeChanged(this:HistoryPage, dates?:DateRange):void
     {
         this.loadData(dates);
     }
@@ -88,21 +88,21 @@ class IndexPage
 
     }
 
-    private showLoading(this:IndexPage)
+    private showLoading(this:HistoryPage)
     {
         this.measurementsLoading.style.display = "flex";
         this.measurementsAvailable.style.display = "none";
         this.measurementsNone.style.display = "none";
     }
 
-    private showNoData(this:IndexPage)
+    private showNoData(this:HistoryPage)
     {
         this.measurementsNone.style.display = "block";
         this.measurementsLoading.style.display = "none";
         this.measurementsAvailable.style.display = "none";
     }
 
-    private showAvailableData(this:IndexPage, measurements:ReadonlyArray<Measurement>)
+    private showAvailableData(this:HistoryPage, measurements:ReadonlyArray<Measurement>)
     {
         this.measurementsAvailable.style.display = "block";
         this.measurementsLoading.style.display = "none";

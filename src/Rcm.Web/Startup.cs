@@ -22,7 +22,10 @@ namespace Rcm.Web
         
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Latest);
+            services
+                .AddMvc()
+                .SetCompatibilityVersion(CompatibilityVersion.Latest)
+                .AddRazorPagesOptions(o => o.Conventions.AddPageRoute("/Latest", ""));
 
             services
                 .Install<CommonServicesInstaller>()
