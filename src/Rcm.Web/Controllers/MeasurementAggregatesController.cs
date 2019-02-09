@@ -24,17 +24,17 @@ namespace Rcm.Web.Controllers
         {
             if (!startTime.HasValue || !endTime.HasValue || !count.HasValue)
             {
-                BadRequest("start, end and count are required");
+                return BadRequest("start, end and count are required");
             }
 
             if (startTime > endTime)
             {
-                BadRequest($"start time is after end time: {startTime:o} > {endTime:o}");
+                return BadRequest($"start time is after end time: {startTime:o} > {endTime:o}");
             }
 
             if (count < 0)
             {
-                BadRequest($"count must be positive integer, actual is {count}");
+                return BadRequest($"count must be positive integer, actual is {count}");
             }
 
             var aggregatedMeasurements = _measurementAggregatesAccessor.GetMeasurementAggregates(startTime.Value, endTime.Value, count.Value);
