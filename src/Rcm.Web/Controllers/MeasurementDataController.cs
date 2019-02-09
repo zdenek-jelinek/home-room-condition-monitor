@@ -23,7 +23,7 @@ namespace Rcm.Web.Controllers
         {
             if (!startTime.HasValue || !endTime.HasValue)
             {
-                BadRequest("start and end are required");
+                return BadRequest("start and end are required");
             }
 
             var measurements = _collectedDataAccessor.GetCollectedData(startTime.Value, endTime.Value);
