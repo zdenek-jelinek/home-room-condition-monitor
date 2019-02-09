@@ -1,0 +1,12 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Rcm.Aggregates.Api\Rcm.Aggregates.Api.csproj" />
+    <ProjectReference Include="..\Rcm.DataCollection.Api\Rcm.DataCollection.Api.csproj" />
+  </ItemGroup>
+
+</Project>
