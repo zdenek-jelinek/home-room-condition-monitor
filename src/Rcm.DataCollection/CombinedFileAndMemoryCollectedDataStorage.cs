@@ -11,12 +11,15 @@ namespace Rcm.DataCollection
 {
     public class CombinedFileAndMemoryCollectedDataStorage : ICollectedDataStorage, IDisposable
     {
+        private const int MeasurementsPerDay = 24 * 60;
+
         private readonly ILogger<CombinedFileAndMemoryCollectedDataStorage> _logger;
         private readonly IClock _clock;
         private readonly ICollectedDataFileAccess _fileAccess;
 
-        private readonly List<MeasurementEntry> _currentDayRecords = new List<MeasurementEntry>(24 * 60);
         private readonly ReaderWriterLockSlim _lock = new ReaderWriterLockSlim();
+
+        private List<MeasurementEntry> _currentDayRecords = null;
 
         private bool _disposed;
 
@@ -35,6 +38,11 @@ namespace Rcm.DataCollection
             try
             {
                 _lock.EnterWriteLock();
+                if (_currentDayRecords is null)
+                {
+                    _currentDayRecords = LoadTodaysRecordsFromFile();
+                }
+
                 if (_currentDayRecords.Count != 0 && _currentDayRecords[0].Time.Date < value.Time.Date)
                 {
                     _currentDayRecords.Clear();
@@ -94,6 +102,8 @@ namespace Rcm.DataCollection
 
         private IReadOnlyCollection<MeasurementEntry> GetTodaysData()
         {
+            EnsureTodaysRecordsAreLoaded();
+
             try
             {
                 _lock.EnterReadLock();
@@ -103,6 +113,37 @@ namespace Rcm.DataCollection
             {
                 _lock.ExitReadLock();
             }
+        }
+
+        private void EnsureTodaysRecordsAreLoaded()
+        {
+            if (_currentDayRecords is null)
+            {
+                try
+                {
+                    _lock.EnterWriteLock();
+                    if (_currentDayRecords is null)
+                    {
+                        _currentDayRecords = LoadTodaysRecordsFromFile();
+                    }
+                }
+                finally
+                {
+                    _lock.ExitWriteLock();
+                }
+            }
+        }
+
+        private List<MeasurementEntry> LoadTodaysRecordsFromFile()
+        {
+            var now = _clock.Now;
+            var startOfToday = new DateTimeOffset(now.Date, now.Offset);
+            var endOfToday = startOfToday.AddDays(1).AddTicks(-1);
+
+            var result = new List<MeasurementEntry>(MeasurementsPerDay);
+            result.AddRange(_fileAccess.Read(startOfToday, endOfToday));
+
+            return result;
         }
 
         public void Dispose()

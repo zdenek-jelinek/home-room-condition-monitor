@@ -113,7 +113,7 @@ namespace Rcm.DataCollection.UnitTests
         }
 
         [Test]
-        public async Task DoesNotAccessFilesToReadTodaysData()
+        public async Task DoesNotAccessFilesToReadTodaysDataAfterPreviousOperation()
         {
             // given
             var now = new DateTimeOffset(2018, 12, 30, 12, 0, 0, TimeSpan.Zero);
@@ -133,6 +133,7 @@ namespace Rcm.DataCollection.UnitTests
             var storedEntry = new MeasurementEntry(now.AddMinutes(-20), 25m, 45m, 1050m);
 
             await combinedStorage.StoreAsync(storedEntry);
+            spyCollectedDataFileAccess.Reset();
 
             // when
             var entries = combinedStorage.GetCollectedData(startTimeOnToday, endTimeOnToday).ToList();
@@ -178,6 +179,64 @@ namespace Rcm.DataCollection.UnitTests
             Assert.AreEqual(todayMidnight.AddSeconds(-1), fileReadEnd);
 
             CollectionAssert.AreEquivalent(new[] { olderEntry, todaysEntry }, entries);
+        }
+
+        [Test]
+        public void TodaysDataReadWithoutAnyStoresIncludeDataStoredInFile()
+        {
+
+            // given
+            var now = new DateTimeOffset(2018, 12, 30, 12, 0, 0, TimeSpan.Zero);
+
+            var startTimeOnToday = now.AddHours(-10);
+            var endTimeOnToday = now.AddHours(10);
+
+            var clock = new FixedClock(now);
+
+            var entryStoredInFile = new MeasurementEntry(now.AddHours(-2), 20m, 40m, 970m);
+
+            var spyCollectedDataFileAccess = new SpyCollectedDataFileAccess { Entries = new[] { entryStoredInFile } };
+
+            var combinedStorage = new CombinedFileAndMemoryCollectedDataStorage(
+                new DummyLogger<CombinedFileAndMemoryCollectedDataStorage>(),
+                clock,
+                spyCollectedDataFileAccess);
+
+            // when
+            var readEntries = combinedStorage.GetCollectedData(startTimeOnToday, endTimeOnToday).ToList();
+
+            // then
+            CollectionAssert.AreEquivalent(new[] { entryStoredInFile }, readEntries);
+        }
+
+        [Test]
+        public async Task TodaysDataReadAfterStoreIncludeDataAlreadyStoredInFile()
+        {
+            // given
+            var now = new DateTimeOffset(2018, 12, 30, 12, 0, 0, TimeSpan.Zero);
+
+            var startTimeOnToday = now.AddHours(-10);
+            var endTimeOnToday = now.AddHours(10);
+
+            var clock = new FixedClock(now);
+
+            var entryPreviouslyStoredInFile = new MeasurementEntry(now.AddHours(-2), 20m, 40m, 970m);
+
+            var spyCollectedDataFileAccess = new SpyCollectedDataFileAccess { Entries = new[] { entryPreviouslyStoredInFile } };
+
+            var combinedStorage = new CombinedFileAndMemoryCollectedDataStorage(
+                new DummyLogger<CombinedFileAndMemoryCollectedDataStorage>(),
+                clock,
+                spyCollectedDataFileAccess);
+
+            var newEntry = new MeasurementEntry(now, 25m, 32m, 985m);
+
+            // when
+            await combinedStorage.StoreAsync(newEntry);
+            var readEntries = combinedStorage.GetCollectedData(startTimeOnToday, endTimeOnToday).ToList();
+
+            // then
+            CollectionAssert.AreEquivalent(new[] { entryPreviouslyStoredInFile, newEntry }, readEntries);
         }
 
         [Test]
@@ -317,6 +376,12 @@ namespace Rcm.DataCollection.UnitTests
                 SavedEntry = entry;
 
                 return Task.CompletedTask;
+            }
+
+            public void Reset()
+            {
+                SavedEntry = null;
+                ReadRange = null;
             }
         }
 
