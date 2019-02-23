@@ -1,11 +1,9 @@
-﻿<div class="daily-entry">
-    <h2>@Model.Name</h2>
+﻿@model (string name, string id)
+
+<div class="daily-entry" id="@Model.id">
+    <h2>@Model.name</h2>
     <p class="time label">Time</p>
     <p class="time value"></p>
     <p class="temperature label">Temperature</p>
     <p class="temperature value"></p>
-    <p class="pressure label">Pressure</p>
-    <p class="pressure value"></p>
-    <p class="humidity label">Humidity</p>
-    <p class="humidity value"></p>
 </div>

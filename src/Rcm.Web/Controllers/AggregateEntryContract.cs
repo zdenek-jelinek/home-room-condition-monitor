@@ -2,7 +2,7 @@
 
 namespace Rcm.Web.Controllers
 {
-    internal class AggregateEntryContract
+    public class AggregateEntryContract
     {
         public DateTimeOffset Time { get; }
         public decimal Value { get; }

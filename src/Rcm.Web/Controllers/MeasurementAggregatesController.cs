@@ -17,7 +17,7 @@ namespace Rcm.Web.Controllers
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<MeasurementContract>> Get(
+        public ActionResult<IEnumerable<MeasurementAggregatesContract>> Get(
             [FromQuery(Name = "start")] DateTimeOffset? startTime,
             [FromQuery(Name = "end")] DateTimeOffset? endTime,
             [FromQuery(Name = "count")] int? count)

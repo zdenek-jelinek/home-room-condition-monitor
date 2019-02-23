@@ -1,6 +1,6 @@
 ﻿namespace Rcm.Web.Controllers
 {
-    internal class MeasurementAggregatesContract
+    public class MeasurementAggregatesContract
     {
         public AggregatesContract Temperature { get; }
         public AggregatesContract Pressure { get; }
