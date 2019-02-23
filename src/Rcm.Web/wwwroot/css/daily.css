@@ -1,19 +1,16 @@
-﻿.daily-grid {
-    display: grid;
-    grid-template-rows: repeat(2, auto);
-    grid-template-columns: repeat(2, auto);
-    grid-gap: 2rem 4rem;
-
-    max-width: 50%;
-    margin-top: 2rem;
+﻿.daily-aggregates {
+    display: flex;
+    flex-flow: column nowrap;
 }
 
 .daily-entry {
+    flex: 1 0 auto;
     display: grid;
-    grid-template-rows: repeat(5, auto);
-    grid-template-columns: repeat(2, auto);
+    grid-template-rows: repeat(3, auto);
+    grid-template-columns: auto auto 1fr;
     
     padding: 1rem;
+    margin: 1rem;
     border: solid 2px brown;
     background-color: cornsilk;
 }
@@ -31,10 +28,12 @@
 
 .daily-entry p.label {
     grid-column: 1;
+    margin-right: 3rem;
 }
 
 .daily-entry p.value {
     grid-column: 2;
+    text-align: right;
 }
 
 .daily-entry p.time {
@@ -45,10 +44,6 @@
     grid-row: 3;
 }
 
-daily-entry p.pressure {
-    grid-row: 4;
-}
-
-daily-entry p.humidity {
-    grid-row: 5;
+*[data-presence] {
+    margin-top: 2rem;
 }

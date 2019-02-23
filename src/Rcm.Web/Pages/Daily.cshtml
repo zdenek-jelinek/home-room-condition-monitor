@@ -8,10 +8,17 @@
     <link rel="stylesheet" href="~/css/daily.css" />
 }
 
-<div class="daily-grid">
-    <partial name="_DailyEntry" model="@(new { Name = "Latest" })" />
-    <partial name="_DailyEntry" model="@(new { Name = "First" })" />
-    <partial name="_DailyEntry" model="@(new { Name = "Min" })" />
-    <partial name="_DailyEntry" model="@(new { Name = "Max" })" />
+<div data-presence="available">
+    <div class="daily-aggregates">
+        <partial name="_DailyEntry" model="@((name: "Latest", id: "latest"))" />
+        <partial name="_DailyEntry" model="@((name: "First", id: "first"))" />
+        <partial name="_DailyEntry" model="@((name: "Min", id: "min"))" />
+        <partial name="_DailyEntry" model="@((name: "Max", id: "max"))" />
+    </div>
 </div>
 
+<p data-presence="none">No measurements are available for today</p>
+
+<div data-presence="loading">
+    <h2>Loading...</h2>
+</div>

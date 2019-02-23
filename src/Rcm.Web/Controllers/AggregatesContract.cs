@@ -1,6 +1,6 @@
 ﻿namespace Rcm.Web.Controllers
 {
-    internal class AggregatesContract
+    public class AggregatesContract
     {
         public AggregateEntryContract First { get; }
         public AggregateEntryContract Min { get; }
