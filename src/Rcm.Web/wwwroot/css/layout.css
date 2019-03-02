@@ -118,17 +118,40 @@ nav a:hover, nav a.active {
     background-color: cornsilk;
 }
 
-a.pseudo-button.primary {
+.page-entry h2 {
+    margin: 0 0 0.5rem 0;    
+}
+
+a.pseudo-button {
     display: inline-block;
-    border: none;
-    color: whitesmoke;
-    background-color: maroon;
     font-weight: bold;
     letter-spacing: 0.025rem;
     padding: 0.75rem;
+    border-radius: 0.25rem;
+}
+
+a.pseudo-button.primary {
+    border: none;
+    color: whitesmoke;
+    background-color: maroon;
 }
 
 a.pseudo-button.primary:hover, a.pseudo-button.primary:focus {
     color: white;
     background-color: brown;
+}
+
+a.pseudo-button.secondary {
+    border: 2px solid brown;
+    color: maroon;
+    background-color: cornsilk;
+}
+
+a.pseudo-button.secondary:hover, a.pseudo-button.secondary:focus {
+    background-color: brown;
+    color: white;
+}
+
+.small {
+    font-size: 0.9rem;
 }

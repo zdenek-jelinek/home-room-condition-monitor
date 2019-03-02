@@ -8,6 +8,7 @@ using Rcm.Web.Configuration.Aggregates;
 using Rcm.Web.Configuration.Common;
 using Rcm.Web.Configuration.DataCollection;
 using Rcm.Web.Configuration.Measurements;
+using Rcm.Web.Presentation;
 
 namespace Rcm.Web
 {
@@ -31,7 +32,8 @@ namespace Rcm.Web
                 .Install<CommonServicesInstaller>()
                 .Install<ModeBasedMeasurementServicesInstaller>()
                 .Install<DataCollectionServicesInstaller>()
-                .Install<AggregatesServicesInstaller>();
+                .Install<AggregatesServicesInstaller>()
+                .Install<PresentationInstaller>();
         }
         
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
