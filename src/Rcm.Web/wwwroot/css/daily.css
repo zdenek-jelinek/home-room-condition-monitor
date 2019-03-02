@@ -1,46 +1,35 @@
-﻿.daily-aggregates {
-    display: flex;
-    flex-flow: column nowrap;
-}
-
-.daily-entry {
-    flex: 1 0 auto;
+﻿.page-entry.daily {
     display: grid;
     grid-template-rows: repeat(3, auto);
     grid-template-columns: auto auto 1fr;
-    
-    padding: 1rem;
-    margin: 1rem;
-    border: solid 2px brown;
-    background-color: cornsilk;
 }
 
-.daily-entry h2 {
+.page-entry.daily h2 {
     grid-row: 1;
     grid-column: 1 / 2;
 
     margin: 0 0 0.5rem 0;
 }
 
-.daily-entry p {
+.page-entry.daily p {
     margin-top: 0.5rem;
 }
 
-.daily-entry p.label {
+.page-entry.daily p.label {
     grid-column: 1;
     margin-right: 3rem;
 }
 
-.daily-entry p.value {
+.page-entry.daily p.value {
     grid-column: 2;
     text-align: right;
 }
 
-.daily-entry p.time {
+.page-entry.daily p.time {
     grid-row: 2;
 }
 
-.daily-entry p.temperature {
+.page-entry.daily p.temperature {
     grid-row: 3;
 }
 

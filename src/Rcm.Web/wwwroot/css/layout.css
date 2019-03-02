@@ -102,3 +102,16 @@ nav a:hover, nav a.active {
     top: 0;
     left: 0;
 }
+
+.page-entries {
+    display: flex;
+    flex-flow: column nowrap;
+}
+
+.page-entry {
+    flex: 1 0 auto;
+    padding: 1rem;
+    margin: 1rem;
+    border: solid 2px brown;
+    background-color: cornsilk;
+}
