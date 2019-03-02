@@ -3,9 +3,12 @@
 }
 
 html, body {
-    font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
+}
+
+html, body, button {
+    font-family: Arial, sans-serif;
 }
 
 p, ul {
@@ -74,7 +77,7 @@ nav a {
 }
 
 nav a:hover, nav a.active {
-    color: whitesmoke;
+    color: white;
 }
 
 .content {
@@ -113,4 +116,19 @@ nav a:hover, nav a.active {
     margin: 1rem;
     border: solid 2px brown;
     background-color: cornsilk;
+}
+
+a.pseudo-button.primary {
+    display: inline-block;
+    border: none;
+    color: whitesmoke;
+    background-color: maroon;
+    font-weight: bold;
+    letter-spacing: 0.025rem;
+    padding: 0.75rem;
+}
+
+a.pseudo-button.primary:hover, a.pseudo-button.primary:focus {
+    color: white;
+    background-color: brown;
 }
