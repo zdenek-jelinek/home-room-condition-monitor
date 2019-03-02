@@ -8,8 +8,9 @@ html, body {
     padding: 0;
 }
 
-p {
+p, ul {
     margin: 0;
+    padding: 0;
 }
 
 a, a:hover, a:visited {
@@ -57,8 +58,6 @@ nav {
 }
 
 nav ul {
-    margin: 0;
-    padding: 0;
     list-style: none;
     display: flex;
     flex-flow: row nowrap;
