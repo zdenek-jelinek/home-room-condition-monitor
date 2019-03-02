@@ -52,6 +52,8 @@ nav {
     font-weight: bold;
     letter-spacing: 0.02rem;
     grid-area: navigation;
+    display: flex;
+    justify-content: space-between;
 }
 
 nav ul {

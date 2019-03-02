@@ -8,4 +8,7 @@
     }
 });
 
-requirejs([pageModule], function (module) { module.initialize(); });
+if (pageModule)
+{
+    requirejs([pageModule], function (module) { module.initialize(); });
+}
