@@ -7,8 +7,6 @@
 .page-entry.daily h2 {
     grid-row: 1;
     grid-column: 1 / 2;
-
-    margin: 0 0 0.5rem 0;
 }
 
 .page-entry.daily p {
