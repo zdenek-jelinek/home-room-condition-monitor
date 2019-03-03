@@ -1,9 +1,8 @@
 using NUnit.Framework;
 using Rcm.Connector.Api.Status;
-using Rcm.Connector.MindSphere;
 using System;
 
-namespace Tests
+namespace Rcm.Connector.MindSphere.UnitTests
 {
     [TestFixture]
     public class MindSphereConnectionStatusAccessorTests
