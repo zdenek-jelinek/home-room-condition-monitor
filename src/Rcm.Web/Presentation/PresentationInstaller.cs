@@ -8,7 +8,7 @@ namespace Rcm.Web.Presentation
     {
         public void Install(IServiceCollection services)
         {
-            services.AddTransient<IStatusPagePresenter, StubStatusPagePresenter>();
+            services.AddTransient<IStatusPagePresenter, StatusPagePresenter>();
         }
     }
 }
