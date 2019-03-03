@@ -1,13 +1,12 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using NUnit.Framework;
-using Rcm.Aggregates;
 using Rcm.Aggregates.Api;
 using Rcm.Common;
 using Rcm.DataCollection.Api;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
-namespace Tests
+namespace Rcm.Aggregates.UnitTests
 {
     [TestFixture]
     public class MeasurementAggregatesAccessorTests
@@ -222,17 +221,17 @@ namespace Tests
             var minHumidity = new AggregateEntry(measurementInFirstPartition.Time, measurementInFirstPartition.RelativeHumidity);
             var maxHumidity = new AggregateEntry(measurementOnBorderOfPartitions.Time, measurementOnBorderOfPartitions.RelativeHumidity);
             var firstPartitionAggregates = new MeasurementAggregates(
-                new Aggregates(minTemperature, minTemperature, maxTemperature, maxTemperature),
-                new Aggregates(minPressure, minPressure, maxPressure, maxPressure),
-                new Aggregates(minHumidity, minHumidity, maxHumidity, maxHumidity));
+                new Api.Aggregates(minTemperature, minTemperature, maxTemperature, maxTemperature),
+                new Api.Aggregates(minPressure, minPressure, maxPressure, maxPressure),
+                new Api.Aggregates(minHumidity, minHumidity, maxHumidity, maxHumidity));
 
             var secondPartitionTemperature = new AggregateEntry(measurementInSecondPartition.Time, measurementInSecondPartition.CelsiusTemperature);
             var secondPartitionPressure = new AggregateEntry(measurementInSecondPartition.Time, measurementInSecondPartition.HpaPressure);
             var secondPartitionHumidity = new AggregateEntry(measurementInSecondPartition.Time, measurementInSecondPartition.RelativeHumidity);
             var secondPartitionAggregates = new MeasurementAggregates(
-                new Aggregates(secondPartitionTemperature, secondPartitionTemperature, secondPartitionTemperature, secondPartitionTemperature),
-                new Aggregates(secondPartitionPressure, secondPartitionPressure, secondPartitionPressure, secondPartitionPressure),
-                new Aggregates(secondPartitionHumidity, secondPartitionHumidity, secondPartitionHumidity, secondPartitionHumidity));
+                new Api.Aggregates(secondPartitionTemperature, secondPartitionTemperature, secondPartitionTemperature, secondPartitionTemperature),
+                new Api.Aggregates(secondPartitionPressure, secondPartitionPressure, secondPartitionPressure, secondPartitionPressure),
+                new Api.Aggregates(secondPartitionHumidity, secondPartitionHumidity, secondPartitionHumidity, secondPartitionHumidity));
 
             Assert.That(
                 aggregates,
@@ -279,9 +278,9 @@ namespace Tests
                     new[]
                     {
                         new MeasurementAggregates(
-                            new Aggregates(temperature, temperature, temperature, temperature),
-                            new Aggregates(pressure, pressure, pressure, pressure),
-                            new Aggregates(humidity, humidity, humidity, humidity))
+                            new Api.Aggregates(temperature, temperature, temperature, temperature),
+                            new Api.Aggregates(pressure, pressure, pressure, pressure),
+                            new Api.Aggregates(humidity, humidity, humidity, humidity))
                     })
                 .Using(new MeasurementAggregatesEqualityComparer()));
         }
@@ -341,7 +340,7 @@ namespace Tests
 
         private class MeasurementAggregatesEqualityComparer : IEqualityComparer<MeasurementAggregates>
         {
-            private readonly IEqualityComparer<Aggregates> _aggregatesComparer = new AggregatesEqualityComparer();
+            private readonly IEqualityComparer<Api.Aggregates> _aggregatesComparer = new AggregatesEqualityComparer();
 
             public bool Equals(MeasurementAggregates x, MeasurementAggregates y) =>
                 _aggregatesComparer.Equals(x.Temperature, y.Temperature)
@@ -355,17 +354,17 @@ namespace Tests
                     _aggregatesComparer.GetHashCode(obj.Humidity));
         }
 
-        private class AggregatesEqualityComparer : IEqualityComparer<Aggregates>
+        private class AggregatesEqualityComparer : IEqualityComparer<Api.Aggregates>
         {
             private readonly IEqualityComparer<AggregateEntry> _entryComparer = new AggregateEntryEqualityComparer();
 
-            public bool Equals(Aggregates x, Aggregates y) => 
+            public bool Equals(Api.Aggregates x, Api.Aggregates y) => 
                 _entryComparer.Equals(x.First, y.First)
                     && _entryComparer.Equals(x.Min, y.Min)
                     && _entryComparer.Equals(x.Max, y.Max)
                     && _entryComparer.Equals(x.Last, y.Last);
 
-            public int GetHashCode(Aggregates obj) =>
+            public int GetHashCode(Api.Aggregates obj) =>
                 HashCode.Combine(
                     _entryComparer.GetHashCode(obj.First),
                     _entryComparer.GetHashCode(obj.Min),
