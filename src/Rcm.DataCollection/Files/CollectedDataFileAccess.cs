@@ -65,10 +65,9 @@ namespace Rcm.DataCollection.Files
 
             _logger.LogTrace($"Storing record of {entry} to \"{Path.GetFullPath(path)}\"");
 
-            using (var file = _file.AppendText(path))
-            {
-                await file.WriteLineAsync(record);
-            }
+            using var file = _file.AppendText(path);
+
+            await file.WriteLineAsync(record);
         }
 
         private void EnsureDirectoryExists(string path)
@@ -76,7 +75,7 @@ namespace Rcm.DataCollection.Files
             var directory = Path.GetDirectoryName(path);
             if (!String.IsNullOrEmpty(directory) && !Directory.Exists(directory))
             {
-                Directory.CreateDirectory(directory);
+                _ = Directory.CreateDirectory(directory);
             }
         }
     }

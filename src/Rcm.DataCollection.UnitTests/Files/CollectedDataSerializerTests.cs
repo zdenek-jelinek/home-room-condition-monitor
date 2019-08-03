@@ -111,10 +111,7 @@ namespace Rcm.DataCollection.UnitTests.Files
             var serializer = new CollectedDataSerializer();
 
             // when
-            void DeserializingInvalidRecord()
-            {
-                serializer.Deserialize(dummyDate, invalidRecord);
-            }
+            void DeserializingInvalidRecord() => serializer.Deserialize(dummyDate, invalidRecord);
 
             // then
             Assert.Catch(DeserializingInvalidRecord);
