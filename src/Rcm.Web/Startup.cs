@@ -35,7 +35,7 @@ namespace Rcm.Web
                 .Install<DataCollectionServicesInstaller>()
                 .Install<AggregatesServicesInstaller>()
                 .Install<PresentationInstaller>()
-                .Install<MindSphereConnectivityInstaller>();
+                .Install<StubConnectivityInstaller>();
         }
         
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)

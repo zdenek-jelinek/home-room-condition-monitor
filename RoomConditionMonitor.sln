@@ -37,15 +37,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rcm.Aggregates", "src\Rcm.A
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rcm.Aggregates.Api", "src\Rcm.Aggregates.Api\Rcm.Aggregates.Api.csproj", "{12F0F9D1-C57C-481A-B9A6-88B878EB1E15}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RcmAggregates.Tests", "src\RcmAggregates.Tests\RcmAggregates.Tests.csproj", "{136D1929-EC18-4848-A371-9463553FBAC2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rcm.Aggregates.UnitTests", "src\Rcm.Aggregates.UnitTests\Rcm.Aggregates.UnitTests.csproj", "{136D1929-EC18-4848-A371-9463553FBAC2}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Connectivity", "Connectivity", "{29941A6E-533B-4F99-941F-A497F64E6982}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rcm.Connector.Api", "src\Rcm.Connector.Api\Rcm.Connector.Api.csproj", "{154EB859-99F3-461D-B646-521F74DE15F6}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rcm.Connector.MindSphere", "src\Rcm.Connector.MindSphere\Rcm.Connector.MindSphere.csproj", "{DD104233-587C-4787-BEAB-1E1398752D93}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rcm.Connector.MindSphere.UnitTests", "src\Rcm.Connector.MindSphere.UnitTests\Rcm.Connector.MindSphere.UnitTests.csproj", "{40956C90-94CF-47A3-81ED-BDE994DE8016}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rcm.Connector.Api", "src\Rcm.Connector.Api\Rcm.Connector.Api.csproj", "{154EB859-99F3-461D-B646-521F74DE15F6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -113,14 +109,6 @@ Global
 		{154EB859-99F3-461D-B646-521F74DE15F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{154EB859-99F3-461D-B646-521F74DE15F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{154EB859-99F3-461D-B646-521F74DE15F6}.Release|Any CPU.Build.0 = Release|Any CPU
-		{DD104233-587C-4787-BEAB-1E1398752D93}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DD104233-587C-4787-BEAB-1E1398752D93}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DD104233-587C-4787-BEAB-1E1398752D93}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DD104233-587C-4787-BEAB-1E1398752D93}.Release|Any CPU.Build.0 = Release|Any CPU
-		{40956C90-94CF-47A3-81ED-BDE994DE8016}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{40956C90-94CF-47A3-81ED-BDE994DE8016}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{40956C90-94CF-47A3-81ED-BDE994DE8016}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{40956C90-94CF-47A3-81ED-BDE994DE8016}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -140,8 +128,6 @@ Global
 		{12F0F9D1-C57C-481A-B9A6-88B878EB1E15} = {FEA048C8-224E-4FBF-8A28-DC8CA46E5792}
 		{136D1929-EC18-4848-A371-9463553FBAC2} = {FEA048C8-224E-4FBF-8A28-DC8CA46E5792}
 		{154EB859-99F3-461D-B646-521F74DE15F6} = {29941A6E-533B-4F99-941F-A497F64E6982}
-		{DD104233-587C-4787-BEAB-1E1398752D93} = {29941A6E-533B-4F99-941F-A497F64E6982}
-		{40956C90-94CF-47A3-81ED-BDE994DE8016} = {29941A6E-533B-4F99-941F-A497F64E6982}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9CB9B0C3-BCE7-4E86-84BC-7FDA82CAF8AD}
