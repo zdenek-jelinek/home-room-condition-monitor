@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Globalization;
 using Rcm.Common;
+using static System.Globalization.CultureInfo;
 
 namespace Rcm.DataCollection.Files
 {
@@ -8,7 +8,11 @@ namespace Rcm.DataCollection.Files
     {
         public string Serialize(MeasurementEntry entry)
         {
-            return $@"{entry.Time:HH\:mmK} {entry.CelsiusTemperature} {entry.RelativeHumidity} {entry.HpaPressure}";
+            var temperature = entry.CelsiusTemperature.ToString(InvariantCulture);
+            var relativeHumidity = entry.RelativeHumidity.ToString(InvariantCulture);
+            var pressure = entry.HpaPressure.ToString(InvariantCulture);
+
+            return $@"{entry.Time:HH\:mmK} {temperature} {relativeHumidity} {pressure}";
         }
 
         public MeasurementEntry Deserialize(DateTime date, ReadOnlySpan<char> record)
@@ -43,14 +47,14 @@ namespace Rcm.DataCollection.Files
             var nextSpaceIndex = record.Slice(offset).IndexOf(' ');
             if (nextSpaceIndex < 0)
             {
-                var result = Decimal.Parse(record.Slice(offset));
+                var result = Decimal.Parse(record.Slice(offset), provider: InvariantCulture);
                 
                 offset = record.Length;
                 return result;
             }
             else
             {
-                var result = Decimal.Parse(record.Slice(offset, nextSpaceIndex));
+                var result = Decimal.Parse(record.Slice(offset, nextSpaceIndex), provider: InvariantCulture);
                 
                 offset += nextSpaceIndex;
                 return result;
@@ -77,7 +81,7 @@ namespace Rcm.DataCollection.Files
 
             var time = record.Slice(offset, separatorIndex);
 
-            var result = DateTimeOffset.ParseExact(time, "HH:mmK", CultureInfo.InvariantCulture.DateTimeFormat);
+            var result = DateTimeOffset.ParseExact(time, "HH:mmK", InvariantCulture.DateTimeFormat);
 
             offset += separatorIndex;
 

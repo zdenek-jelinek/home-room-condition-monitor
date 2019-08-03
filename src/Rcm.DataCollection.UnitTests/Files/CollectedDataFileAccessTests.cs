@@ -9,6 +9,7 @@ using Rcm.Common.IO;
 using Rcm.DataCollection.Files;
 using Rcm.TestDoubles.Common;
 using Rcm.TestDoubles.IO;
+using static System.Globalization.CultureInfo;
 
 namespace Rcm.DataCollection.UnitTests.Files
 {
@@ -121,7 +122,8 @@ namespace Rcm.DataCollection.UnitTests.Files
 
         private static string GetEntryRecord(MeasurementEntry entry)
         {
-            return $"{entry.Time:HH':'mmK} {entry.CelsiusTemperature} {entry.RelativeHumidity} {entry.HpaPressure}";
+            FormattableString output = $"{entry.Time:HH':'mmK} {entry.CelsiusTemperature} {entry.RelativeHumidity} {entry.HpaPressure}";
+            return output.ToString(InvariantCulture);
         }
 
         private static string GetEntryFilePath(DateTimeOffset entryTime)
