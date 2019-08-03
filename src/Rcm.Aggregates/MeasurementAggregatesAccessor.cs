@@ -21,7 +21,7 @@ namespace Rcm.Aggregates
             
             var partitionSize = (endTime - startTime).Ticks / (double)aggregatesCount;
             
-            var previousMeasurement = (MeasurementEntry)null;
+            var previousMeasurement = (MeasurementEntry?)null;
             
             var currentPartitionEndOffset = partitionSize;
             var currentPartitionEndTime = startTime.AddTicks((long)Math.Round(currentPartitionEndOffset));
@@ -30,7 +30,7 @@ namespace Rcm.Aggregates
 
             foreach (var measurement in measurements)
             {
-                if (!(previousMeasurement is null) && measurement.Time < previousMeasurement.Time)
+                if (previousMeasurement != null && measurement.Time < previousMeasurement.Time)
                 {
                     throw new NotSupportedException($"Non-monotonous measurement times are not supported for partitioning. " +
                         $"Got measurement on {previousMeasurement.Time} followed by measurement on {measurement.Time}");
@@ -40,7 +40,7 @@ namespace Rcm.Aggregates
                 {
                     if (!currentAggregate.IsEmpty)
                     {
-                        yield return currentAggregate.ExtractResult();
+                        yield return currentAggregate.ExtractResult()!;
                         currentAggregate = new AggregateAccumulator();
                     }
 
@@ -55,7 +55,7 @@ namespace Rcm.Aggregates
 
             if (!currentAggregate.IsEmpty)
             {
-                yield return currentAggregate.ExtractResult();
+                yield return currentAggregate.ExtractResult()!;
             }
         }
 
@@ -80,7 +80,7 @@ namespace Rcm.Aggregates
             {
                 if (IsEmpty)
                 {
-                    return null;
+                    throw new InvalidOperationException("Cannot extract result of empty aggregate");
                 }
 
                 return new MeasurementAggregates(

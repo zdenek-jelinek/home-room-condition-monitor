@@ -31,26 +31,22 @@ namespace Rcm.DataCollection.Files
         {
             foreach (var (date, path) in _filesNavigator.GetFilePaths(start, end))
             {
-                if (!_file.TryOpenText(path, out var file, (Action<string, Exception>)CannotOpenFile))
+                using var file = _file.OpenText(path, CannotOpenFile);
+                if (file is null)
                 {
                     _logger.LogTrace($"Skipping read from \"{Path.GetFullPath(path)}\" as the file does not exist");
                     continue;
                 }
 
-                using (file)
+                while (!file.EndOfStream)
                 {
-#pragma warning disable CS8602 // Possible dereference of a null reference.
-                    while (!file.EndOfStream)
-#pragma warning restore CS8602 // Possible dereference of a null reference.
-                    {
-                        var line = file.ReadLine();
-                        var entry = _serializer.Deserialize(date, line);
+                    var line = file.ReadLine();
+                    var entry = _serializer.Deserialize(date, line);
 
-                        if (entry.Time >= start && entry.Time <= end)
-                        {
-                            _logger.LogTrace($"Read record of {entry} from \"{Path.GetFullPath(path)}\"");
-                            yield return entry;
-                        }
+                    if (entry.Time >= start && entry.Time <= end)
+                    {
+                        _logger.LogTrace($"Read record of {entry} from \"{Path.GetFullPath(path)}\"");
+                        yield return entry;
                     }
                 }
             }

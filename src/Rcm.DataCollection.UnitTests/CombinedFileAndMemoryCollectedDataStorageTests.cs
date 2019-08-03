@@ -358,8 +358,7 @@ namespace Rcm.DataCollection.UnitTests
 
         public class SpyCollectedDataFileAccess : ICollectedDataFileAccess
         {
-            // TODO: Make nullable
-            public MeasurementEntry SavedEntry { get; private set; }
+            public MeasurementEntry? SavedEntry { get; private set; }
             public (DateTimeOffset start, DateTimeOffset end)? ReadRange { get; private set; }
 
             public IEnumerable<MeasurementEntry> Entries { get; set; } = Enumerable.Empty<MeasurementEntry>();
