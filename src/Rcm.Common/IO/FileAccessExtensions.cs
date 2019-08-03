@@ -1,27 +1,23 @@
-﻿using System;
+﻿using Rcm.Common.Temporary;
+using System;
 using System.Collections.Generic;
 using System.IO;
-using Rcm.Common.Temporary;
 
 namespace Rcm.Common.IO
 {
     public static class FileAccessExtensions
     {
-        public static bool TryOpenText(
+        public static StreamReader? OpenText(
             this IFileAccess file,
             string path,
-            // TODO: Make nullable
-            [NotNullWhenTrue] out StreamReader reader,
-            // TODO: Make nullable
-            Action<string, Exception> exceptionHandler = null)
+            Action<string, Exception>? exceptionHandler = null)
         {
             try
             {
                 if (file.Exists(path))
                 {
                     var stream = file.Open(path, FileMode.Open, FileAccess.Read, FileShare.Read);
-                    reader = new StreamReader(stream);
-                    return true;
+                    return new StreamReader(stream);
                 }
             }
             catch (Exception e)
@@ -29,8 +25,7 @@ namespace Rcm.Common.IO
                 exceptionHandler?.Invoke(path, e);
             }
 
-            reader = default;
-            return false;
+            return null;
         }
 
         public static StreamWriter AppendText(this IFileAccess file, string path)

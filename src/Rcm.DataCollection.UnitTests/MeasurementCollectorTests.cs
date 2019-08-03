@@ -149,8 +149,7 @@ namespace Rcm.DataCollection.UnitTests
 
             public class SpyCollectedDataWriter : ICollectedDataWriter
             {
-                // TODO: Make nullable
-                public MeasurementEntry StoredEntry { get; private set; }
+                public MeasurementEntry? StoredEntry { get; private set; }
 
                 public Task StoreAsync(MeasurementEntry value)
                 {

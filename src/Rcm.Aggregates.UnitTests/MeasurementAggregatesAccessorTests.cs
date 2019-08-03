@@ -332,7 +332,7 @@ namespace Rcm.Aggregates.UnitTests
 
         private class StubCollectedDataAccessor : ICollectedDataAccessor
         {
-            public ICollection<MeasurementEntry> Data { get; set; }
+            public ICollection<MeasurementEntry>? Data { get; set; }
 
             public IEnumerable<MeasurementEntry> GetCollectedData(DateTimeOffset start, DateTimeOffset end) =>
                 Data?.Select(x => x) ?? Enumerable.Empty<MeasurementEntry>();
