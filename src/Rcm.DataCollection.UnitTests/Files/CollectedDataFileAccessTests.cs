@@ -163,14 +163,7 @@ namespace Rcm.DataCollection.UnitTests.Files
 
             public int GetHashCode(MeasurementEntry obj)
             {
-                unchecked
-                {
-                    var hashCode = obj.Time.GetHashCode();
-                    hashCode = (hashCode * 397) ^ obj.CelsiusTemperature.GetHashCode();
-                    hashCode = (hashCode * 397) ^ obj.RelativeHumidity.GetHashCode();
-                    hashCode = (hashCode * 397) ^ obj.HpaPressure.GetHashCode();
-                    return hashCode;
-                }
+                return HashCode.Combine(obj.Time, obj.CelsiusTemperature, obj.RelativeHumidity, obj.HpaPressure);
             }
         }
     }

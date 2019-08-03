@@ -65,7 +65,7 @@ namespace Rcm.DataCollection.Files
         {
             if (record[offset] != ' ')
             {
-                throw new FormatException($"Invalid separator in record {new String(record)} at offset {offset}");
+                throw new FormatException($"Invalid separator in record {new string(record)} at offset {offset}");
             }
 
             offset += 1;
@@ -76,7 +76,7 @@ namespace Rcm.DataCollection.Files
             var separatorIndex = record.Slice(offset).IndexOf(" ");
             if (separatorIndex < 0)
             {
-                throw new FormatException($"Invalid record: Space expected after time entry in \"{new String(record)}\"");
+                throw new FormatException($"Invalid record: Space expected after time entry in \"{new string(record)}\"");
             }
 
             var time = record.Slice(offset, separatorIndex);
@@ -86,51 +86,6 @@ namespace Rcm.DataCollection.Files
             offset += separatorIndex;
 
             return result;
-        }
-
-        private (int offsetStart, int temperatureStart, int humidityStart, int pressureStart) GetOffsets(ReadOnlySpan<char> record)
-        {
-            int? offsetStart = null;
-            int? temperatureStart = null;
-            int? humidityStart = null;
-            int? pressureStart = null;
-
-            for (var i = 0; i < record.Length; ++i)
-            {
-                if (!Char.IsWhiteSpace(record[i]))
-                {
-                    continue;
-                }
-
-                if (offsetStart is null)
-                {
-                    offsetStart = i + 1;
-                }
-                else if (temperatureStart is null)
-                {
-                    temperatureStart = i + 1;
-                }
-                else if (humidityStart is null)
-                {
-                    humidityStart = i + 1;
-                }
-                else
-                {
-                    pressureStart = i + 1;
-                    break;
-                }
-            }
-
-            if (offsetStart is null
-                || temperatureStart is null
-                || humidityStart is null
-                || pressureStart is null
-                || pressureStart >= record.Length)
-            {
-                throw new ParseException("Given record has invalid format");
-            }
-
-            return (offsetStart.Value, temperatureStart.Value, humidityStart.Value, pressureStart.Value);
         }
 
         public class ParseException : Exception

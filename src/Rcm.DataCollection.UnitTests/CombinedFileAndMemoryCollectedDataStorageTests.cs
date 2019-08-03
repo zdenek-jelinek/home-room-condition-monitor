@@ -101,8 +101,7 @@ namespace Rcm.DataCollection.UnitTests
                 spyCollectedDataFileAccess);
 
             // when
-            // ReSharper disable once ReturnValueOfPureMethodIsNotUsed
-            combinedStorage.GetCollectedData(startTimeBeforeToday, endTimeBeforeToday).ToList();
+            _ = combinedStorage.GetCollectedData(startTimeBeforeToday, endTimeBeforeToday).ToList();
 
             // then
             Assert.IsNotNull(spyCollectedDataFileAccess.ReadRange);
@@ -347,10 +346,7 @@ namespace Rcm.DataCollection.UnitTests
                 new DummyCollectedDataFileAccess());
 
             // when
-            void RetrieveDataForInvalidTimeRange()
-            {
-                combinedStorage.GetCollectedData(startTime, endTime);
-            }
+            void RetrieveDataForInvalidTimeRange() => combinedStorage.GetCollectedData(startTime, endTime);
 
             // then
             Assert.Catch(RetrieveDataForInvalidTimeRange);

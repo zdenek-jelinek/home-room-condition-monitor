@@ -165,7 +165,7 @@ namespace Rcm.DataCollection.UnitTests
 
                 public Task<MeasurementEntry> MeasureAsync()
                 {
-                    Interlocked.Increment(ref _invocationCount);
+                    _ = Interlocked.Increment(ref _invocationCount);
                     throw new Exception();
                 }
             }
@@ -179,7 +179,7 @@ namespace Rcm.DataCollection.UnitTests
 
                 public Task<MeasurementEntry> MeasureAsync()
                 {
-                    Interlocked.Increment(ref _invocationCount);
+                    _ = Interlocked.Increment(ref _invocationCount);
                     return _task;
                 }
 

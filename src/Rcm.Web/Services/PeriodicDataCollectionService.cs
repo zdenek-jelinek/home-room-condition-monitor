@@ -12,7 +12,7 @@ namespace Rcm.Web.Services
         private readonly ILogger<PeriodicDataCollectionService> _logger;
         private readonly IMeasurementCollector _measurementCollector;
 
-        private readonly object _sync = new Object();
+        private readonly object _sync = new object();
 
         private Task? _pendingMeasurement;
         private Timer? _timer;
@@ -38,8 +38,8 @@ namespace Rcm.Web.Services
         public Task StopAsync(CancellationToken cancellationToken)
         {
             _logger.LogInformation("Cancelling periodic measurements");
-            
-            _timer?.Change(Timeout.Infinite, Timeout.Infinite);
+
+            _ = _timer?.Change(Timeout.Infinite, Timeout.Infinite);
 
             var lockTaken = false;
             try
