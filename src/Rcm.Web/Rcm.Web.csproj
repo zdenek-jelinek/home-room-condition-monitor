@@ -10,16 +10,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Remove="wwwroot\js\Aggregates\MeasurementAggregates.ts" />
-    <Content Remove="wwwroot\js\Common\DataLifecyclePage.ts" />
-    <Content Remove="wwwroot\js\Daily.ts" />
-    <Content Remove="wwwroot\js\DateRangePicker.ts" />
-    <Content Remove="wwwroot\js\Measurement.ts" />
-    <Content Remove="wwwroot\js\MeasurementAggregatesClient.ts" />
-    <Content Remove="wwwroot\js\MeasurementsClient.ts" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Folder Include="wwwroot\lib\" />
   </ItemGroup>
 
@@ -40,13 +30,13 @@
 
   <ItemGroup>
     <TypeScriptCompile Include="wwwroot\js\Aggregates\MeasurementAggregates.ts" />
-    <TypeScriptCompile Include="wwwroot\js\Common\DataLifecyclePage.ts" />
-    <TypeScriptCompile Include="wwwroot\js\DateRangePicker.ts" />
-    <TypeScriptCompile Include="wwwroot\js\History.ts" />
-    <TypeScriptCompile Include="wwwroot\js\Daily.ts" />
-    <TypeScriptCompile Include="wwwroot\js\Measurement.ts" />
+    <TypeScriptCompile Include="wwwroot\js\Views\Common\DataLifecyclePage.ts" />
+    <TypeScriptCompile Include="wwwroot\js\Views\Components\DateRangePicker.ts" />
+    <TypeScriptCompile Include="wwwroot\js\Views\History.ts" />
+    <TypeScriptCompile Include="wwwroot\js\Views\Daily.ts" />
+    <TypeScriptCompile Include="wwwroot\js\Measurements\Measurement.ts" />
     <TypeScriptCompile Include="wwwroot\js\Aggregates\MeasurementAggregatesClient.ts" />
-    <TypeScriptCompile Include="wwwroot\js\MeasurementsClient.ts" />
+    <TypeScriptCompile Include="wwwroot\js\Measurements\MeasurementsClient.ts" />
   </ItemGroup>
 
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">

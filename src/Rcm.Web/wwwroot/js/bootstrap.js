@@ -4,11 +4,11 @@
         "flatpickr", { name: "flatpickr", location: "../lib/flatpickr/dist", main: "flatpickr" }
     ],
     bundles: {
-        "compiled": ["History", "Daily"]
+        "compiled": ["Views/History", "Views/Daily"]
     }
 });
 
 if (pageModule)
 {
-    requirejs([pageModule], function (module) { module.initialize(); });
+    requirejs([`Views/${pageModule}`], function (module) { module.initialize(); });
 }

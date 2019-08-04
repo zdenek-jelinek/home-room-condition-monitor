@@ -1,6 +1,6 @@
-﻿import { DateRange, DateRangePicker } from "./DateRangePicker";
-import { MeasurementsClient } from "./MeasurementsClient";
-import { Measurement } from "./Measurement";
+﻿import { DateRange, DateRangePicker } from "./Components/DateRangePicker";
+import { MeasurementsClient } from "../Measurements/MeasurementsClient";
+import { Measurement } from "../Measurements/Measurement";
 
 export function initialize():void
 {
