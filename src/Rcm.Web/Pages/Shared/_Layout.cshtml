@@ -19,15 +19,15 @@
     <nav>
         <ul>
             <li>
-                <a asp-page="/Daily" class="@(Html.GetActiveClass("/Daily"))">Today</a>
+                <a asp-page="/Daily" class="@(Html.GetActiveClassIfCurrentPage("/Daily"))">Today</a>
             </li>
             <li>
-                <a asp-page="/History" class="@(Html.GetActiveClass("/History"))">History</a>
+                <a asp-page="/History" class="@(Html.GetActiveClassIfCurrentPage("/History"))">History</a>
             </li>
         </ul>
         <ul>
             <li>
-                <a asp-page="/Status" class="@(Html.GetActiveClass("/Status"))">Status</a>
+                <a asp-page="/Status" class="@(Html.GetActiveClassIfCurrentPage("/Status"))">Status</a>
             </li>
         </ul>
     </nav>
