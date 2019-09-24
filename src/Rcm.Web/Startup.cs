@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Rcm.Web.Configuration;
 using Rcm.Web.Configuration.Aggregates;
 using Rcm.Web.Configuration.Common;
@@ -24,10 +24,8 @@ namespace Rcm.Web
         
         public void ConfigureServices(IServiceCollection services)
         {
-            services
-                .AddMvc()
-                .SetCompatibilityVersion(CompatibilityVersion.Latest)
-                .AddRazorPagesOptions(o => o.Conventions.AddPageRoute("/Daily", ""));
+            services.AddControllers();
+            services.AddRazorPages(o => o.Conventions.AddPageRoute("/Daily", ""));
 
             services
                 .Install<CommonServicesInstaller>()
@@ -38,20 +36,25 @@ namespace Rcm.Web
                 .Install<StubConnectivityInstaller>();
         }
         
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder application, IWebHostEnvironment environment)
         {
-            if (env.IsDevelopment())
+            if (environment.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage();
+                application.UseDeveloperExceptionPage();
             }
             else
             {
-                app.UseExceptionHandler("/Error");
+                application.UseExceptionHandler("/Error");
             }
 
-            app.UseStaticFiles();
-
-            app.UseMvc();
+            application
+                .UseStaticFiles()
+                .UseRouting()
+                .UseEndpoints(e => 
+                {
+                    e.MapControllers();
+                    e.MapRazorPages();
+                });
         }
     }
 }
