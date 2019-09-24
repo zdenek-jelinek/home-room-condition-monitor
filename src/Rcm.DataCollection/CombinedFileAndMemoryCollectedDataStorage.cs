@@ -107,7 +107,7 @@ namespace Rcm.DataCollection
             try
             {
                 _lock.EnterReadLock();
-                return new List<MeasurementEntry>(_currentDayRecords);
+                return new List<MeasurementEntry>(_currentDayRecords!);
             }
             finally
             {
