@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -13,6 +14,7 @@ using Rcm.Web.Presentation;
 
 namespace Rcm.Web
 {
+    [SuppressMessage("Style", "IDE0058:Expression value is never used")]
     public class Startup
     {
         public Startup(IConfiguration configuration)
@@ -35,7 +37,7 @@ namespace Rcm.Web
                 .Install<PresentationInstaller>()
                 .Install<StubConnectivityInstaller>();
         }
-        
+
         public void Configure(IApplicationBuilder application, IWebHostEnvironment environment)
         {
             if (environment.IsDevelopment())

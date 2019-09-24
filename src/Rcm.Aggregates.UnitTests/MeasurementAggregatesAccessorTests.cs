@@ -327,7 +327,7 @@ namespace Rcm.Aggregates.UnitTests
                     .ToList();
 
             // then
-            Assert.Catch(GetAggregatesForNonMonotonousMeasurementTimes);
+            _ = Assert.Catch(GetAggregatesForNonMonotonousMeasurementTimes);
         }
 
         private class StubCollectedDataAccessor : ICollectedDataAccessor

@@ -26,8 +26,7 @@ namespace Rcm.DataCollection.UnitTests
 
             var spyCollectedDataFileAccess = new SpyCollectedDataFileAccess();
 
-            var combinedStorage = new CombinedFileAndMemoryCollectedDataStorage(
-                new DummyLogger<CombinedFileAndMemoryCollectedDataStorage>(),
+            using var combinedStorage = new CombinedFileAndMemoryCollectedDataStorage(
                 dummyClock,
                 spyCollectedDataFileAccess);
 
@@ -37,12 +36,10 @@ namespace Rcm.DataCollection.UnitTests
             // then
             Assert.IsNotNull(spyCollectedDataFileAccess.SavedEntry);
 
-#pragma warning disable CS8602 // Possible dereference of a null reference.
-            Assert.AreEqual(entry.Time, spyCollectedDataFileAccess.SavedEntry.Time);
+            Assert.AreEqual(entry.Time, spyCollectedDataFileAccess.SavedEntry!.Time);
             Assert.AreEqual(entry.CelsiusTemperature, spyCollectedDataFileAccess.SavedEntry.CelsiusTemperature);
             Assert.AreEqual(entry.RelativeHumidity, spyCollectedDataFileAccess.SavedEntry.RelativeHumidity);
             Assert.AreEqual(entry.HpaPressure, spyCollectedDataFileAccess.SavedEntry.HpaPressure);
-#pragma warning restore CS8602 // Possible dereference of a null reference.
         }
         
         [Test]
@@ -62,8 +59,7 @@ namespace Rcm.DataCollection.UnitTests
 
             var spyCollectedDataFileAccess = new SpyCollectedDataFileAccess { Entries = new[] { pastEntry } };
 
-            var combinedStorage = new CombinedFileAndMemoryCollectedDataStorage(
-                new DummyLogger<CombinedFileAndMemoryCollectedDataStorage>(),
+            using var combinedStorage = new CombinedFileAndMemoryCollectedDataStorage(
                 clock,
                 spyCollectedDataFileAccess);
 
@@ -95,8 +91,7 @@ namespace Rcm.DataCollection.UnitTests
 
             var spyCollectedDataFileAccess = new SpyCollectedDataFileAccess();
 
-            var combinedStorage = new CombinedFileAndMemoryCollectedDataStorage(
-                new DummyLogger<CombinedFileAndMemoryCollectedDataStorage>(),
+            using var combinedStorage = new CombinedFileAndMemoryCollectedDataStorage(
                 clock,
                 spyCollectedDataFileAccess);
 
@@ -124,8 +119,7 @@ namespace Rcm.DataCollection.UnitTests
 
             var spyCollectedDataFileAccess = new SpyCollectedDataFileAccess();
 
-            var combinedStorage = new CombinedFileAndMemoryCollectedDataStorage(
-                new DummyLogger<CombinedFileAndMemoryCollectedDataStorage>(),
+            using var combinedStorage = new CombinedFileAndMemoryCollectedDataStorage(
                 clock,
                 spyCollectedDataFileAccess);
 
@@ -160,8 +154,7 @@ namespace Rcm.DataCollection.UnitTests
 
             var spyCollectedDataFileAccess = new SpyCollectedDataFileAccess { Entries = new[] { olderEntry } };
 
-            var combinedStorage = new CombinedFileAndMemoryCollectedDataStorage(
-                new DummyLogger<CombinedFileAndMemoryCollectedDataStorage>(),
+            using var combinedStorage = new CombinedFileAndMemoryCollectedDataStorage(
                 clock,
                 spyCollectedDataFileAccess);
 
@@ -196,8 +189,7 @@ namespace Rcm.DataCollection.UnitTests
 
             var spyCollectedDataFileAccess = new SpyCollectedDataFileAccess { Entries = new[] { entryStoredInFile } };
 
-            var combinedStorage = new CombinedFileAndMemoryCollectedDataStorage(
-                new DummyLogger<CombinedFileAndMemoryCollectedDataStorage>(),
+            using var combinedStorage = new CombinedFileAndMemoryCollectedDataStorage(
                 clock,
                 spyCollectedDataFileAccess);
 
@@ -223,8 +215,7 @@ namespace Rcm.DataCollection.UnitTests
 
             var spyCollectedDataFileAccess = new SpyCollectedDataFileAccess { Entries = new[] { entryPreviouslyStoredInFile } };
 
-            var combinedStorage = new CombinedFileAndMemoryCollectedDataStorage(
-                new DummyLogger<CombinedFileAndMemoryCollectedDataStorage>(),
+            using var combinedStorage = new CombinedFileAndMemoryCollectedDataStorage(
                 clock,
                 spyCollectedDataFileAccess);
 
@@ -257,8 +248,7 @@ namespace Rcm.DataCollection.UnitTests
 
             var spyCollectedDataFileAccess = new SpyCollectedDataFileAccess();
 
-            var combinedStorage = new CombinedFileAndMemoryCollectedDataStorage(
-                new DummyLogger<CombinedFileAndMemoryCollectedDataStorage>(),
+            using var combinedStorage = new CombinedFileAndMemoryCollectedDataStorage(
                 clock,
                 spyCollectedDataFileAccess);
 
@@ -288,8 +278,7 @@ namespace Rcm.DataCollection.UnitTests
 
             var spyCollectedDataFileAccess = new SpyCollectedDataFileAccess();
 
-            var combinedStorage = new CombinedFileAndMemoryCollectedDataStorage(
-                new DummyLogger<CombinedFileAndMemoryCollectedDataStorage>(),
+            using var combinedStorage = new CombinedFileAndMemoryCollectedDataStorage(
                 clock,
                 spyCollectedDataFileAccess);
 
@@ -317,8 +306,7 @@ namespace Rcm.DataCollection.UnitTests
 
             var stubCollectedDataFileAccess = new StubCollectedDataFileAccess { Entries = new[] { entryOnYesterday } };
 
-            var combinedStorage = new CombinedFileAndMemoryCollectedDataStorage(
-                new DummyLogger<CombinedFileAndMemoryCollectedDataStorage>(),
+            using var combinedStorage = new CombinedFileAndMemoryCollectedDataStorage(
                 fixedClock,
                 stubCollectedDataFileAccess);
             
@@ -340,8 +328,7 @@ namespace Rcm.DataCollection.UnitTests
 
             var dummyClock = new Clock();
 
-            var combinedStorage = new CombinedFileAndMemoryCollectedDataStorage(
-                new DummyLogger<CombinedFileAndMemoryCollectedDataStorage>(),
+            using var combinedStorage = new CombinedFileAndMemoryCollectedDataStorage(
                 dummyClock,
                 new DummyCollectedDataFileAccess());
 
@@ -349,7 +336,7 @@ namespace Rcm.DataCollection.UnitTests
             void RetrieveDataForInvalidTimeRange() => combinedStorage.GetCollectedData(startTime, endTime);
 
             // then
-            Assert.Catch(RetrieveDataForInvalidTimeRange);
+            _ = Assert.Catch(RetrieveDataForInvalidTimeRange);
         }
 
         public class SpyCollectedDataFileAccess : ICollectedDataFileAccess

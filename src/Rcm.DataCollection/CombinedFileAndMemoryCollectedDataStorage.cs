@@ -13,7 +13,6 @@ namespace Rcm.DataCollection
     {
         private const int MeasurementsPerDay = 24 * 60;
 
-        private readonly ILogger<CombinedFileAndMemoryCollectedDataStorage> _logger;
         private readonly IClock _clock;
         private readonly ICollectedDataFileAccess _fileAccess;
 
@@ -24,12 +23,10 @@ namespace Rcm.DataCollection
         private bool _disposed;
 
         public CombinedFileAndMemoryCollectedDataStorage(
-            ILogger<CombinedFileAndMemoryCollectedDataStorage> logger,
             IClock clock,
             ICollectedDataFileAccess fileAccess)
         {
             _clock = clock;
-            _logger = logger;
             _fileAccess = fileAccess;
         }
 
