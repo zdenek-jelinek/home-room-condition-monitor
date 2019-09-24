@@ -1,6 +1,7 @@
 ﻿using System;
-using Microsoft.AspNetCore;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting;
 
 namespace Rcm.Web
 {
@@ -8,14 +9,18 @@ namespace Rcm.Web
     {
         public static readonly TimeSpan ShutdownTimeout = TimeSpan.FromSeconds(10);
 
-        public static void Main(string[] args) =>
+        public static Task Main(string[] args) =>
             CreateWebHostBuilder(args)
                 .Build()
-                .Run();
+                .RunAsync();
 
-        public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
-            WebHost
+        public static IHostBuilder CreateWebHostBuilder(string[] args) =>
+            Host
                 .CreateDefaultBuilder(args)
+                .ConfigureWebHostDefaults(ConfigureWebHost);
+
+        private static void ConfigureWebHost(IWebHostBuilder webBuilder) =>
+            webBuilder
                 .UseShutdownTimeout(ShutdownTimeout)
                 .UseStartup<Startup>();
     }
