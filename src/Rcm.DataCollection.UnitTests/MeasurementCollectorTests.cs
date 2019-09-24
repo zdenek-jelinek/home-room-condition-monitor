@@ -87,8 +87,7 @@ namespace Rcm.DataCollection.UnitTests
                 // then
                 Assert.IsNotNull(spyCollectedDataStorage.StoredEntry);
 
-#pragma warning disable CS8602 // Possible dereference of a null reference.
-                Assert.AreEqual(firstMeasurementTime.Offset, spyCollectedDataStorage.StoredEntry.Time.Offset);
+                Assert.AreEqual(firstMeasurementTime.Offset, spyCollectedDataStorage.StoredEntry!.Time.Offset);
                 Assert.AreEqual(firstMeasurementTime.Year, spyCollectedDataStorage.StoredEntry.Time.Year);
                 Assert.AreEqual(firstMeasurementTime.Month, spyCollectedDataStorage.StoredEntry.Time.Month);
                 Assert.AreEqual(firstMeasurementTime.Day, spyCollectedDataStorage.StoredEntry.Time.Day);
@@ -107,7 +106,6 @@ namespace Rcm.DataCollection.UnitTests
                 Assert.AreEqual(
                     (firstMeasurement.RelativeHumidity + secondMeasurementWithinSameMinute.RelativeHumidity) / 2,
                     spyCollectedDataStorage.StoredEntry.RelativeHumidity);
-#pragma warning restore CS8602 // Possible dereference of a null reference.
             }
 
             private async Task IgnoreExceptions(Func<Task> f)
