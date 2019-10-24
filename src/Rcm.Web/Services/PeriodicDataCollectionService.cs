@@ -7,7 +7,7 @@ using Rcm.DataCollection.Api;
 
 namespace Rcm.Web.Services
 {
-    public class PeriodicDataCollectionService : IHostedService, IDisposable
+    public class PeriodicDataCollectionService : IHostedService, IAsyncDisposable
     {
         private readonly ILogger<PeriodicDataCollectionService> _logger;
         private readonly IMeasurementCollector _measurementCollector;
@@ -77,10 +77,7 @@ namespace Rcm.Web.Services
             }
         }
 
-        public void Dispose()
-        {
-            _timer?.Dispose();
-        }
+        public ValueTask DisposeAsync() => _timer?.DisposeAsync() ?? default;
 
         private void RunMeasurement()
         {
