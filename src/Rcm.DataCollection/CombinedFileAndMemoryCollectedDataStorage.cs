@@ -63,8 +63,16 @@ namespace Rcm.DataCollection
             }
 
             var now = _clock.Now;
+            if (start > now)
+            {
+                return Enumerable.Empty<MeasurementEntry>();
+            }
+            
+            start = start.ToOffset(now.Offset);
+            end = end.ToOffset(now.Offset);
+
             var todayMidnight = new DateTimeOffset(now.Date, now.Offset);
-            var startMidnight = new DateTimeOffset(start.Date, start.Offset);
+            var startMidnight = new DateTimeOffset(start.Date, now.Offset);
             if (startMidnight > todayMidnight)
             {
                 return Enumerable.Empty<MeasurementEntry>();

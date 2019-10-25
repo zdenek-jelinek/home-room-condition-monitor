@@ -107,6 +107,37 @@ namespace Rcm.DataCollection.UnitTests
         }
 
         [Test]
+        [TestCase(-2)]
+        [TestCase(2)]
+        public void ReadsDataJustBeforeTodayFromFilesRegardlessOfOffset(int offset)
+        {
+            // given
+            var now = new DateTimeOffset(2018, 12, 30, 12, 0, 0, TimeSpan.Zero);
+            var todayMidnight = new DateTimeOffset(now.Date, now.Offset);
+
+            var startTimeBeforeMidnight = todayMidnight.AddMinutes(-30).ToOffset(TimeSpan.FromHours(offset));
+            var endTimeBeforeMidnight = startTimeBeforeMidnight.AddMinutes(10);
+
+            var clock = new FixedClock(now);
+
+            var spyCollectedDataFileAccess = new SpyCollectedDataFileAccess();
+
+            using var combinedStorage = new CombinedFileAndMemoryCollectedDataStorage(
+                clock,
+                spyCollectedDataFileAccess);
+
+            // when
+            _ = combinedStorage.GetCollectedData(startTimeBeforeMidnight, endTimeBeforeMidnight).ToList();
+
+            // then
+            Assert.IsNotNull(spyCollectedDataFileAccess.ReadRange);
+
+            var (readStart, readEnd) = spyCollectedDataFileAccess.ReadRange.GetValueOrDefault();
+            Assert.AreEqual(startTimeBeforeMidnight.ToUniversalTime(), readStart);
+            Assert.AreEqual(endTimeBeforeMidnight.ToUniversalTime(), readEnd);
+        }
+
+        [Test]
         public async Task DoesNotAccessFilesToReadTodaysDataAfterPreviousOperation()
         {
             // given
@@ -174,18 +205,17 @@ namespace Rcm.DataCollection.UnitTests
         }
 
         [Test]
-        public void TodaysDataReadWithoutAnyStoresIncludeDataStoredInFile()
+        public void TodaysDataReadWithoutAnyPrecedingStoresIncludeDataStoredInFile()
         {
-
             // given
             var now = new DateTimeOffset(2018, 12, 30, 12, 0, 0, TimeSpan.Zero);
 
-            var startTimeOnToday = now.AddHours(-10);
-            var endTimeOnToday = now.AddHours(10);
+            var startTimeOnToday = now.AddHours(-1);
+            var endTimeOnToday = now.AddHours(1);
 
             var clock = new FixedClock(now);
 
-            var entryStoredInFile = new MeasurementEntry(now.AddHours(-2), 20m, 40m, 970m);
+            var entryStoredInFile = new MeasurementEntry(now, 20m, 40m, 970m);
 
             var spyCollectedDataFileAccess = new SpyCollectedDataFileAccess { Entries = new[] { entryStoredInFile } };
 
@@ -266,6 +296,91 @@ namespace Rcm.DataCollection.UnitTests
         }
 
         [Test]
+        [TestCase(-2)]
+        [TestCase(2)]
+        public void ReturnsTodaysEntriesForTimesAtOrAfterMidnightRegardlessOfOffset(int offset)
+        {
+            // given
+            var now = new DateTimeOffset(2018, 12, 30, 12, 0, 0, TimeSpan.Zero);
+            var todayMidnight = new DateTimeOffset(now.Date, now.Offset);
+
+            var startTimeOnMidnightInDifferentOffset = todayMidnight.ToOffset(TimeSpan.FromHours(offset));
+            var endTimeAfterMidnightInDifferentOffset = startTimeOnMidnightInDifferentOffset.AddMinutes(30);
+
+            var clock = new FixedClock(now);
+
+            var entryPreviouslyStoredInFile = new MeasurementEntry(todayMidnight.AddMinutes(10), 20m, 40m, 970m);
+
+            var spyCollectedDataFileAccess = new SpyCollectedDataFileAccess { Entries = new[] { entryPreviouslyStoredInFile } };
+
+            using var combinedStorage = new CombinedFileAndMemoryCollectedDataStorage(
+                clock,
+                spyCollectedDataFileAccess);
+
+            // when
+            var readEntries = combinedStorage.GetCollectedData(startTimeOnMidnightInDifferentOffset, endTimeAfterMidnightInDifferentOffset).ToList();
+
+            // then
+            CollectionAssert.AreEquivalent(new[] { entryPreviouslyStoredInFile }, readEntries);
+        }
+
+        [Test]
+        [TestCase(-2)]
+        [TestCase(2)]
+        public void ReturnsTodaysEntriesForTimesBeforeNextMidnightRegardlessOfOffset(int offset)
+        {
+            // given
+            var hourBeforeMidnight = new DateTimeOffset(2018, 12, 30, 23, 0, 0, TimeSpan.Zero);
+
+            var startTimeBeforeNextMidnightInDifferentOffset = hourBeforeMidnight.AddMinutes(-30).ToOffset(TimeSpan.FromHours(offset));
+            var endTimeBeforeNextMidnightInDifferentOffset = startTimeBeforeNextMidnightInDifferentOffset.AddMinutes(30);
+
+            var clock = new FixedClock(hourBeforeMidnight);
+
+            var entryPreviouslyStoredInFile = new MeasurementEntry(hourBeforeMidnight.AddMinutes(-10), 20m, 40m, 970m);
+
+            var spyCollectedDataFileAccess = new SpyCollectedDataFileAccess { Entries = new[] { entryPreviouslyStoredInFile } };
+
+            using var combinedStorage = new CombinedFileAndMemoryCollectedDataStorage(
+                clock,
+                spyCollectedDataFileAccess);
+
+            // when
+            var readEntries = combinedStorage.GetCollectedData(startTimeBeforeNextMidnightInDifferentOffset, endTimeBeforeNextMidnightInDifferentOffset).ToList();
+
+            // then
+            CollectionAssert.AreEquivalent(new[] { entryPreviouslyStoredInFile }, readEntries);
+        }
+
+        [Test]
+        public void DoesNotAccessFilesForDataBeforeQueriedRangeDueToNegativeOffset()
+        {
+            // given
+            var midnightInUtc = new DateTimeOffset(2018, 12, 30, 0, 0, 0, TimeSpan.Zero);
+            var timeEquivalentToUtcMidnightInMinusFive = midnightInUtc.ToOffset(TimeSpan.FromHours(-5));
+
+            var startSkew = TimeSpan.FromMinutes(10);
+            var rangeSize = TimeSpan.FromHours(2);
+            var startTimeBeforeTodayInDifferentZone = timeEquivalentToUtcMidnightInMinusFive.Add(startSkew);
+            var endTimeBeforeTodayInDifferentZone = startTimeBeforeTodayInDifferentZone.Add(rangeSize);
+
+            var clock = new FixedClock(midnightInUtc);
+
+            var spyCollectedDataFileAccess = new SpyCollectedDataFileAccess();
+
+            using var combinedStorage = new CombinedFileAndMemoryCollectedDataStorage(
+                clock,
+                spyCollectedDataFileAccess);
+
+            // when
+            var entries = combinedStorage.GetCollectedData(startTimeBeforeTodayInDifferentZone, endTimeBeforeTodayInDifferentZone).ToList();
+
+            // then
+            Assert.IsNull(spyCollectedDataFileAccess.ReadRange);
+            Assert.IsEmpty(entries);
+        }
+
+        [Test]
         public void DoesNotAccessFilesForDataStartingInFuture()
         {
             // given
@@ -284,6 +399,35 @@ namespace Rcm.DataCollection.UnitTests
 
             // when
             var entries = combinedStorage.GetCollectedData(futureStartTime, futureEndTime).ToList();
+
+            // then
+            Assert.IsNull(spyCollectedDataFileAccess.ReadRange);
+
+            Assert.IsEmpty(entries);
+        }
+
+        [Test]
+        public void DoesNotAccessFilesForDataStartingInFutureWithSeeminglyPastTimeDueToNegativeOffset()
+        {
+            // given
+            var oneHourBeforeMidnight = new DateTimeOffset(2018, 12, 30, 23, 0, 0, TimeSpan.Zero);
+
+            var fiveHoursOffset = TimeSpan.FromHours(-5);
+            var futureStartInNegativeOFfset = oneHourBeforeMidnight.ToOffset(fiveHoursOffset).AddHours(2);
+            var futureEndTimeInNegativeOffset = futureStartInNegativeOFfset.AddMinutes(30);
+
+            var clock = new FixedClock(oneHourBeforeMidnight);
+
+            var entryAtCurrentTime = new MeasurementEntry(oneHourBeforeMidnight, 20m, 40m, 970m);
+
+            var spyCollectedDataFileAccess = new SpyCollectedDataFileAccess { Entries = new[] { entryAtCurrentTime } };
+
+            using var combinedStorage = new CombinedFileAndMemoryCollectedDataStorage(
+                clock,
+                spyCollectedDataFileAccess);
+
+            // when
+            var entries = combinedStorage.GetCollectedData(futureStartInNegativeOFfset, futureEndTimeInNegativeOffset).ToList();
 
             // then
             Assert.IsNull(spyCollectedDataFileAccess.ReadRange);
