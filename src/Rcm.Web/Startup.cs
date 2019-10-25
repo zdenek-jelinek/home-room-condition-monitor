@@ -27,7 +27,7 @@ namespace Rcm.Web
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            services.AddRazorPages(o => o.Conventions.AddPageRoute("/Daily", ""));
+            services.AddRazorPages(o => o.Conventions.AddPageRoute("/Now", ""));
 
             services
                 .Install<CommonServicesInstaller>()

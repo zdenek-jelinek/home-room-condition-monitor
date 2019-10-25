@@ -62,17 +62,6 @@ export class DailyPage extends DataLifecyclePage
         }
     }
 
-    private setElementText(parent:Element, selector:string, text:string):void
-    {
-        const element = parent.querySelector(selector);
-        if (!element)
-        {
-            throw new Error("Could not set value: No element with selector " + selector + " found");
-        }
-
-        element.textContent = text;
-    }
-
     private async fetchData():Promise<MeasurementAggregates|undefined>
     {
         const startOfToday = new Date();

@@ -1,7 +1,10 @@
-﻿export class DataLifecyclePage
+﻿import { View } from "./View";
+
+export class DataLifecyclePage extends View
 {
     constructor(initialStatus:string)
     {
+        super();
         this.setStatus(initialStatus);
     }
 
