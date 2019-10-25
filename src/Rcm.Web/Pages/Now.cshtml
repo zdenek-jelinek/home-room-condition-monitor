@@ -1,0 +1,23 @@
+﻿@page
+@{
+    ViewData["Title"] = "Current state";
+    ViewData["Module"] = "Now";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/now.css" asp-append-version="true" />
+}
+
+<div data-presence="available">
+    <div class="page-entry">
+        <p class="large"><span id="temperature-value"></span>°C</pclass="">
+        <p class="large"><span id="pressure-value"></span>hPa</p>
+        <p class="large"><span id="humidity-value"></span>% RH</p>
+    </div>
+</div>
+
+<p data-presence="none">No measurements are available at the moment</p>
+
+<div data-presence="loading">
+    <h2>Loading...</h2>
+</div>

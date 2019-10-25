@@ -19,6 +19,9 @@
     <nav>
         <ul>
             <li>
+                <a asp-page="/Now" class="@(Html.GetActiveClassIfCurrentPage("/Now"))">Now</a>
+            </li>
+            <li>
                 <a asp-page="/Daily" class="@(Html.GetActiveClassIfCurrentPage("/Daily"))">Today</a>
             </li>
             <li>
@@ -31,7 +34,7 @@
             </li>
         </ul>
     </nav>
-    `
+    
     <div class="content">
         @RenderBody()
     </div>

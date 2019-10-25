@@ -155,3 +155,8 @@ a.pseudo-button.secondary:hover, a.pseudo-button.secondary:focus {
 .small {
     font-size: 0.9rem;
 }
+
+.large {
+    font-size: 1.25rem;
+    line-height: 2.5rem;
+}
