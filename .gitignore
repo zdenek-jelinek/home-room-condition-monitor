@@ -197,6 +197,9 @@ csx/
 ecf/
 rcf/
 
+# Azure Function configuration
+local.settings.json
+
 # Windows Store app package directories and files
 AppPackages/
 BundleArtifacts/
