@@ -25,7 +25,7 @@ namespace Rcm.Backend.Device
     {
         [FunctionName("MeasurementIngress")]
         public static async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Function, "post", Route = "ingress/measurements")] HttpRequest request,
+            [HttpTrigger(AuthorizationLevel.Function, "post", Route = DeviceRoutes.MeasurementsIngress)] HttpRequest request,
             [Table("devices")] CloudTable devices,
             [Table("measurements")] CloudTable measurementsTable,
             ILogger logger,
