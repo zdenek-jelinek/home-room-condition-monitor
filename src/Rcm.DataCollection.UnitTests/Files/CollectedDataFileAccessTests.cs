@@ -111,6 +111,44 @@ namespace Rcm.DataCollection.UnitTests.Files
                     .Using(new MeasurementEntryEqualityComparer()));
         }
 
+        [Test]
+        public void SkipsInvalidLinesInFiles()
+        {
+            // given
+            var time = new DateTimeOffset(2020, 1, 28, 18, 45, 0, TimeSpan.FromHours(1));
+
+            var dataStorageLocation = new DataStorageLocation(DataPath);
+
+            var fakeFileAccess = new FakeFileAccess();
+
+            var collectedDataFileAccess = new CollectedDataFileAccess(
+                new DummyLogger<CollectedDataFileAccess>(),
+                dataStorageLocation,
+                fakeFileAccess);
+
+            var validEntries = new[]
+            {
+                new MeasurementEntry(time, 28m, 47.6m, 974.59m),
+                new MeasurementEntry(time.AddHours(1), 29m, 42.6m, 987m)
+            };
+
+            var measurementFileLines = new[]
+            {
+                GetEntryRecord(validEntries[0]),
+                "Invalid line",
+                GetEntryRecord(validEntries[1])
+            };
+
+            var path = GetEntryFilePath(time);
+            fakeFileAccess.WriteAllLines(path, measurementFileLines);
+
+            // when
+            var readEntries = collectedDataFileAccess.Read(time.AddHours(-2), time.AddHours(2));
+
+            // then
+            Assert.That(readEntries, Is.EquivalentTo(validEntries).Using(new MeasurementEntryEqualityComparer()));
+        }
+
         private static void StoreEntriesToFiles(IFileAccess file, IEnumerable<MeasurementEntry> entries)
         {
             foreach (var entriesByDay in entries.GroupBy(e => new DateTimeOffset(e.Time.Date, e.Time.Offset)))
