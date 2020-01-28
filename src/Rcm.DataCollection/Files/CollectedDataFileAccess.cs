@@ -38,17 +38,30 @@ namespace Rcm.DataCollection.Files
                     continue;
                 }
 
-                while (!file.EndOfStream)
+                for (var lineNumber = 1; !file.EndOfStream; ++lineNumber)
                 {
                     var line = file.ReadLine();
-                    var entry = _serializer.Deserialize(date, line);
 
-                    if (entry.Time >= start && entry.Time <= end)
+                    var entry = TryParseEntry(date, path, lineNumber, line);
+                    if (entry != null && entry.Time >= start && entry.Time <= end)
                     {
                         _logger.LogTrace($"Read record of {entry} from \"{Path.GetFullPath(path)}\"");
                         yield return entry;
                     }
                 }
+            }
+        }
+
+        private MeasurementEntry? TryParseEntry(DateTime date, string filePath, int lineNumber, string line)
+        {
+            try
+            {
+                return _serializer.Deserialize(date, line);
+            }
+            catch (FormatException e)
+            {
+                _logger.LogWarning(e, $"Skipping corrupt entry in \"{filePath}\", line: {lineNumber}, value: \"{line}\".");
+                return default;
             }
         }
 
