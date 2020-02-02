@@ -43,7 +43,7 @@
         const pageModule = "@ViewData["Module"]";
     </script>
     <script
-        data-main=@Context.AppendVersionToPath("./js/bootstrap.js")
+        data-main=@Href(Context.AppendVersionToPath("~/js/bootstrap.js"))
         src="~/lib/requirejs/require.js"></script>
     @RenderSection("Scripts", required: false)
 </body>
