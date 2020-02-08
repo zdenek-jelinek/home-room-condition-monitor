@@ -1,0 +1,62 @@
+﻿input {
+    padding: 0.25rem 0 calc(0.25rem + 1px);
+    margin-bottom: 1rem;
+
+    border-left: none;
+    border-right: none;
+    border-top: none;
+    border-bottom: 1px solid darkgrey;
+}
+
+input:focus {
+    padding: 0.25rem 0;
+    border-bottom: 2px solid brown;
+    outline: none;
+}
+
+input.input-validation-error {
+    margin-bottom: 0;
+}
+
+input:disabled {
+    background-color: transparent;
+}
+
+.error-message {
+    margin-top: 0.2rem;
+    font-size: 0.8rem;
+    color: red;
+    margin-bottom: 1rem;
+}
+
+button, a.pseudo-button {
+    cursor: pointer;
+    display: inline-block;
+    font-weight: bold;
+    letter-spacing: 0.025rem;
+    padding: 0.75rem;
+    border-radius: 0.25rem;
+}
+
+button.primary, a.pseudo-button.primary {
+    border: none;
+    color: whitesmoke;
+    background-color: maroon;
+}
+
+button.primary:hover, button.primary:focus, a.pseudo-button.primary:hover, a.pseudo-button.primary:focus {
+    color: white;
+    background-color: brown;
+}
+
+button.secondary, a.pseudo-button.secondary {
+    border: 2px solid brown;
+    color: maroon;
+    background-color: cornsilk;
+}
+
+button.secondary:hover, button.secondary:focus, a.pseudo-button.secondary:hover, a.pseudo-button.secondary:focus {
+    background-color: brown;
+    color: white;
+}
+

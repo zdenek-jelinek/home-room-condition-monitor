@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using NUnit.Framework;
 using Rcm.DataCollection.Files;
+using Rcm.Device.Common;
 
 namespace Rcm.DataCollection.UnitTests.Files
 {

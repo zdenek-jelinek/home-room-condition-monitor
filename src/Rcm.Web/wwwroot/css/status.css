@@ -3,38 +3,45 @@
 }
 
 .details {
-    margin: 1rem 0;
     display: flex;
-    flex-flow: row nowrap;
-    justify-content: space-between;
+    flex-flow: column nowrap;
 }
 
 .descriptions {
-    display: flex;
-    flex-flow: row nowrap;
+    justify-content: flex-start;
 }
 
-.descriptions > * {
+.actions {
+    justify-content: flex-end;
+}
+
+.descriptions > *,
+.actions > * {
+    margin: 0.5rem;
+    vertical-align: middle;
+}
+
+.status-detail, .actions {
+    display: flex;
+    flex-flow: row wrap;
+    align-items: center;
+    white-space: nowrap;
+}
+
+.status-detail {
+    margin-bottom: 1rem;
+}
+
+.status-icon, .status-description {
     display: block;
     align-items: center;
     text-overflow: ellipsis;
     overflow: hidden;
 }
 
-.actions {
-    display: flex;
-    flex-flow: row nowrap;
-    align-items: center;
-}
-
-.descriptions > *,
-.actions > * {
-    margin: 0 0.5rem;
-    vertical-align: middle;
-}
-
-.actions button {
-    font-size: 1rem;
+.status-description {
+    font-size: 1.2rem;
+    padding-left: 0.5rem;
 }
 
 .status-icon {
@@ -46,22 +53,8 @@
     color: black;
 }
 
-.status-description {
-    display: flex;
-    flex-flow: column nowrap;
-    align-items: flex-start;
-}
-
-.status-description > p {
-    margin-bottom: 0.2rem;
-}
-
 .positive {
     background-color: lightgreen;
-}
-
-.negative {
-    background-color: lightsalmon;
 }
 
 .unknown {

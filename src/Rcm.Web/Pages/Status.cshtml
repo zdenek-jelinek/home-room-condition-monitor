@@ -1,8 +1,6 @@
 ﻿@page
 @model Rcm.Web.Pages.StatusModel
 
-@using Presentation.Status;
-
 @{
     ViewData["Title"] = "System status";
 }
@@ -13,60 +11,43 @@
 
 <div class="page-entries">
     <div class="page-entry">
-        <h2>Cloud connection</h2>
+        <h2>Back-end connection</h2>
         <div class="details">
             <div class="descriptions">
-                @{
-                    if (Model.Connectivity?.ConnectionStatus == ConnectionStatusModel.Active)
-                    {
-                        <div class="status-icon positive">
-                            <p>✔</p>
-                        </div>
-                        <div class="status-description">
-                            <p>Active</p>
-                            @if (Model.Connectivity.Uptime.HasValue)
-                            {
-                                <p class="small">Uptime: @Model.Connectivity.Uptime.Value.ToString("d'd, 'hh':'mm")</p>
-                            }
-                        </div>
+                <div class="status-detail">
+                    @{
+                        if (Model.IsConfigured)
+                        {
+                            <div class="status-icon positive">
+                                <p>✔</p>
+                            </div>
+                            <div class="status-description">
+                                <p>Active</p>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="status-icon unknown">
+                                <p>🗙</p>
+                            </div>
+                            <div class="status-description">
+                                <p>Not configured</p>
+                            </div>
+                        }
                     }
-                    else if (Model.Connectivity?.ConnectionStatus == ConnectionStatusModel.Inactive)
-                    {
-                        <div class="status-icon negative">
-                            <p>🗙</p>
-                        </div>
-                        <div class="status-description">
-                            <p>Inactive</p>
-                        </div>
-                    }
-                    else
-                    {
-                        <div class="status-icon unknown">
-                            <p>🗙</p>
-                        </div>
-                        <div class="status-description">
-                            <p>Not configured</p>
-                        </div>
-                    }
+                </div>
+                @if (@Model.LastUploadedMeasurementTime.HasValue)
+                {
+                    <p>Last uploaded measurement at @Model.LastUploadedMeasurementTime</p>
+                }
+                else
+                {
+                    <p>No measurements uploaded yet.</p>
                 }
             </div>
             <div class="actions">
                 @{
-                    if (Model.Connectivity?.ConnectionStatus == ConnectionStatusModel.Active)
-                    {
-                        <a asp-page="/Configuration/Upload" class="pseudo-button secondary">Manual data upload</a>
-                    }
-
-                    if (Model.Connectivity != null && 
-                        (Model.Connectivity.ConnectionStatus == ConnectionStatusModel.Active
-                            || Model.Connectivity.ConnectionStatus == ConnectionStatusModel.Inactive))
-                    {
-                        <a asp-page="/Configuration/Offboard" class="pseudo-button secondary">Offboard</a>
-                    }
-                    else
-                    {
-                        <a asp-page="/Configuration/Onboard" class="pseudo-button primary">Onboard</a>
-                    }
+                    <a asp-page="/Connection/Configure" class="pseudo-button primary">Configure</a>
                 }
             </div>
         </div>

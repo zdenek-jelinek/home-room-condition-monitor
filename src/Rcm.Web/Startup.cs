@@ -10,7 +10,6 @@ using Rcm.Web.Configuration.Common;
 using Rcm.Web.Configuration.Connectivity;
 using Rcm.Web.Configuration.DataCollection;
 using Rcm.Web.Configuration.Measurements;
-using Rcm.Web.Presentation;
 
 namespace Rcm.Web
 {
@@ -27,15 +26,18 @@ namespace Rcm.Web
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            services.AddRazorPages(o => o.Conventions.AddPageRoute("/Now", ""));
+            var mvc = services.AddRazorPages(o => o.Conventions.AddPageRoute("/Now", ""));
+
+#if DEBUG
+            mvc.AddRazorRuntimeCompilation();
+#endif
 
             services
                 .Install<CommonServicesInstaller>()
                 .Install<ModeBasedMeasurementServicesInstaller>()
                 .Install<DataCollectionServicesInstaller>()
                 .Install<AggregatesServicesInstaller>()
-                .Install<PresentationInstaller>()
-                .Install<StubConnectivityInstaller>();
+                .Install<ConnectivityInstaller>();
         }
 
         public void Configure(IApplicationBuilder application, IWebHostEnvironment environment)

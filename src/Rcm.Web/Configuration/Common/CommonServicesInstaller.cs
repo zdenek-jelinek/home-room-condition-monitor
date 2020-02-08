@@ -1,6 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Rcm.Common;
+using Rcm.Common.Http;
 using Rcm.Common.IO;
+using Rcm.Device.Common;
 
 namespace Rcm.Web.Configuration.Common
 {
@@ -10,7 +12,9 @@ namespace Rcm.Web.Configuration.Common
         {
             services
                 .AddTransient<IClock, Clock>()
-                .AddTransient<IFileAccess, FileAccessAdapter>();
+                .AddTransient<IFileAccess, FileAccessAdapter>()
+                .AddTransient<IHttpClientFactory, HttpClientFactoryAdapter>()
+                .AddTransient<IDataStorageLocation, EnvironmentDataStorageLocation>();
         }
     }
 }

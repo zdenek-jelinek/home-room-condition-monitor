@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Rcm.Common;
 using Rcm.Common.IO;
+using Rcm.Device.Common;
 
 namespace Rcm.DataCollection.Files
 {

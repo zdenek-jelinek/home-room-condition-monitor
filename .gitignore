@@ -332,8 +332,11 @@ ASALocalRun/
 # MFractors (Xamarin productivity tool) working folder 
 .mfractor/
 
-# Custom RCM extensions
+# Custom RCM data file extensions
 *.mst
+
+# Default project data folder
+/data/
 
 # Generated
 **/wwwroot/js/compiled.js*

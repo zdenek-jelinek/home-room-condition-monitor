@@ -1,4 +1,4 @@
-﻿namespace Rcm.DataCollection.Files
+﻿namespace Rcm.Device.Common
 {
     public interface IDataStorageLocation
     {

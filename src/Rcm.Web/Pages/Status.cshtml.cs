@@ -1,22 +1,25 @@
+using System;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Rcm.Web.Presentation.Status;
+using Rcm.Connector.Api.Status;
 
 namespace Rcm.Web.Pages
 {
     public class StatusModel : PageModel
     {
-        private readonly IStatusPagePresenter _presenter;
+        private readonly IConnectionStatusAccessor _connectionStatus;
 
-        public ConnectivityStatusModel? Connectivity { get; private set; }
+        public bool IsConfigured { get; private set; }
+        public DateTimeOffset? LastUploadedMeasurementTime { get; private set; }
 
-        public StatusModel(IStatusPagePresenter presenter)
+        public StatusModel(IConnectionStatusAccessor connectionStatus)
         {
-            _presenter = presenter;
+            _connectionStatus = connectionStatus;
         }
 
         public void OnGet()
         {
-            Connectivity = _presenter.GetStatus();
+            IsConfigured = _connectionStatus.IsConfigured;
+            LastUploadedMeasurementTime = _connectionStatus.LastUploadedMeasurementTime;
         }
     }
 }

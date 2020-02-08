@@ -2,6 +2,8 @@
 using Rcm.DataCollection;
 using Rcm.DataCollection.Api;
 using Rcm.DataCollection.Files;
+using Rcm.Device.Common;
+using Rcm.Web.Configuration.Common;
 using Rcm.Web.Services;
 
 namespace Rcm.Web.Configuration.DataCollection
@@ -15,8 +17,7 @@ namespace Rcm.Web.Configuration.DataCollection
                 .AddSingleton<ICollectedDataStorage, CombinedFileAndMemoryCollectedDataStorage>()
                 .AddSingleton<ICollectedDataWriter>(s => s.GetRequiredService<ICollectedDataStorage>())
                 .AddSingleton<ICollectedDataAccessor>(s => s.GetRequiredService<ICollectedDataStorage>())
-                .AddTransient<ICollectedDataFileAccess, CollectedDataFileAccess>()
-                .AddTransient<IDataStorageLocation, EnvironmentDataStorageLocation>();
+                .AddTransient<ICollectedDataFileAccess, CollectedDataFileAccess>();
 
             services.AddHostedService<PeriodicDataCollectionService>();
         }
