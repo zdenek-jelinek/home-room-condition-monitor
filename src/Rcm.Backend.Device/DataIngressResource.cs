@@ -109,7 +109,7 @@ namespace Rcm.Backend.Device
 
         private static Measurement ConvertEntry(MeasurementEntryIngressModel entry, int index)
         {
-            if (!DateTimeOffset.TryParseExact(entry.Time, DateTimeFormat.Iso8601, InvariantCulture, default, out var time))
+            if (!DateTimeOffset.TryParseExact(entry.Time, DateTimeFormat.Iso8601DateTime, InvariantCulture, default, out var time))
             {
                 ThrowMeasurementPropertyError(
                     index,

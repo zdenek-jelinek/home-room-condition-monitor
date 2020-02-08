@@ -1,0 +1,13 @@
+﻿.entries {
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: start;
+}
+
+label {
+    margin-bottom: 0.5rem;
+}
+
+button {
+    margin: 1rem 0;
+}

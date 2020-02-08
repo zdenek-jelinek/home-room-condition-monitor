@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using Rcm.Device.Common;
 
 namespace Rcm.DataCollection.Files
 {

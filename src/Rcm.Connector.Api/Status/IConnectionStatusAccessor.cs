@@ -1,7 +1,10 @@
-﻿namespace Rcm.Connector.Api.Status
+﻿using System;
+
+namespace Rcm.Connector.Api.Status
 {
     public interface IConnectionStatusAccessor
     {
-        ConnectionStatus GetStatus();
+        bool IsConfigured { get; }
+        DateTimeOffset? LastUploadedMeasurementTime { get; }
     }
 }

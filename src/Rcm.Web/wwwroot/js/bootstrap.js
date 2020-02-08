@@ -1,10 +1,11 @@
 ﻿requirejs.config({
-    baseUrl: "js",
+    baseUrl: "/js",
+    urlArgs: "v=" + new Date().getTime(),
     packages: [
         "flatpickr", { name: "flatpickr", location: "../lib/flatpickr/dist", main: "flatpickr" }
     ],
     bundles: {
-        "compiled": ["Views/History", "Views/Daily", "Views/Now"]
+        "compiled": ["Views/History", "Views/Daily", "Views/Now", "Views/ConfigureConnection"]
     }
 });
 

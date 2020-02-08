@@ -10,17 +10,24 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="wwwroot\js\Views\ConfigureConnection.ts" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="wwwroot\lib\" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.Logging" Version="3.1.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="3.1.1" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="3.1.1" Condition="'$(Configuration)' == 'Debug'" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Rcm.Aggregates\Rcm.Aggregates.csproj" />
     <ProjectReference Include="..\Rcm.Bme280\Rcm.Bme280.csproj" />
     <ProjectReference Include="..\Rcm.Connector.Api\Rcm.Connector.Api.csproj" />
+    <ProjectReference Include="..\Rcm.Connector\Rcm.Connector.csproj" />
     <ProjectReference Include="..\Rcm.DataCollection\Rcm.DataCollection.csproj" />
     <ProjectReference Include="..\Rcm.I2c\Rcm.I2c.csproj" />
     <ProjectReference Include="..\Rcm.Measurement.Stubs\Rcm.Measurement.Stubs.csproj" />
@@ -31,6 +38,7 @@
     <TypeScriptCompile Include="wwwroot\js\Views\Common\DataLifecyclePage.ts" />
     <TypeScriptCompile Include="wwwroot\js\Views\Common\View.ts" />
     <TypeScriptCompile Include="wwwroot\js\Views\Components\DateRangePicker.ts" />
+    <TypeScriptCompile Include="wwwroot\js\Views\ConfigureConnection.ts" />
     <TypeScriptCompile Include="wwwroot\js\Views\History.ts" />
     <TypeScriptCompile Include="wwwroot\js\Views\Daily.ts" />
     <TypeScriptCompile Include="wwwroot\js\Measurements\Measurement.ts" />

@@ -7,6 +7,7 @@ using NUnit.Framework;
 using Rcm.Common;
 using Rcm.Common.IO;
 using Rcm.DataCollection.Files;
+using Rcm.Device.Common;
 using Rcm.TestDoubles.Common;
 using Rcm.TestDoubles.IO;
 using static System.Globalization.CultureInfo;

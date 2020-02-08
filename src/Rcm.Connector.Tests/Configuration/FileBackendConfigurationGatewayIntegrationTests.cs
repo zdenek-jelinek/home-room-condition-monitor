@@ -1,0 +1,295 @@
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text.Json;
+using NUnit.Framework;
+using Rcm.Connector.Api.Configuration;
+using Rcm.Connector.Configuration;
+using Rcm.Device.Common;
+using Rcm.TestDoubles.Common;
+using Rcm.TestFramework.IO;
+
+namespace Rcm.Connector.Tests.Configuration
+{
+    [TestFixture]
+    public class FileBackendConfigurationGatewayIntegrationTests
+    {
+        private static TestDirectory DataDirectory { get; } = new TestDirectory(Path.GetFullPath("data"));
+        private static string BackendConfigurationFilePath => Path.Combine(DataDirectory.Path, "backend.json");
+
+        [SetUp]
+        public void EnsureCleanDataDirectory()
+        {
+            DataDirectory.PrepareClean();
+        }
+
+        [TearDown]
+        public void ClearDataDirectory()
+        {
+            DataDirectory.Delete();
+        }
+
+        [Test]
+        public void PersistsBackendConnectionConfiguration()
+        {
+            // given
+            var writer = CreateFileBackendConfigurationGateway();
+            var reader = CreateFileBackendConfigurationGateway();
+
+            var writtenConfiguration = new ConnectionConfiguration(
+                baseUri: "http://dummy.server",
+                deviceIdentifier: "dummy device id",
+                deviceKey: "dummy device key");
+
+            // when
+            writer.WriteConfiguration(writtenConfiguration);
+            var readConfiguration = reader.ReadConfiguration();
+
+            // then
+            Assert.IsNotNull(readConfiguration);
+            Assert.AreEqual(writtenConfiguration.BaseUri, readConfiguration!.BaseUri);
+            Assert.AreEqual(writtenConfiguration.DeviceIdentifier, readConfiguration.DeviceIdentifier);
+            Assert.AreEqual(writtenConfiguration.DeviceKey, readConfiguration.DeviceKey);
+        }
+
+        [Test]
+        public void PersistsConfigurationToFileLocatedInDataStorageLocation()
+        {
+            // given
+            var backendConfigurationGateway = CreateFileBackendConfigurationGateway();
+
+            var dummyConfiguration = new ConnectionConfiguration(
+                baseUri: "http://dummy.server",
+                deviceIdentifier: "dummy device id",
+                deviceKey: "dummy device key");
+
+            // when
+            backendConfigurationGateway.WriteConfiguration(dummyConfiguration);
+
+            // then
+            Assert.AreEqual(
+                new Dictionary<string, string>
+                {
+                    ["baseUri"] = "http://dummy.server",
+                    ["deviceIdentifier"] = "dummy device id",
+                    ["deviceKey"] = "dummy device key"
+                },
+                ReadFileAsDictionary(BackendConfigurationFilePath));
+        }
+
+        [Test]
+        public void CreatesDirectoryForConfigurationOnWriteIfItDidNotExist()
+        {
+            // given
+            DataDirectory.Delete();
+
+            var backendConfigurationGateway = CreateFileBackendConfigurationGateway();
+
+            var dummyConfiguration = new ConnectionConfiguration(
+                baseUri: "http://dummy.server",
+                deviceIdentifier: "dummy device id",
+                deviceKey: "dummy device key");
+
+            // when
+            backendConfigurationGateway.WriteConfiguration(dummyConfiguration);
+
+            // then
+            FileAssert.Exists(BackendConfigurationFilePath);
+        }
+
+        [Test]
+        public void OverwritesExistingConfigurationFile()
+        {
+            // given
+            var backendConfigurationGateway = CreateFileBackendConfigurationGateway();
+
+            File.WriteAllLines(BackendConfigurationFilePath, Enumerable.Repeat("dummy contents", 100));
+
+            var dummyConfiguration = new ConnectionConfiguration(
+                baseUri: "http://dummy.server",
+                deviceIdentifier: "dummy device id",
+                deviceKey: "dummy device key");
+
+            // when
+            backendConfigurationGateway.WriteConfiguration(dummyConfiguration);
+
+            // then
+            Assert.AreEqual(
+                new Dictionary<string, string>
+                {
+                    ["baseUri"] = "http://dummy.server",
+                    ["deviceIdentifier"] = "dummy device id",
+                    ["deviceKey"] = "dummy device key"
+                },
+                ReadFileAsDictionary(BackendConfigurationFilePath));
+        }
+
+        [Test]
+        public void ReturnsNullWhenNoConfigurationFileExists()
+        {
+            // given
+            var backendConfigurationGateway = CreateFileBackendConfigurationGateway();
+
+            // when
+            var configuration = backendConfigurationGateway.ReadConfiguration();
+
+            // then
+            Assert.IsNull(configuration);
+        }
+
+        [Test]
+        public void ReturnsNullWhenAttemptingToReadMalformedJson()
+        {
+            // given
+            File.WriteAllText(BackendConfigurationFilePath, "\"malformed\": \"json\"");
+
+            var backendConfigurationGateway = CreateFileBackendConfigurationGateway();
+
+            // when
+            var configuration = backendConfigurationGateway.ReadConfiguration();
+
+            // then
+            Assert.IsNull(configuration);
+        }
+
+        [Test]
+        [TestCase(@"{ ""baseUri"": ""http://dummy.server"", ""deviceIdentifier"": ""dummy device id"" }")]
+        [TestCase(@"{ ""baseUri"": ""http://dummy.server"", ""deviceKey"": ""dummy device key"" }")]
+        [TestCase(@"{ ""deviceIdentifier"": ""dummy device id"", ""deviceKey"": ""dummy device key"" }")]
+        public void ReturnsNullWhenAttemptingToReadRecordThatDoesNotContainAllProperties(
+            string jsonThatDoesNotContainAllConfigurationProperties)
+        {
+            // given
+            File.WriteAllText(BackendConfigurationFilePath, jsonThatDoesNotContainAllConfigurationProperties);
+
+            var backendConfigurationGateway = CreateFileBackendConfigurationGateway();
+
+            // when
+            var configuration = backendConfigurationGateway.ReadConfiguration();
+
+            // then
+            Assert.IsNull(configuration);
+        }
+
+        [Test]
+        public void EraseRemovesConfiguration()
+        {
+            // given
+            CreateDummyConfigurationFile(BackendConfigurationFilePath);
+
+            var deletingConfigurationGateway = CreateFileBackendConfigurationGateway();
+            var readingConfigurationGateway = CreateFileBackendConfigurationGateway();
+
+            // when
+            deletingConfigurationGateway.EraseConfiguration();
+
+            // then
+            Assert.IsNull(readingConfigurationGateway.ReadConfiguration());
+        }
+
+        [Test]
+        public void EraseDeletesConfigurationFileFromDisk()
+        {
+            // given
+            CreateDummyConfigurationFile(BackendConfigurationFilePath);
+
+            var configurationGateway = CreateFileBackendConfigurationGateway();
+
+            // when
+            configurationGateway.EraseConfiguration();
+
+            // then
+            FileAssert.DoesNotExist(BackendConfigurationFilePath);
+        }
+
+        [Test]
+        public void EraseDoesNotThrowWhenConfigurationFileDoesNotExist()
+        {
+            // given
+            DataDirectory.Delete();
+
+            var configurationGateway = CreateFileBackendConfigurationGateway();
+
+            // when
+            void EraseNonExtantConfiguration() => configurationGateway.EraseConfiguration();
+
+            // then
+            Assert.DoesNotThrow(EraseNonExtantConfiguration);
+        }
+
+        [Test]
+        public void EraseDoesNotThrowWhenConfigurationDirectoryDoesNotExist()
+        {
+            // given
+            EnsureFileNonExistence(BackendConfigurationFilePath);
+
+            var configurationGateway = CreateFileBackendConfigurationGateway();
+
+            // when
+            void EraseNonExtantConfiguration() => configurationGateway.EraseConfiguration();
+
+            // then
+            Assert.DoesNotThrow(EraseNonExtantConfiguration);
+        }
+
+        [Test]
+        public void EraseThrowsOriginalExceptionWhenTheFileCannotBeDeleted()
+        {
+            // given
+            using var fileLock = LockFile(BackendConfigurationFilePath);
+
+            var configurationGateway = CreateFileBackendConfigurationGateway();
+
+            // when
+            void EraseLockedFile() => configurationGateway.EraseConfiguration();
+
+            // then
+            Assert.Catch<IOException>(EraseLockedFile);
+        }
+
+        private static FileConnectionConfigurationGateway CreateFileBackendConfigurationGateway(IDataStorageLocation? dataStorageLocation = null)
+        {
+            return new FileConnectionConfigurationGateway(
+                new DummyLogger<FileConnectionConfigurationGateway>(),
+                dataStorageLocation ?? new StubDataStorageLocation());
+        }
+
+        private static IReadOnlyDictionary<string, string> ReadFileAsDictionary(string path)
+        {
+            return JsonSerializer.Deserialize<Dictionary<string, string>>(File.ReadAllText(path));
+        }
+
+        private static void CreateDummyConfigurationFile(string path)
+        {
+            var configuration = new
+            {
+                baseUri = "http://dummy.server",
+                deviceIdentifier = "dummy device id",
+                deviceKey = "dummy device key"
+            };
+
+            File.WriteAllText(path, JsonSerializer.Serialize(configuration));
+        }
+
+        private static IDisposable LockFile(string path)
+        {
+            return File.OpenWrite(path);
+        }
+
+        private static void EnsureFileNonExistence(string path)
+        {
+            if (!File.Exists(path))
+            {
+                return;
+            }
+
+            File.Delete(path);
+        }
+
+        private class StubDataStorageLocation : IDataStorageLocation
+        {
+            public string Path { get; set; } = DataDirectory.Path;
+        }
+    }
+}
