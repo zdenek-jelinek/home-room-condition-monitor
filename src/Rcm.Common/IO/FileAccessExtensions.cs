@@ -35,7 +35,7 @@ namespace Rcm.Common.IO
 
         public static string ReadAllText(this IFileAccess file, string path)
         {
-            using var stream = file.Open(path, FileMode.Open, FileAccess.Read, FileShare.Read);
+            var stream = file.Open(path, FileMode.Open, FileAccess.Read, FileShare.Read);
             
             using var reader = new StreamReader(stream);
             
@@ -44,7 +44,7 @@ namespace Rcm.Common.IO
 
         public static void WriteAllLines(this IFileAccess file, string path, IEnumerable<string> lines)
         {
-            using var stream = file.Open(path, FileMode.Open, FileAccess.Write, FileShare.Read);
+            var stream = file.Open(path, FileMode.Create, FileAccess.Write, FileShare.Read);
             
             using var writer = new StreamWriter(stream);
 
@@ -52,6 +52,15 @@ namespace Rcm.Common.IO
             {
                 writer.WriteLine(line);
             }
+        }
+
+        public static void WriteAllText(this IFileAccess file, string path, string text)
+        {
+            var stream = file.Open(path, FileMode.Create, FileAccess.Write, FileShare.Read);
+
+            using var writer = new StreamWriter(stream);
+
+            writer.Write(text);
         }
     }
 }
