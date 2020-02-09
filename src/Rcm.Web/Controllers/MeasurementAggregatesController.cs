@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using Microsoft.AspNetCore.Mvc;
 using Rcm.Aggregates.Api;
 
@@ -20,7 +21,8 @@ namespace Rcm.Web.Controllers
         public ActionResult<IEnumerable<MeasurementAggregatesContract>> Get(
             [FromQuery(Name = "start")] DateTimeOffset? startTime,
             [FromQuery(Name = "end")] DateTimeOffset? endTime,
-            [FromQuery(Name = "count")] int? count)
+            [FromQuery(Name = "count")] int? count,
+            CancellationToken token)
         {
             if (!startTime.HasValue || !endTime.HasValue || !count.HasValue)
             {
@@ -37,17 +39,19 @@ namespace Rcm.Web.Controllers
                 return BadRequest($"count must be positive integer, actual is {count}");
             }
 
-            var aggregatedMeasurements = _measurementAggregatesAccessor.GetMeasurementAggregates(startTime.Value, endTime.Value, count.Value);
+            var aggregatedMeasurements = _measurementAggregatesAccessor
+                .GetMeasurementAggregates(startTime.Value, endTime.Value, count.Value, token);
 
-            var result = aggregatedMeasurements.Select(m => new MeasurementAggregatesContract(
-                MapAggregates(m.Temperature), 
-                MapAggregates(m.Pressure), 
-                MapAggregates(m.Humidity)));
+            var result = aggregatedMeasurements
+                .Select(m => new MeasurementAggregatesContract(
+                    temperature: MapAggregates(m.Temperature),
+                    pressure: MapAggregates(m.Pressure),
+                    humidity: MapAggregates(m.Humidity)));
 
             return Ok(result);
         }
 
-        private AggregatesContract MapAggregates(Aggregates.Api.Aggregates aggregates)
+        private static AggregatesContract MapAggregates(Aggregates.Api.Aggregates aggregates)
         {
             return new AggregatesContract(
                 MapAggregateEntry(aggregates.First),
@@ -56,7 +60,7 @@ namespace Rcm.Web.Controllers
                 MapAggregateEntry(aggregates.Last));
         }
 
-        private AggregateEntryContract MapAggregateEntry(AggregateEntry entry)
+        private static AggregateEntryContract MapAggregateEntry(AggregateEntry entry)
         {
             return new AggregateEntryContract(entry.Time, entry.Value);
         }

@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using NUnit.Framework;
 using Rcm.Common;
 using Rcm.Common.IO;
+using Rcm.Common.Tasks;
 using Rcm.DataCollection.Files;
 using Rcm.Device.Common;
 using Rcm.TestDoubles.Common;
@@ -24,14 +26,9 @@ namespace Rcm.DataCollection.UnitTests.Files
         public async Task WritesDataToDataStorageLocationUnderFilenameMatchingEntryDate()
         {
             // given
-            var dataStorageLocation = new DataStorageLocation(DataPath);
-
             var fakeFileAccess = new FakeFileAccess();
 
-            var collectedDataFileAccess = new CollectedDataFileAccess(
-                new DummyLogger<CollectedDataFileAccess>(),
-                dataStorageLocation,
-                fakeFileAccess);
+            var collectedDataFileAccess = CreateCollectedDataFileAccess(fakeFileAccess);
 
             var firstEntry = new MeasurementEntry(
                 new DateTimeOffset(2018, 12, 30, 15, 10, 30, TimeSpan.FromHours(2)),
@@ -46,8 +43,8 @@ namespace Rcm.DataCollection.UnitTests.Files
                 994.36m);
 
             // when
-            await collectedDataFileAccess.SaveAsync(firstEntry);
-            await collectedDataFileAccess.SaveAsync(secondEntry);
+            await collectedDataFileAccess.SaveAsync(firstEntry, default);
+            await collectedDataFileAccess.SaveAsync(secondEntry, default);
 
             // then
             var firstEntryPath = GetEntryFilePath(firstEntry.Time);
@@ -67,14 +64,9 @@ namespace Rcm.DataCollection.UnitTests.Files
         public void ReadsDataFromStorageLocationFilesBasedOnSuppliedRange()
         {
             // given
-            var dataStorageLocation = new DataStorageLocation(DataPath);
-
             var fakeFileAccess = new FakeFileAccess();
 
-            var collectedDataFileAccess = new CollectedDataFileAccess(
-                new DummyLogger<CollectedDataFileAccess>(),
-                dataStorageLocation,
-                fakeFileAccess);
+            var collectedDataFileAccess = CreateCollectedDataFileAccess(fakeFileAccess);
 
             var startTime = new DateTimeOffset(2018, 12, 25, 15, 0, 0, TimeSpan.FromHours(1));
             var endTime = new DateTimeOffset(2018, 12, 30, 12, 0, 0, TimeSpan.FromHours(-1));
@@ -103,7 +95,7 @@ namespace Rcm.DataCollection.UnitTests.Files
                 });
 
             // when
-            var readEntries = collectedDataFileAccess.Read(startTime, endTime);
+            var readEntries = collectedDataFileAccess.Read(startTime, endTime, default);
 
             // then
             Assert.That(
@@ -118,14 +110,9 @@ namespace Rcm.DataCollection.UnitTests.Files
             // given
             var time = new DateTimeOffset(2020, 1, 28, 18, 45, 0, TimeSpan.FromHours(1));
 
-            var dataStorageLocation = new DataStorageLocation(DataPath);
-
             var fakeFileAccess = new FakeFileAccess();
 
-            var collectedDataFileAccess = new CollectedDataFileAccess(
-                new DummyLogger<CollectedDataFileAccess>(),
-                dataStorageLocation,
-                fakeFileAccess);
+            var collectedDataFileAccess = CreateCollectedDataFileAccess(fakeFileAccess);
 
             var validEntries = new[]
             {
@@ -144,10 +131,90 @@ namespace Rcm.DataCollection.UnitTests.Files
             fakeFileAccess.WriteAllLines(path, measurementFileLines);
 
             // when
-            var readEntries = collectedDataFileAccess.Read(time.AddHours(-2), time.AddHours(2));
+            var readEntries = collectedDataFileAccess.Read(time.AddHours(-2), time.AddHours(2), default);
 
             // then
             Assert.That(readEntries, Is.EquivalentTo(validEntries).Using(new MeasurementEntryEqualityComparer()));
+        }
+
+        [Test]
+        public async Task AbortsWriteIfCancellationIsSignaledBeforeOrDuringFileOpening()
+        {
+            // given
+            using var cancellationTokenSource = new CancellationTokenSource();
+
+            var dummyEntry = new MeasurementEntry(new DateTimeOffset(2000, 1, 1, 12, 0, 0, TimeSpan.FromHours(2)), 25m, 42m, 1010m);
+
+            using var blockingFileAccess = new BlockingFileAccess();
+
+            var collectedDataFileAccess = CreateCollectedDataFileAccess(blockingFileAccess);
+
+            // when
+            var savingTask = Task.Run(() => collectedDataFileAccess.SaveAsync(dummyEntry, cancellationTokenSource.Token));
+            
+            await blockingFileAccess.OpeningStarted;
+            cancellationTokenSource.Cancel();
+            blockingFileAccess.Release();
+
+            var savingCompleted = await savingTask.TryWait(TimeSpan.FromSeconds(1));
+
+            // then
+            Assert.IsTrue(savingCompleted, nameof(savingCompleted));
+            Assert.AreEqual(TaskStatus.Canceled, savingTask.Status);
+        }
+
+        [Test]
+        public async Task AbortsReadWhenCancelledBetweenReadingFiles()
+        {
+            // given
+            using var cancellationTokenSource = new CancellationTokenSource();
+
+            var dummyStart = new DateTimeOffset(2000, 1, 1, 12, 0, 0, TimeSpan.FromHours(2));
+            var dummyEnd = new DateTimeOffset(2000, 1, 10, 12, 0, 0, TimeSpan.FromHours(2));
+
+            using var blockingFileAccess = new BlockingFileAccess();
+
+            var collectedDataFileAccess = CreateCollectedDataFileAccess(blockingFileAccess);
+
+            CreateDummyMeasurementFiles(blockingFileAccess.UnderlyingFileAcces, dummyStart, dummyEnd);
+
+            // when
+            var readIterator = collectedDataFileAccess.Read(dummyStart, dummyEnd, cancellationTokenSource.Token);
+            var readingTask = Task.Run(() => readIterator.ToList(), cancellationTokenSource.Token);
+
+            await blockingFileAccess.OpeningStarted;
+            cancellationTokenSource.Cancel();
+            blockingFileAccess.Release();
+
+            var readingCompleted = await readingTask.TryWait(TimeSpan.FromSeconds(1));
+
+            // then
+            Assert.IsTrue(readingCompleted, nameof(readingCompleted));
+            Assert.AreEqual(TaskStatus.Canceled, readingTask.Status);
+        }
+
+        private static CollectedDataFileAccess CreateCollectedDataFileAccess(
+            IFileAccess fileAccess,
+            IDataStorageLocation? dataStorageLocation = null)
+        {
+            return new CollectedDataFileAccess(
+                new DummyLogger<CollectedDataFileAccess>(),
+                dataStorageLocation ?? new DataStorageLocation(DataPath),
+                fileAccess);
+        }
+
+        private static void CreateDummyMeasurementFiles(IFileAccess file, DateTimeOffset start, DateTimeOffset end)
+        {
+            for (var day = start; day <= end; day = day.AddDays(1))
+            {
+                var filePath = GetEntryFilePath(day);
+                var dummyEntry = new MeasurementEntry(day, 25m, 85m, 1010m);
+
+                using (var measurementFile = file.AppendText(filePath))
+                {
+                    measurementFile.WriteLine(GetEntryRecord(dummyEntry));
+                }
+            }
         }
 
         private static void StoreEntriesToFiles(IFileAccess file, IEnumerable<MeasurementEntry> entries)
@@ -203,6 +270,37 @@ namespace Rcm.DataCollection.UnitTests.Files
             public int GetHashCode(MeasurementEntry obj)
             {
                 return HashCode.Combine(obj.Time, obj.CelsiusTemperature, obj.RelativeHumidity, obj.HpaPressure);
+            }
+        }
+
+        private class BlockingFileAccess : IFileAccess, IDisposable
+        {
+            private readonly SemaphoreSlim _openingSemaphore = new SemaphoreSlim(0);
+            private readonly SemaphoreSlim _blockingSemaphore = new SemaphoreSlim(0);
+
+            public IFileAccess UnderlyingFileAcces { get; set; } = new FakeFileAccess();
+
+            public Task OpeningStarted => _openingSemaphore.WaitAsync();
+
+            public bool Exists(string path) => UnderlyingFileAcces.Exists(path);
+
+            public Stream Open(string path, FileMode mode, FileAccess access, FileShare share)
+            {
+                _openingSemaphore.Release();
+                _blockingSemaphore.Wait();
+
+                return UnderlyingFileAcces.Open(path, mode, access, share);
+            }
+
+            public void Release()
+            {
+                _blockingSemaphore.Release();
+            }
+
+            public void Dispose()
+            {
+                _openingSemaphore.Dispose();
+                _blockingSemaphore.Dispose();
             }
         }
     }

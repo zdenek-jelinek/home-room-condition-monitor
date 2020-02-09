@@ -38,7 +38,7 @@ namespace Rcm.DataCollection
             _collectedDataWriter = collectedDataWriter;
         }
 
-        public async Task MeasureAsync()
+        public async Task MeasureAsync(CancellationToken token)
         {
             if (Interlocked.CompareExchange(ref _measurementInProgress, 1, 0) == 1)
             {
@@ -48,8 +48,8 @@ namespace Rcm.DataCollection
 
             try
             {
-                var measurement = await _measurementProvider.MeasureAsync();
-                await AddMeasurementAsync(measurement);
+                var measurement = await _measurementProvider.MeasureAsync(token);
+                await AddMeasurementAsync(measurement, token);
             }
             finally
             {
@@ -57,14 +57,14 @@ namespace Rcm.DataCollection
             }
         }
 
-        private async Task AddMeasurementAsync(MeasurementEntry measurement)
+        private async Task AddMeasurementAsync(MeasurementEntry measurement, CancellationToken token)
         {
             _logger.LogTrace($"Adding new record of {measurement}");
 
             if (_entries.Count != 0 && _entries[0].Time.Minute != measurement.Time.Minute)
             {
                 _logger.LogTrace($"Persisting previous minute measurement records");
-                await PropagateCollectedDataAsync(_entries);
+                await PropagateCollectedDataAsync(_entries, token);
                 _entries.Clear();
             }
 
@@ -72,7 +72,7 @@ namespace Rcm.DataCollection
             _entries.Add(measurement);
         }
 
-        private Task PropagateCollectedDataAsync(IReadOnlyCollection<MeasurementEntry> entries)
+        private Task PropagateCollectedDataAsync(IReadOnlyCollection<MeasurementEntry> entries, CancellationToken token)
         {
             if (entries.Count == 0)
             {
@@ -81,7 +81,7 @@ namespace Rcm.DataCollection
 
             var averageValue = GetAverageValue(entries);
 
-            return _collectedDataWriter.StoreAsync(averageValue);
+            return _collectedDataWriter.StoreAsync(averageValue, token);
         }
 
         private MeasurementEntry GetAverageValue(IReadOnlyCollection<MeasurementEntry> entries)

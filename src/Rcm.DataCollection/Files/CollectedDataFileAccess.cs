@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Rcm.Common;
@@ -28,10 +29,12 @@ namespace Rcm.DataCollection.Files
             _serializer = new CollectedDataSerializer();
         }
 
-        public IEnumerable<MeasurementEntry> Read(DateTimeOffset start, DateTimeOffset end)
+        public IEnumerable<MeasurementEntry> Read(DateTimeOffset start, DateTimeOffset end, CancellationToken token)
         {
             foreach (var (date, path) in _filesNavigator.GetFilePaths(start, end))
             {
+                token.ThrowIfCancellationRequested();
+
                 using var file = _file.OpenText(path, CannotOpenFile);
                 if (file is null)
                 {
@@ -41,6 +44,8 @@ namespace Rcm.DataCollection.Files
 
                 for (var lineNumber = 1; !file.EndOfStream; ++lineNumber)
                 {
+                    token.ThrowIfCancellationRequested();
+
                     var line = file.ReadLine();
 
                     var entry = TryParseEntry(date, path, lineNumber, line);
@@ -71,7 +76,7 @@ namespace Rcm.DataCollection.Files
             _logger.LogWarning($"Could not open measurements file \"{path}\"(\"{Path.GetFullPath(path)}\") for reading", e);
         }
 
-        public async Task SaveAsync(MeasurementEntry entry)
+        public async Task SaveAsync(MeasurementEntry entry, CancellationToken token)
         {
             var record = _serializer.Serialize(entry);
             var path = _filesNavigator.GetFilePath(entry.Time);
@@ -81,7 +86,11 @@ namespace Rcm.DataCollection.Files
 
             using var file = _file.AppendText(path);
 
+            token.ThrowIfCancellationRequested();
+
+            // Do not interrupt write/flush with cancellation so that the file does not get corrupted
             await file.WriteLineAsync(record);
+            await file.FlushAsync();
         }
 
         private void EnsureDirectoryExists(string path)
