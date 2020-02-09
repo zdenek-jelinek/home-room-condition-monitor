@@ -12,7 +12,8 @@ namespace Rcm.Web.Services
         private readonly ILogger<PeriodicDataCollectionService> _logger;
         private readonly IMeasurementCollector _measurementCollector;
 
-        private readonly object _sync = new object();
+        private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
+        private readonly CancellationTokenSource _stoppingSource = new CancellationTokenSource();
 
         private Task? _pendingMeasurement;
         private Timer? _timer;
@@ -35,76 +36,91 @@ namespace Rcm.Web.Services
             return Task.CompletedTask;
         }
 
-        public Task StopAsync(CancellationToken cancellationToken)
+        public async Task StopAsync(CancellationToken cancellationToken)
         {
             _logger.LogInformation("Cancelling periodic measurements");
 
+            _stoppingSource.Cancel();
             _ = _timer?.Change(Timeout.Infinite, Timeout.Infinite);
 
-            var lockTaken = false;
             try
             {
-                Monitor.TryEnter(_sync, Program.ShutdownTimeout, ref lockTaken);
-                if (!lockTaken)
-                {
-                    _logger.LogWarning(
-                        "Graceful periodic measurement cancellation failed: "
-                        + $"Could not enter pending measurement lock within shutdown timeout of {Program.ShutdownTimeout}.");
-                    return Task.CompletedTask;
-                }
+                await _semaphore.WaitAsync(cancellationToken);
+            }
+            catch (OperationCanceledException)
+            {
+                _logger.LogWarning(
+                    "Graceful periodic measurement cancellation failed: "
+                    + "Could not enter pending measurement lock within shutdown timeout.");
+                throw;
+            }
 
-                var measurement = _pendingMeasurement;
-                if (measurement is null)
+            try
+            {
+                if (_pendingMeasurement is null || _pendingMeasurement.IsCompleted)
                 {
                     _logger.LogInformation("Periodic measurement cancelled: No measurement in progress.");
-                    return Task.CompletedTask;
+                    return;
                 }
 
                 _logger.LogInformation("Periodic measurement cancelled: Waiting for last measurement to finish.");
-                return measurement;
+                await Task.WhenAny(_pendingMeasurement, Task.Delay(Timeout.Infinite, cancellationToken));
+            }
+            catch (OperationCanceledException)
+            {
             }
             catch (Exception e)
             {
                 _logger.LogWarning("Graceful periodic measurement cancellation failed", e);
-                return Task.CompletedTask;
             }
             finally
             {
-                if (lockTaken)
-                {
-                    Monitor.Exit(_sync);
-                }
+                _semaphore.Release();
             }
         }
 
-        public ValueTask DisposeAsync() => _timer?.DisposeAsync() ?? default;
+        public ValueTask DisposeAsync()
+        {
+            _semaphore.Dispose();
+            _stoppingSource.Dispose();
+            return _timer?.DisposeAsync() ?? default;
+        }
 
         private void RunMeasurement()
         {
             _logger.LogDebug("Initiating periodic measurement");
 
-            if (!(Volatile.Read(ref _pendingMeasurement) is null))
+            if (_semaphore.CurrentCount == 0)
             {
                 _logger.LogWarning("Skipping measurement: Previous measurement is still in progress");
                 return;
             }
 
+            _semaphore.Wait();
             try
             {
-                Task measurement;
-                lock (_sync)
+                if (_pendingMeasurement != null && !_pendingMeasurement.IsCompleted)
                 {
-                    if (!(_pendingMeasurement is null))
-                    {
-                        _logger.LogWarning("Skipping measurement: Previous measurement is still in progress");
-                        return;
-                    }
-
-                    measurement = _pendingMeasurement = _measurementCollector.MeasureAsync();
+                    _logger.LogWarning("Skipping measurement: Previous measurement is still in progress");
+                    return;
                 }
 
-                // wait outside of locks
-                measurement.Wait();
+                _pendingMeasurement = _measurementCollector
+                    .MeasureAsync(_stoppingSource.Token)
+                    .ContinueWith(t => 
+                    {
+                        if (t.IsCompletedSuccessfully)
+                        {
+                            _logger.LogDebug("Finished periodic measurement");
+                        }
+                        else if (t.IsFaulted)
+                        {
+                            _logger.LogError("Measurement failed.", t.Exception);
+                        }
+                    });
+            }
+            catch (OperationCanceledException)
+            {
             }
             catch (Exception e)
             {
@@ -112,13 +128,8 @@ namespace Rcm.Web.Services
             }
             finally
             {
-                lock (_sync)
-                {
-                    _pendingMeasurement = null;
-                }
+                _semaphore.Release();
             }
-
-            _logger.LogDebug("Finished periodic measurement");
         }
     }
 }

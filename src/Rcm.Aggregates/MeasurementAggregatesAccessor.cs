@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using Rcm.Aggregates.Api;
 using Rcm.Common;
 using Rcm.DataCollection.Api;
@@ -15,14 +16,18 @@ namespace Rcm.Aggregates
             _collectedDataAccessor = collectedDataAccessor;
         }
 
-        public IEnumerable<MeasurementAggregates> GetMeasurementAggregates(DateTimeOffset startTime, DateTimeOffset endTime, int aggregatesCount)
+        public IEnumerable<MeasurementAggregates> GetMeasurementAggregates(
+            DateTimeOffset startTime,
+            DateTimeOffset endTime,
+            int aggregatesCount,
+            CancellationToken token)
         {
-            var measurements = _collectedDataAccessor.GetCollectedData(startTime, endTime);
-            
+            var measurements = _collectedDataAccessor.GetCollectedData(startTime, endTime, token);
+
             var partitionSize = (endTime - startTime).Ticks / (double)aggregatesCount;
-            
+
             var previousMeasurement = (MeasurementEntry?)null;
-            
+
             var currentPartitionEndOffset = partitionSize;
             var currentPartitionEndTime = startTime.AddTicks((long)Math.Round(currentPartitionEndOffset));
 

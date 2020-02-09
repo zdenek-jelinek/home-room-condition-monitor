@@ -27,8 +27,8 @@ namespace Rcm.DataCollection.UnitTests
                     new DummyCollectedDataWriter());
 
                 // when
-                var firstMeasurementTask = measurementCollector.MeasureAsync();
-                var secondMeasurementTask = measurementCollector.MeasureAsync();
+                var firstMeasurementTask = measurementCollector.MeasureAsync(default);
+                var secondMeasurementTask = measurementCollector.MeasureAsync(default);
 
                 // then
                 Assert.AreEqual(1, blockingSpyMeasurementProvider.InvocationCount);
@@ -52,8 +52,8 @@ namespace Rcm.DataCollection.UnitTests
                     new DummyCollectedDataWriter());
 
                 // when
-                await IgnoreExceptions(() => measurementCollector.MeasureAsync());
-                await IgnoreExceptions(() => measurementCollector.MeasureAsync());
+                await IgnoreExceptions(() => measurementCollector.MeasureAsync(default));
+                await IgnoreExceptions(() => measurementCollector.MeasureAsync(default));
 
                 // then
                 Assert.AreEqual(2, throwingSpyMeasurementProvider.InvocationCount);
@@ -80,9 +80,9 @@ namespace Rcm.DataCollection.UnitTests
                     spyCollectedDataStorage);
 
                 // when
-                await measurementCollector.MeasureAsync();
-                await measurementCollector.MeasureAsync();
-                await measurementCollector.MeasureAsync();
+                await measurementCollector.MeasureAsync(default);
+                await measurementCollector.MeasureAsync(default);
+                await measurementCollector.MeasureAsync(default);
 
                 // then
                 Assert.IsNotNull(spyCollectedDataStorage.StoredEntry);
@@ -131,7 +131,7 @@ namespace Rcm.DataCollection.UnitTests
                     _measurements = measurements;
                 }
 
-                public Task<MeasurementEntry> MeasureAsync()
+                public Task<MeasurementEntry> MeasureAsync(CancellationToken token)
                 {
                     var measurement = _measurements[_currentMeasurementIndex];
                     
@@ -149,7 +149,7 @@ namespace Rcm.DataCollection.UnitTests
             {
                 public MeasurementEntry? StoredEntry { get; private set; }
 
-                public Task StoreAsync(MeasurementEntry value)
+                public Task StoreAsync(MeasurementEntry value, CancellationToken token)
                 {
                     StoredEntry = value;
                     return Task.CompletedTask;
@@ -161,7 +161,7 @@ namespace Rcm.DataCollection.UnitTests
                 private int _invocationCount;
                 public int InvocationCount => _invocationCount;
 
-                public Task<MeasurementEntry> MeasureAsync()
+                public Task<MeasurementEntry> MeasureAsync(CancellationToken token)
                 {
                     _ = Interlocked.Increment(ref _invocationCount);
                     throw new Exception();
@@ -175,7 +175,7 @@ namespace Rcm.DataCollection.UnitTests
                 private int _invocationCount;
                 public int InvocationCount => _invocationCount;
 
-                public Task<MeasurementEntry> MeasureAsync()
+                public Task<MeasurementEntry> MeasureAsync(CancellationToken token)
                 {
                     _ = Interlocked.Increment(ref _invocationCount);
                     return _task;
@@ -235,12 +235,12 @@ namespace Rcm.DataCollection.UnitTests
 
         public class DummyMeasurementProvider : IMeasurementProvider
         {
-            public Task<MeasurementEntry> MeasureAsync() => throw new NotImplementedException();
+            public Task<MeasurementEntry> MeasureAsync(CancellationToken token) => throw new NotImplementedException();
         }
 
         public class DummyCollectedDataWriter : ICollectedDataWriter
         {
-            public Task StoreAsync(MeasurementEntry value) => Task.CompletedTask;
+            public Task StoreAsync(MeasurementEntry value, CancellationToken token) => Task.CompletedTask;
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Rcm.Common;
 using Rcm.Measurement.Api;
@@ -16,7 +17,7 @@ namespace Rcm.Measurement.Stubs
             _clock = clock;
         }
 
-        public Task<MeasurementEntry> MeasureAsync()
+        public Task<MeasurementEntry> MeasureAsync(CancellationToken token)
         {
             var now = _clock.Now;
 

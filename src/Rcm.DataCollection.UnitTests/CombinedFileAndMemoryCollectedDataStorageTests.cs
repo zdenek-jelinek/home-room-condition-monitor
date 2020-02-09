@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using NUnit.Framework;
 using Rcm.Common;
@@ -31,7 +32,7 @@ namespace Rcm.DataCollection.UnitTests
                 spyCollectedDataFileAccess);
 
             // when
-            await combinedStorage.StoreAsync(entry);
+            await combinedStorage.StoreAsync(entry, default);
 
             // then
             Assert.IsNotNull(spyCollectedDataFileAccess.SavedEntry);
@@ -63,10 +64,12 @@ namespace Rcm.DataCollection.UnitTests
                 clock,
                 spyCollectedDataFileAccess);
 
-            await combinedStorage.StoreAsync(todaysEntry);
+            await combinedStorage.StoreAsync(todaysEntry, default);
 
             // when
-            var entries = combinedStorage.GetCollectedData(startTimeBeforeToday, endTimeInFuture).ToList();
+            var entries = combinedStorage
+                .GetCollectedData(startTimeBeforeToday, endTimeInFuture, default)
+                .ToList();
 
             // then
             Assert.IsNotNull(spyCollectedDataFileAccess.ReadRange);
@@ -96,7 +99,9 @@ namespace Rcm.DataCollection.UnitTests
                 spyCollectedDataFileAccess);
 
             // when
-            _ = combinedStorage.GetCollectedData(startTimeBeforeToday, endTimeBeforeToday).ToList();
+            _ = combinedStorage
+                .GetCollectedData(startTimeBeforeToday, endTimeBeforeToday, default)
+                .ToList();
 
             // then
             Assert.IsNotNull(spyCollectedDataFileAccess.ReadRange);
@@ -127,7 +132,9 @@ namespace Rcm.DataCollection.UnitTests
                 spyCollectedDataFileAccess);
 
             // when
-            _ = combinedStorage.GetCollectedData(startTimeBeforeMidnight, endTimeBeforeMidnight).ToList();
+            _ = combinedStorage
+                .GetCollectedData(startTimeBeforeMidnight, endTimeBeforeMidnight, default)
+                .ToList();
 
             // then
             Assert.IsNotNull(spyCollectedDataFileAccess.ReadRange);
@@ -156,11 +163,13 @@ namespace Rcm.DataCollection.UnitTests
 
             var storedEntry = new MeasurementEntry(now.AddMinutes(-20), 25m, 45m, 1050m);
 
-            await combinedStorage.StoreAsync(storedEntry);
+            await combinedStorage.StoreAsync(storedEntry, default);
             spyCollectedDataFileAccess.Reset();
 
             // when
-            var entries = combinedStorage.GetCollectedData(startTimeOnToday, endTimeOnToday).ToList();
+            var entries = combinedStorage
+                .GetCollectedData(startTimeOnToday, endTimeOnToday, default)
+                .ToList();
 
             // then
             Assert.IsNull(spyCollectedDataFileAccess.ReadRange);
@@ -189,10 +198,12 @@ namespace Rcm.DataCollection.UnitTests
                 clock,
                 spyCollectedDataFileAccess);
 
-            await combinedStorage.StoreAsync(todaysEntry);
+            await combinedStorage.StoreAsync(todaysEntry, default);
 
             // when
-            var entries = combinedStorage.GetCollectedData(startTimeBeforeToday, endTimeOnToday).ToList();
+            var entries = combinedStorage
+                .GetCollectedData(startTimeBeforeToday, endTimeOnToday, default)
+                .ToList();
 
             // then
             Assert.IsNotNull(spyCollectedDataFileAccess.ReadRange);
@@ -224,7 +235,9 @@ namespace Rcm.DataCollection.UnitTests
                 spyCollectedDataFileAccess);
 
             // when
-            var readEntries = combinedStorage.GetCollectedData(startTimeOnToday, endTimeOnToday).ToList();
+            var readEntries = combinedStorage
+                .GetCollectedData(startTimeOnToday, endTimeOnToday, default)
+                .ToList();
 
             // then
             CollectionAssert.AreEquivalent(new[] { entryStoredInFile }, readEntries);
@@ -252,8 +265,11 @@ namespace Rcm.DataCollection.UnitTests
             var newEntry = new MeasurementEntry(now, 25m, 32m, 985m);
 
             // when
-            await combinedStorage.StoreAsync(newEntry);
-            var readEntries = combinedStorage.GetCollectedData(startTimeOnToday, endTimeOnToday).ToList();
+            await combinedStorage.StoreAsync(newEntry, default);
+
+            var readEntries = combinedStorage
+                .GetCollectedData(startTimeOnToday, endTimeOnToday, default)
+                .ToList();
 
             // then
             CollectionAssert.AreEquivalent(new[] { entryPreviouslyStoredInFile, newEntry }, readEntries);
@@ -282,14 +298,16 @@ namespace Rcm.DataCollection.UnitTests
                 clock,
                 spyCollectedDataFileAccess);
 
-            await combinedStorage.StoreAsync(entryBeforeStart);
-            await combinedStorage.StoreAsync(entryOnStart);
-            await combinedStorage.StoreAsync(entryInsideRange);
-            await combinedStorage.StoreAsync(entryOnEnd);
-            await combinedStorage.StoreAsync(entryAfterEnd);
+            await combinedStorage.StoreAsync(entryBeforeStart, default);
+            await combinedStorage.StoreAsync(entryOnStart, default);
+            await combinedStorage.StoreAsync(entryInsideRange, default);
+            await combinedStorage.StoreAsync(entryOnEnd, default);
+            await combinedStorage.StoreAsync(entryAfterEnd, default);
 
             // when
-            var entries = combinedStorage.GetCollectedData(startTimeOnToday, endTimeOnToday).ToList();
+            var entries = combinedStorage
+                .GetCollectedData(startTimeOnToday, endTimeOnToday, default)
+                .ToList();
 
             // then
             CollectionAssert.AreEquivalent(new[] { entryOnStart, entryInsideRange, entryOnEnd }, entries);
@@ -318,7 +336,9 @@ namespace Rcm.DataCollection.UnitTests
                 spyCollectedDataFileAccess);
 
             // when
-            var readEntries = combinedStorage.GetCollectedData(startTimeOnMidnightInDifferentOffset, endTimeAfterMidnightInDifferentOffset).ToList();
+            var readEntries = combinedStorage
+                .GetCollectedData(startTimeOnMidnightInDifferentOffset, endTimeAfterMidnightInDifferentOffset, default)
+                .ToList();
 
             // then
             CollectionAssert.AreEquivalent(new[] { entryPreviouslyStoredInFile }, readEntries);
@@ -346,7 +366,9 @@ namespace Rcm.DataCollection.UnitTests
                 spyCollectedDataFileAccess);
 
             // when
-            var readEntries = combinedStorage.GetCollectedData(startTimeBeforeNextMidnightInDifferentOffset, endTimeBeforeNextMidnightInDifferentOffset).ToList();
+            var readEntries = combinedStorage
+                .GetCollectedData(startTimeBeforeNextMidnightInDifferentOffset, endTimeBeforeNextMidnightInDifferentOffset, default)
+                .ToList();
 
             // then
             CollectionAssert.AreEquivalent(new[] { entryPreviouslyStoredInFile }, readEntries);
@@ -373,7 +395,9 @@ namespace Rcm.DataCollection.UnitTests
                 spyCollectedDataFileAccess);
 
             // when
-            var entries = combinedStorage.GetCollectedData(startTimeBeforeTodayInDifferentZone, endTimeBeforeTodayInDifferentZone).ToList();
+            var entries = combinedStorage
+                .GetCollectedData(startTimeBeforeTodayInDifferentZone, endTimeBeforeTodayInDifferentZone, default)
+                .ToList();
 
             // then
             Assert.IsNull(spyCollectedDataFileAccess.ReadRange);
@@ -398,7 +422,9 @@ namespace Rcm.DataCollection.UnitTests
                 spyCollectedDataFileAccess);
 
             // when
-            var entries = combinedStorage.GetCollectedData(futureStartTime, futureEndTime).ToList();
+            var entries = combinedStorage
+                .GetCollectedData(futureStartTime, futureEndTime, default)
+                .ToList();
 
             // then
             Assert.IsNull(spyCollectedDataFileAccess.ReadRange);
@@ -427,7 +453,9 @@ namespace Rcm.DataCollection.UnitTests
                 spyCollectedDataFileAccess);
 
             // when
-            var entries = combinedStorage.GetCollectedData(futureStartInNegativeOFfset, futureEndTimeInNegativeOffset).ToList();
+            var entries = combinedStorage
+                .GetCollectedData(futureStartInNegativeOFfset, futureEndTimeInNegativeOffset, default)
+                .ToList();
 
             // then
             Assert.IsNull(spyCollectedDataFileAccess.ReadRange);
@@ -454,10 +482,10 @@ namespace Rcm.DataCollection.UnitTests
                 fixedClock,
                 stubCollectedDataFileAccess);
             
-            await combinedStorage.StoreAsync(entryOnYesterday);
+            await combinedStorage.StoreAsync(entryOnYesterday, default);
 
             // when
-            var entries = combinedStorage.GetCollectedData(startTimeOnYesterday, endTimeOnToday);
+            var entries = combinedStorage.GetCollectedData(startTimeOnYesterday, endTimeOnToday, default);
 
             // then
             CollectionAssert.AreEquivalent(new[] { entryOnYesterday }, entries);
@@ -477,7 +505,7 @@ namespace Rcm.DataCollection.UnitTests
                 new DummyCollectedDataFileAccess());
 
             // when
-            void RetrieveDataForInvalidTimeRange() => combinedStorage.GetCollectedData(startTime, endTime);
+            void RetrieveDataForInvalidTimeRange() => combinedStorage.GetCollectedData(startTime, endTime, default);
 
             // then
             _ = Assert.Catch(RetrieveDataForInvalidTimeRange);
@@ -490,14 +518,14 @@ namespace Rcm.DataCollection.UnitTests
 
             public IEnumerable<MeasurementEntry> Entries { get; set; } = Enumerable.Empty<MeasurementEntry>();
 
-            public IEnumerable<MeasurementEntry> Read(DateTimeOffset start, DateTimeOffset end)
+            public IEnumerable<MeasurementEntry> Read(DateTimeOffset start, DateTimeOffset end, CancellationToken token)
             {
                 ReadRange = (start, end);
 
                 return Entries;
             }
 
-            public Task SaveAsync(MeasurementEntry entry)
+            public Task SaveAsync(MeasurementEntry entry, CancellationToken token)
             {
                 SavedEntry = entry;
 
@@ -513,12 +541,12 @@ namespace Rcm.DataCollection.UnitTests
 
         public class DummyCollectedDataFileAccess : ICollectedDataFileAccess
         {
-            public IEnumerable<MeasurementEntry> Read(DateTimeOffset start, DateTimeOffset end)
+            public IEnumerable<MeasurementEntry> Read(DateTimeOffset start, DateTimeOffset end, CancellationToken token)
             {
                 yield break;
             }
 
-            public Task SaveAsync(MeasurementEntry entry)
+            public Task SaveAsync(MeasurementEntry entry, CancellationToken token)
             {
                 return Task.CompletedTask;
             }
@@ -528,12 +556,12 @@ namespace Rcm.DataCollection.UnitTests
         {
             public IEnumerable<MeasurementEntry> Entries { get; set; } = Enumerable.Empty<MeasurementEntry>();
 
-            public IEnumerable<MeasurementEntry> Read(DateTimeOffset start, DateTimeOffset end)
+            public IEnumerable<MeasurementEntry> Read(DateTimeOffset start, DateTimeOffset end, CancellationToken token)
             {
                 return Entries;
             }
 
-            public Task SaveAsync(MeasurementEntry entry)
+            public Task SaveAsync(MeasurementEntry entry, CancellationToken token)
             {
                 return Task.CompletedTask;
             }

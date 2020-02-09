@@ -5,6 +5,7 @@ using Rcm.DataCollection.Api;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 
 namespace Rcm.Aggregates.UnitTests
 {
@@ -63,7 +64,9 @@ namespace Rcm.Aggregates.UnitTests
             var aggregatesAccessor = new MeasurementAggregatesAccessor(new StubCollectedDataAccessor { Data = measurements });
 
             // when
-            var aggregates = aggregatesAccessor.GetMeasurementAggregates(startTime, endTime, partitionCount).ToList();
+            var aggregates = aggregatesAccessor
+                .GetMeasurementAggregates(startTime, endTime, partitionCount, default)
+                .ToList();
 
             // then
             Assert.AreEqual(partitionCount, aggregates.Count);
@@ -153,7 +156,7 @@ namespace Rcm.Aggregates.UnitTests
             var aggregatesAccessor = new MeasurementAggregatesAccessor(new StubCollectedDataAccessor { Data = measurements });
 
             // when
-            var aggregates = aggregatesAccessor.GetMeasurementAggregates(dummyStartTime, dummyEndTime, count);
+            var aggregates = aggregatesAccessor.GetMeasurementAggregates(dummyStartTime, dummyEndTime, count, default);
 
             // then
             var aggregate = aggregates.Single();
@@ -211,7 +214,7 @@ namespace Rcm.Aggregates.UnitTests
                 });
 
             // when
-            var aggregates = aggregatesAccessor.GetMeasurementAggregates(startTime, endTime, partitionCount);
+            var aggregates = aggregatesAccessor.GetMeasurementAggregates(startTime, endTime, partitionCount, default);
 
             // then
             var minTemperature = new AggregateEntry(measurementInFirstPartition.Time, measurementInFirstPartition.CelsiusTemperature);
@@ -265,7 +268,7 @@ namespace Rcm.Aggregates.UnitTests
                 });
 
             // when
-            var aggregates = aggregatesAccessor.GetMeasurementAggregates(startTime, endTime, partitionCount);
+            var aggregates = aggregatesAccessor.GetMeasurementAggregates(startTime, endTime, partitionCount, default);
 
             // then
             var temperature = new AggregateEntry(actualMeasurementTime, 25m);
@@ -298,7 +301,7 @@ namespace Rcm.Aggregates.UnitTests
             var aggregatesAccessor = new MeasurementAggregatesAccessor(new StubCollectedDataAccessor { Data = emptyMeasurements });
 
             // when
-            var aggregates = aggregatesAccessor.GetMeasurementAggregates(dummyStartTime, dummyEndTime, dummyCount);
+            var aggregates = aggregatesAccessor.GetMeasurementAggregates(dummyStartTime, dummyEndTime, dummyCount, default);
 
             // then
             CollectionAssert.IsEmpty(aggregates);
@@ -323,7 +326,7 @@ namespace Rcm.Aggregates.UnitTests
             // when
             void GetAggregatesForNonMonotonousMeasurementTimes() =>
                 aggregatesAccessor
-                    .GetMeasurementAggregates(dummyStartTime, dummyEndTime, dummyCount)
+                    .GetMeasurementAggregates(dummyStartTime, dummyEndTime, dummyCount, default)
                     .ToList();
 
             // then
@@ -334,8 +337,13 @@ namespace Rcm.Aggregates.UnitTests
         {
             public ICollection<MeasurementEntry>? Data { get; set; }
 
-            public IEnumerable<MeasurementEntry> GetCollectedData(DateTimeOffset start, DateTimeOffset end) =>
-                Data?.Select(x => x) ?? Enumerable.Empty<MeasurementEntry>();
+            public IEnumerable<MeasurementEntry> GetCollectedData(
+                DateTimeOffset start,
+                DateTimeOffset end,
+                CancellationToken token)
+            {
+                return Data?.Select(x => x) ?? Enumerable.Empty<MeasurementEntry>();
+            }
         }
 
         private class MeasurementAggregatesEqualityComparer : IEqualityComparer<MeasurementAggregates>

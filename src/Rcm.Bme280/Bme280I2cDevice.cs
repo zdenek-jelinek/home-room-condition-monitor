@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Rcm.Common;
@@ -9,6 +10,8 @@ namespace Rcm.Bme280
 {
     public class Bme280I2cDevice : IMeasurementProvider, IDisposable
     {
+        private TimeSpan MeasurementDelayTolerance => TimeSpan.FromMilliseconds(20);
+
         private readonly byte _address;
         private readonly I2cBus _bus;
         private readonly IClock _clock;
@@ -25,7 +28,7 @@ namespace Rcm.Bme280
             _compensationParameters = new Lazy<CompensationParameters>(ReadCompensationParameters);
         }
 
-        public async Task<MeasurementEntry> MeasureAsync()
+        public async Task<MeasurementEntry> MeasureAsync(CancellationToken token)
         {
             _logger.LogDebug("Initiating measurement...");
             InitiateMeasurement();
@@ -33,12 +36,12 @@ namespace Rcm.Bme280
             var measurementStart = DateTime.Now;
             do
             {
-                await Task.Delay(100);
+                await Task.Delay(50, token);
             }
             while (IsMeasurementInProgress());
 
             var measurementTime = DateTime.Now - measurementStart;
-            if (measurementTime > TimeSpan.FromMilliseconds(100))
+            if (measurementTime > TimeSpan.FromMilliseconds(100) + MeasurementDelayTolerance)
             {
                 _logger.LogWarning($"Measurement took {measurementTime.TotalMilliseconds}ms");
             }

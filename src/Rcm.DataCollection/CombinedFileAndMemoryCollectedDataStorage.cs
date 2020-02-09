@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
 using Rcm.Common;
 using Rcm.DataCollection.Files;
 
@@ -30,14 +29,14 @@ namespace Rcm.DataCollection
             _fileAccess = fileAccess;
         }
 
-        public async Task StoreAsync(MeasurementEntry value)
+        public async Task StoreAsync(MeasurementEntry value, CancellationToken token)
         {
             try
             {
                 _lock.EnterWriteLock();
                 if (_currentDayRecords is null)
                 {
-                    _currentDayRecords = LoadTodaysRecordsFromFile();
+                    _currentDayRecords = LoadTodaysRecordsFromFile(token);
                 }
 
                 if (_currentDayRecords.Count != 0 && _currentDayRecords[0].Time.Date < value.Time.Date)
@@ -52,10 +51,10 @@ namespace Rcm.DataCollection
                 _lock.ExitWriteLock();
             }
 
-            await _fileAccess.SaveAsync(value);
+            await _fileAccess.SaveAsync(value, token);
         }
 
-        public IEnumerable<MeasurementEntry> GetCollectedData(DateTimeOffset start, DateTimeOffset end)
+        public IEnumerable<MeasurementEntry> GetCollectedData(DateTimeOffset start, DateTimeOffset end, CancellationToken token)
         {
             if (start > end)
             {
@@ -80,7 +79,7 @@ namespace Rcm.DataCollection
 
             if (end < todayMidnight)
             {
-                return _fileAccess.Read(start, end);
+                return _fileAccess.Read(start, end, token);
             }
 
             if (end >= now)
@@ -91,23 +90,23 @@ namespace Rcm.DataCollection
             if (start < todayMidnight)
             {
                 return _fileAccess
-                    .Read(start, todayMidnight.AddSeconds(-1))
-                    .Concat(GetTodaysData(todayMidnight, end));
+                    .Read(start, todayMidnight.AddSeconds(-1), token)
+                    .Concat(GetTodaysData(todayMidnight, end, token));
             }
             else
             {
-                return GetTodaysData(start, end);
+                return GetTodaysData(start, end, token);
             }
         }
 
-        private IEnumerable<MeasurementEntry> GetTodaysData(DateTimeOffset start, DateTimeOffset end)
+        private IEnumerable<MeasurementEntry> GetTodaysData(DateTimeOffset start, DateTimeOffset end, CancellationToken token)
         {
-            return GetTodaysData().Where(e => e.Time >= start && e.Time <= end);
+            return GetTodaysData(token).Where(e => e.Time >= start && e.Time <= end);
         }
 
-        private IReadOnlyCollection<MeasurementEntry> GetTodaysData()
+        private IReadOnlyCollection<MeasurementEntry> GetTodaysData(CancellationToken token)
         {
-            EnsureTodaysRecordsAreLoaded();
+            EnsureTodaysRecordsAreLoaded(token);
 
             try
             {
@@ -120,7 +119,7 @@ namespace Rcm.DataCollection
             }
         }
 
-        private void EnsureTodaysRecordsAreLoaded()
+        private void EnsureTodaysRecordsAreLoaded(CancellationToken token)
         {
             if (_currentDayRecords is null)
             {
@@ -129,7 +128,7 @@ namespace Rcm.DataCollection
                     _lock.EnterWriteLock();
                     if (_currentDayRecords is null)
                     {
-                        _currentDayRecords = LoadTodaysRecordsFromFile();
+                        _currentDayRecords = LoadTodaysRecordsFromFile(token);
                     }
                 }
                 finally
@@ -139,14 +138,14 @@ namespace Rcm.DataCollection
             }
         }
 
-        private List<MeasurementEntry> LoadTodaysRecordsFromFile()
+        private List<MeasurementEntry> LoadTodaysRecordsFromFile(CancellationToken token)
         {
             var now = _clock.Now;
             var startOfToday = new DateTimeOffset(now.Date, now.Offset);
             var endOfToday = startOfToday.AddDays(1).AddTicks(-1);
 
             var result = new List<MeasurementEntry>(MeasurementsPerDay);
-            result.AddRange(_fileAccess.Read(startOfToday, endOfToday));
+            result.AddRange(_fileAccess.Read(startOfToday, endOfToday, token));
 
             return result;
         }

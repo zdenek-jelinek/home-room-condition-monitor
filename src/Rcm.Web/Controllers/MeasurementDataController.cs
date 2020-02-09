@@ -1,7 +1,9 @@
 ﻿using System;
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
 using Microsoft.AspNetCore.Mvc;
+using Rcm.Common;
 using Rcm.DataCollection.Api;
 
 namespace Rcm.Web.Controllers
@@ -19,18 +21,26 @@ namespace Rcm.Web.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<MeasurementContract>> Get(
             [FromQuery(Name = "start")] DateTimeOffset? startTime,
-            [FromQuery(Name = "end")] DateTimeOffset? endTime)
+            [FromQuery(Name = "end")] DateTimeOffset? endTime,
+            CancellationToken token)
         {
             if (!startTime.HasValue || !endTime.HasValue)
             {
                 return BadRequest("start and end are required");
             }
 
-            var measurements = _collectedDataAccessor.GetCollectedData(startTime.Value, endTime.Value);
+            var measurements = _collectedDataAccessor.GetCollectedData(startTime.Value, endTime.Value, token);
 
-            var result = measurements.Select(m => new MeasurementContract(m.Time, m.CelsiusTemperature, m.HpaPressure, m.RelativeHumidity));
+            return Ok(measurements.Select(ToContract));
+        }
 
-            return Ok(result);
+        private static MeasurementContract ToContract(MeasurementEntry entry)
+        {
+            return new MeasurementContract(
+                entry.Time,
+                entry.CelsiusTemperature,
+                entry.HpaPressure,
+                entry.RelativeHumidity);
         }
     }
 }
