@@ -71,7 +71,7 @@ namespace Rcm.Web.Services
             }
             catch (Exception e)
             {
-                _logger.LogWarning("Graceful periodic measurement cancellation failed", e);
+                _logger.LogWarning(e, "Graceful periodic measurement cancellation failed");
             }
             finally
             {
@@ -115,7 +115,7 @@ namespace Rcm.Web.Services
                         }
                         else if (t.IsFaulted)
                         {
-                            _logger.LogError("Measurement failed.", t.Exception);
+                            _logger.LogError(t.Exception, "Measurement failed.");
                         }
                     });
             }
@@ -124,7 +124,7 @@ namespace Rcm.Web.Services
             }
             catch (Exception e)
             {
-                _logger.LogError("Measurement failed.", e);
+                _logger.LogError(e, "Measurement failed.");
             }
             finally
             {
