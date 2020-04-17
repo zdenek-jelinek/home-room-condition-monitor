@@ -73,7 +73,7 @@ namespace Rcm.DataCollection.Files
 
         private void CannotOpenFile(string path, Exception e)
         {
-            _logger.LogWarning($"Could not open measurements file \"{path}\"(\"{Path.GetFullPath(path)}\") for reading", e);
+            _logger.LogWarning(e, $"Could not open measurements file \"{path}\"(\"{Path.GetFullPath(path)}\") for reading");
         }
 
         public async Task SaveAsync(MeasurementEntry entry, CancellationToken token)

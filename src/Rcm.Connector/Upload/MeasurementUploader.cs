@@ -64,7 +64,7 @@ namespace Rcm.Connector.Upload
             }
             catch (HttpRequestException e)
             {
-                _logger.LogInformation($"Failed to upload measurements to back-end.", e);
+                _logger.LogInformation(e, "Failed to upload measurements to back-end.");
             }
         }
     }
