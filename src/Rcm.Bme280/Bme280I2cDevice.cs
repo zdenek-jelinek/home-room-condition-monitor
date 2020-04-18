@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
@@ -33,28 +34,89 @@ namespace Rcm.Bme280
             _logger.LogDebug("Initiating measurement...");
             InitiateMeasurement();
 
-            var measurementStart = DateTime.Now;
-            do
-            {
-                await Task.Delay(50, token);
-            }
-            while (IsMeasurementInProgress());
-
-            var measurementTime = DateTime.Now - measurementStart;
-            if (measurementTime > TimeSpan.FromMilliseconds(100) + MeasurementDelayTolerance)
-            {
-                _logger.LogWarning($"Measurement took {measurementTime.TotalMilliseconds}ms");
-            }
-            else
-            {
-                _logger.LogDebug($"Measurement took {measurementTime.TotalMilliseconds}ms");
-            }
+            await WaitForMeasurementCompletionAsync(token);
 
             _logger.LogDebug("Reading measurement results...");
             var (rawPressure, rawTemperature, rawHumidity) = ReadMeasurementResults();
 
             _logger.LogDebug("Compensating measurement results...");
             return CompensateResults(rawPressure, rawTemperature, rawHumidity, _compensationParameters.Value);
+        }
+
+        private void InitiateMeasurement()
+        {
+            const byte humiditySettingsRegisterAddress = 0xF2;
+            Write(humiditySettingsRegisterAddress, Oversampling.X8);
+
+            const byte measurementControlRegisterAddress = 0xF4;
+            const byte temperatureOversampling = Oversampling.X8;
+            const byte pressureOversampling = Oversampling.X16;
+            const int forcedMode = 0b10;
+
+            const byte controlValue =
+                ((temperatureOversampling << 5) | (pressureOversampling << 2) | forcedMode) & 0xFF;
+            Write(measurementControlRegisterAddress, controlValue);
+        }
+
+        private async Task WaitForMeasurementCompletionAsync(CancellationToken token)
+        {
+            var reported = false;
+            var stopwatch = Stopwatch.StartNew();
+
+            do
+            {
+                if (!reported && stopwatch.Elapsed > TimeSpan.FromSeconds(10))
+                {
+                    _logger.LogWarning("Measurement is taking longer than 10 seconds to complete.");
+                    reported = true;
+                }
+
+                await Task.Delay(50, token);
+            }
+            while (IsMeasurementInProgress());
+
+            stopwatch.Stop();
+
+            ReportMeasurementDuration(stopwatch.Elapsed);
+        }
+
+        private bool IsMeasurementInProgress()
+        {
+            const byte MeasurementDone = 1 << 3;
+
+            Span<byte> config = stackalloc byte[1];
+            Read(0xF3, config);
+
+            return (config[0] & MeasurementDone) == MeasurementDone;
+        }
+
+        private void ReportMeasurementDuration(TimeSpan duration)
+        {
+            if (duration > TimeSpan.FromMilliseconds(100) + MeasurementDelayTolerance)
+            {
+                _logger.LogWarning($"Measurement took {duration.TotalMilliseconds}ms");
+            }
+            else
+            {
+                _logger.LogDebug($"Measurement took {duration.TotalMilliseconds}ms");
+            }
+        }
+
+        private (int pressure, int temperature, int humidity) ReadMeasurementResults()
+        {
+            const byte firstMeasurementResultRegisterAddress = 0xF7;
+            const byte resultRegistersSize = 0xFE - firstMeasurementResultRegisterAddress + 1;
+
+            Span<byte> results = stackalloc byte[resultRegistersSize];
+            Read(firstMeasurementResultRegisterAddress, results);
+
+            var pressure = (results[0] << 12) | (results[1] << 4) | (results[2] >> 4);
+            var temperature = (results[3] << 12) | (results[4] << 4) | (results[5] >> 4);
+            var humidity = (results[6] << 8) | results[7];
+
+            _logger.LogTrace($"Read pressure {pressure:X5}, temperature {temperature:X5}, humidity {humidity:X4}");
+
+            return (pressure, temperature, humidity);
         }
 
         private MeasurementEntry CompensateResults(
@@ -109,38 +171,6 @@ namespace Rcm.Bme280
             return p / 256m / 100m;
         }
 
-        private (int pressure, int temperature, int humidity) ReadMeasurementResults()
-        {
-            const byte firstMeasurementResultRegisterAddress = 0xF7;
-            const byte resultRegistersSize = 0xFE - firstMeasurementResultRegisterAddress + 1;
-
-            Span<byte> results = stackalloc byte[resultRegistersSize];
-            Read(firstMeasurementResultRegisterAddress, results);
-
-            var pressure = (results[0] << 12) | (results[1] << 4) | (results[2] >> 4);
-            var temperature = (results[3] << 12) | (results[4] << 4) | (results[5] >> 4);
-            var humidity = (results[6] << 8) | results[7];
-
-            _logger.LogTrace($"Read pressure {pressure:X5}, temperature {temperature:X5}, humidity {humidity:X4}");
-
-            return (pressure, temperature, humidity);
-        }
-
-        private void InitiateMeasurement()
-        {
-            const byte humiditySettingsRegisterAddress = 0xF2;
-            Write(humiditySettingsRegisterAddress, (byte)Oversampling.X8);
-
-            const byte measurementControlRegisterAddress = 0xF4;
-            const byte temperatureOversampling = (byte)Oversampling.X8;
-            const byte pressureOversampling = (byte)Oversampling.X16;
-            const int forcedMode = 0b10;
-
-            const byte controlValue =
-                ((temperatureOversampling << 5) | (pressureOversampling << 2) | forcedMode) & 0xFF;
-            Write(measurementControlRegisterAddress, controlValue);
-        }
-
         private CompensationParameters ReadCompensationParameters()
         {
             _logger.LogDebug("Loading compensation parameters.");
@@ -163,7 +193,6 @@ namespace Rcm.Bme280
                     temperature1: (ushort)(lowCompensation[0] | (lowCompensation[1] << 8)),
                     temperature2: (short)(lowCompensation[2] | (lowCompensation[3] << 8)),
                     temperature3: (short)(lowCompensation[4] | (lowCompensation[5] << 8)));
-
 
                 var pressureCompensation = new PressureCompensationParameters(
                     pressure1: (ushort)(lowCompensation[6] | (lowCompensation[7] << 8)),
@@ -196,16 +225,6 @@ namespace Rcm.Bme280
             }
         }
 
-        private bool IsMeasurementInProgress()
-        {
-            const byte MeasurementDone = 1 << 3;
-
-            Span<byte> config = stackalloc byte[1];
-            Read(0xF3, config);
-
-            return (config[0] & MeasurementDone) == MeasurementDone;
-        }
-
         private void Read(byte startAddress, Span<byte> buffer)
         {
             Span<byte> startAddressBytes = stackalloc byte[] { startAddress };
@@ -222,20 +241,28 @@ namespace Rcm.Bme280
 
         public void Dispose()
         {
-            _bus.Dispose();
+            Dispose(true);
         }
 
-        public enum Oversampling
+        protected virtual void Dispose(bool disposing)
         {
-            None = 0b000,
-            X1 = 0b001,
-            X2 = 0b010,
-            X4 = 0b011,
-            X8 = 0b100,
-            X16 = 0b101
+            if (disposing)
+            {
+                _bus.Dispose();
+            }
         }
 
-        public class CompensationParameters
+        private static class Oversampling
+        {
+            public const byte None = 0b000;
+            public const byte X1 = 0b001;
+            public const byte X2 = 0b010;
+            public const byte X4 = 0b011;
+            public const byte X8 = 0b100;
+            public const byte X16 = 0b101;
+        }
+
+        private class CompensationParameters
         {
             public TemperatureCompensationParameters Temperature { get; }
             public PressureCompensationParameters Pressure { get; }
