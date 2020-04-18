@@ -7,6 +7,6 @@ namespace Rcm.Connector.Api.Upload
 {
     public interface IMeasurementUploader
     {
-        Task UploadAsync(IEnumerable<MeasurementEntry> measurements, CancellationToken token);
+        Task UploadAsync(IReadOnlyCollection<MeasurementEntry> measurements, CancellationToken token);
     }
 }

@@ -5,11 +5,11 @@ using System.Linq;
 using System.Threading;
 using Rcm.Common.IO;
 
-namespace Rcm.TestDoubles.IO
+namespace Rcm.TestDoubles.Common.IO
 {
     public class FakeFileAccess : IFileAccess
     {
-        private readonly IDictionary<string, FakeFile> _files = new Dictionary<string, FakeFile>();
+        private readonly IDictionary<string, FakeFile> _files;
 
         public FakeFileAccess(params (string name, byte[] data)[] files)
         {

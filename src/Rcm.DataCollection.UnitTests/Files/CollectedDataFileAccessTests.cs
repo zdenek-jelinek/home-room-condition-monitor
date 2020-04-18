@@ -11,7 +11,7 @@ using Rcm.Common.Tasks;
 using Rcm.DataCollection.Files;
 using Rcm.Device.Common;
 using Rcm.TestDoubles.Common;
-using Rcm.TestDoubles.IO;
+using Rcm.TestDoubles.Common.IO;
 using static System.Globalization.CultureInfo;
 
 namespace Rcm.DataCollection.UnitTests.Files

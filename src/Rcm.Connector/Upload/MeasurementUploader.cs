@@ -30,7 +30,7 @@ namespace Rcm.Connector.Upload
             _latestUploadedMeasurementWriter = latestUploadedMeasurementWriter;
         }
 
-        public async Task UploadAsync(IEnumerable<MeasurementEntry> measurements, CancellationToken token)
+        public async Task UploadAsync(IReadOnlyCollection<MeasurementEntry> measurements, CancellationToken token)
         {
             var measurementClient = CreateMeasurementClient();
             if (measurementClient is null)
@@ -53,7 +53,7 @@ namespace Rcm.Connector.Upload
         }
 
         private async Task UploadMeasurementAndSetAsLatestAsync(
-            IEnumerable<MeasurementEntry> measurements,
+            IReadOnlyCollection<MeasurementEntry> measurements,
             MeasurementClient measurementClient,
             CancellationToken token)
         {

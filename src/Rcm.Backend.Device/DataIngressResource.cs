@@ -13,7 +13,6 @@ using Microsoft.WindowsAzure.Storage.Table;
 using Rcm.Backend.Common;
 using Rcm.Backend.Common.Http;
 using Rcm.Backend.Device.Api;
-using Rcm.Backend.Persistence;
 using Rcm.Backend.Persistence.Devices;
 using Rcm.Backend.Persistence.Measurements;
 using Rcm.Common;

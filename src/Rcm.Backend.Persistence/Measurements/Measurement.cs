@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Rcm.Backend.Persistence
+namespace Rcm.Backend.Persistence.Measurements
 {
     public class Measurement
     {

@@ -10,9 +10,9 @@ using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.WindowsAzure.Storage.Table;
 using Rcm.Backend.Common;
+using Rcm.Backend.Common.Contracts;
 using Rcm.Backend.Common.Http;
 using Rcm.Backend.Persistence.Devices;
-using Rcm.Backend.Web.Server.Devices;
 
 namespace Rcm.Backend.Web.Server
 {
