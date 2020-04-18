@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using NUnit.Framework;
 using Rcm.Common.IO;
-using Rcm.TestDoubles.IO;
+using Rcm.TestDoubles.Common.IO;
 
 namespace Rcm.Common.TestDoubles.Tests.IO
 {
@@ -22,7 +22,7 @@ namespace Rcm.Common.TestDoubles.Tests.IO
             {
                 // given
                 var contents = "Hello world!";
-                var path = $"file.txt";
+                var path = "file.txt";
 
                 var fileAccess = new FakeFileAccess();
 
@@ -38,7 +38,7 @@ namespace Rcm.Common.TestDoubles.Tests.IO
             public void EmptyFileCanBeEnlargedUsingSetLength()
             {
                 // given
-                var path = $"file.txt";
+                var path = "file.txt";
                 var newLength = 10L;
 
                 var fileAccess = new FakeFileAccess((path, Array.Empty<byte>()));
@@ -56,7 +56,7 @@ namespace Rcm.Common.TestDoubles.Tests.IO
             public void FileCanBeShrunkUsingSetLength()
             {
                 // given
-                var path = $"file.txt";
+                var path = "file.txt";
                 var newLength = 0L;
 
                 var fileAccess = new FakeFileAccess((path, Encoding.UTF8.GetBytes("Hello world!")));
@@ -74,24 +74,24 @@ namespace Rcm.Common.TestDoubles.Tests.IO
             public void ThrowsArgumentOutOfRangeExceptionForNegativeLength()
             {
                 // given
-                var path = $"file.txt";
+                var path = "file.txt";
 
                 var fileAccess = new FakeFileAccess();
 
                 using var file = fileAccess.Open(path, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None);
 
                 // when
-                void SetNegativelength() => file.SetLength(-1L);
+                void SetNegativeLength() => file.SetLength(-1L);
 
                 // then
-                Assert.Catch<ArgumentOutOfRangeException>(SetNegativelength);
+                Assert.Catch<ArgumentOutOfRangeException>(SetNegativeLength);
             }
 
             [Test]
             public void WritingPastFileSizeEnlargesTheFile()
             {
                 // given
-                var path = $"file.txt";
+                var path = "file.txt";
                 var contentsToWrite = "Hello world!";
 
                 var fileAccess = new FakeFileAccess((path, Array.Empty<byte>()));
@@ -110,7 +110,7 @@ namespace Rcm.Common.TestDoubles.Tests.IO
             {
                 // given
                 var contents = "Hello world!";
-                var path = $"file.txt";
+                var path = "file.txt";
 
                 var fileAccess = new FakeFileAccess((path, Encoding.UTF8.GetBytes(contents)));
 
@@ -132,7 +132,7 @@ namespace Rcm.Common.TestDoubles.Tests.IO
             {
                 // given
                 var contents = "Hello world!";
-                var path = $"file.txt";
+                var path = "file.txt";
 
                 var fileAccess = new FakeFileAccess((path, Encoding.UTF8.GetBytes(contents)));
 
@@ -157,7 +157,7 @@ namespace Rcm.Common.TestDoubles.Tests.IO
             public void FileOpenedWithWriteAccessCanBeWritten(FileAccess writeFileAcces)
             {
                 // given
-                var path = $"file.txt";
+                var path = "file.txt";
 
                 var fileAccess = new FakeFileAccess((path, Array.Empty<byte>()));
 
@@ -176,7 +176,7 @@ namespace Rcm.Common.TestDoubles.Tests.IO
             {
                 // given
                 var contents = "Hello world!";
-                var path = $"file.txt";
+                var path = "file.txt";
 
                 var fileAccess = new FakeFileAccess((path, Encoding.UTF8.GetBytes(contents)));
 
@@ -196,7 +196,7 @@ namespace Rcm.Common.TestDoubles.Tests.IO
             {
                 // given
                 var contents = "Hello world!";
-                var path = $"file.txt";
+                var path = "file.txt";
 
                 var fileAccess = new FakeFileAccess((path, Encoding.UTF8.GetBytes(contents)));
 
@@ -213,7 +213,7 @@ namespace Rcm.Common.TestDoubles.Tests.IO
             public void SettingFilePositionBeyondTheEndOfFileThrowsArgumentOutOfRangeException()
             {
                 var contents = "Hello world!";
-                var path = $"file.txt";
+                var path = "file.txt";
 
                 var fileAccess = new FakeFileAccess((path, Encoding.UTF8.GetBytes(contents)));
 
@@ -233,7 +233,7 @@ namespace Rcm.Common.TestDoubles.Tests.IO
                 var seekOffset = 5L;
                 var contents = "Hello world!";
 
-                var path = $"file.txt";
+                var path = "file.txt";
 
                 var fileAccess = new FakeFileAccess((path, Encoding.UTF8.GetBytes(contents)));
 
@@ -253,7 +253,7 @@ namespace Rcm.Common.TestDoubles.Tests.IO
                 var seekOffset = -5L;
                 var written = "Hello world!";
 
-                var path = $"file.txt";
+                var path = "file.txt";
 
                 var fileAccess = new FakeFileAccess((path, Array.Empty<byte>()));
 
@@ -274,7 +274,7 @@ namespace Rcm.Common.TestDoubles.Tests.IO
                 // given
                 var seekOffset = -5L;
 
-                var path = $"file.txt";
+                var path = "file.txt";
                 var contents = "Hello world!";
 
                 var fileAccess = new FakeFileAccess((path, Encoding.UTF8.GetBytes(contents)));
@@ -293,7 +293,7 @@ namespace Rcm.Common.TestDoubles.Tests.IO
             public void SeekingBeyondFileEndThrowsArgumentOutOfRangeException(SeekOrigin origin)
             {
                 // given
-                var path = $"empty.txt";
+                var path = "empty.txt";
 
                 var fileAccess = new FakeFileAccess((path, Array.Empty<byte>()));
 
@@ -311,7 +311,7 @@ namespace Rcm.Common.TestDoubles.Tests.IO
             public void SeekingBeforeFileStartThrowsArgumentOutOfRangeException(SeekOrigin origin)
             {
                 // given
-                var path = $"empty.txt";
+                var path = "empty.txt";
 
                 var fileAccess = new FakeFileAccess((path, Array.Empty<byte>()));
 
@@ -328,7 +328,7 @@ namespace Rcm.Common.TestDoubles.Tests.IO
             public void OpeningFileWithAppendModeOpensItAtItsEnd()
             {
                 // given
-                var dummyPath = $"dummy.txt";
+                var dummyPath = "dummy.txt";
                 var content = "Hello world!";
 
                 var fileAccess = new FakeFileAccess((dummyPath, Encoding.UTF8.GetBytes(content)));
@@ -351,7 +351,7 @@ namespace Rcm.Common.TestDoubles.Tests.IO
             public void OpeningFileWithCreateOrTruncateErasesItsContent(FileMode createOrTruncateFileMode)
             {
                 // given
-                var dummyPath = $"dummy.txt";
+                var dummyPath = "dummy.txt";
 
                 var fileAccess = new FakeFileAccess((dummyPath, Encoding.UTF8.GetBytes("Hello world!")));
 
@@ -371,7 +371,7 @@ namespace Rcm.Common.TestDoubles.Tests.IO
             public void DisposedFileCanBeReopenedWithConflictingAccess()
             {
                 // given
-                var dummyPath = $"dummy.txt";
+                var dummyPath = "dummy.txt";
                 var fileAccess = new FakeFileAccess();
 
                 // when
@@ -392,7 +392,7 @@ namespace Rcm.Common.TestDoubles.Tests.IO
             public void NonDisposedFileCanBeReopenedWithConflictingAccessAfterItIsFinalized()
             {
                 // given
-                var dummyPath = $"dummy.txt";
+                var dummyPath = "dummy.txt";
                 var fileAccess = new FakeFileAccess();
 
                 // when
@@ -419,7 +419,7 @@ namespace Rcm.Common.TestDoubles.Tests.IO
             public void DisposingFileMultipleTimesDoesNotThrow()
             {
                 // given
-                var dummyPath = $"dummy.txt";
+                var dummyPath = "dummy.txt";
                 var fileAccess = new FakeFileAccess();
 
                 // when
@@ -439,7 +439,7 @@ namespace Rcm.Common.TestDoubles.Tests.IO
             public void FileOpenedWithReadAccessDoesNotSupportWriting()
             {
                 // given
-                var dummyPath = $"dummy.txt";
+                var dummyPath = "dummy.txt";
                 var fileAccess = new FakeFileAccess();
 
                 // when
@@ -459,7 +459,7 @@ namespace Rcm.Common.TestDoubles.Tests.IO
             public void FileOpenedWithWriteAccessDoesNotSupportReading()
             {
                 // given
-                var dummyPath = $"dummy.txt";
+                var dummyPath = "dummy.txt";
                 var fileAccess = new FakeFileAccess();
 
                 // when
@@ -479,7 +479,7 @@ namespace Rcm.Common.TestDoubles.Tests.IO
             public void OpeningPreexistingFileWithCreateNewModeThrowsIOException()
             {
                 // given
-                var preexistingFile = $"dummy.txt";
+                var preexistingFile = "dummy.txt";
                 var fileAccess = new FakeFileAccess((preexistingFile, Array.Empty<byte>()));
 
                 // when
@@ -498,7 +498,7 @@ namespace Rcm.Common.TestDoubles.Tests.IO
             public void OpeningNonExtantFileWithOpenOrTruncateModeThrowsFileNotFoundException(FileMode openOrTruncateMode)
             {
                 // given
-                var dummyPath = $"dummy.txt";
+                var dummyPath = "dummy.txt";
                 var fileAccess = new FakeFileAccess();
 
                 // when
@@ -517,7 +517,7 @@ namespace Rcm.Common.TestDoubles.Tests.IO
             public void FileSharesInheritableAndDeleteAreNotSupported(FileShare unsupportedFileShare)
             {
                 // given
-                var dummyPath = $"dummy.txt";
+                var dummyPath = "dummy.txt";
                 var fileAccess = new FakeFileAccess();
 
                 // when
@@ -536,7 +536,7 @@ namespace Rcm.Common.TestDoubles.Tests.IO
             public void ThrowsIOExceptionWhenAttemptingToOpenFileForWritingWithNoWriteSharing(FileAccess writeFileAccess)
             {
                 // given
-                var dummyPath = $"dummy.txt";
+                var dummyPath = "dummy.txt";
                 var fileAccess = new FakeFileAccess();
 
                 using var file = fileAccess.Open(dummyPath, FileMode.OpenOrCreate, FileAccess.Read, FileShare.Read);
@@ -558,7 +558,7 @@ namespace Rcm.Common.TestDoubles.Tests.IO
                 FileAccess readFileAccess)
             {
                 // given
-                var dummyPath = $"dummy.txt";
+                var dummyPath = "dummy.txt";
                 var fileAccess = new FakeFileAccess();
 
                 using var file = fileAccess.Open(dummyPath, FileMode.OpenOrCreate, FileAccess.Read, FileShare.Write);
@@ -580,7 +580,7 @@ namespace Rcm.Common.TestDoubles.Tests.IO
             public void ThrowsIOExceptionWhenAttemptingToOpenFilePreviouslyOpenedWithNoSharing(FileAccess secondAccess)
             {
                 // given
-                var dummyPath = $"dummy.txt";
+                var dummyPath = "dummy.txt";
                 var fileAccess = new FakeFileAccess();
 
                 using var file = fileAccess.Open(dummyPath, FileMode.OpenOrCreate, FileAccess.Read, FileShare.None);
@@ -603,7 +603,7 @@ namespace Rcm.Common.TestDoubles.Tests.IO
             public void ThrowsArgumentExceptionForReadFileAccessWithFileModeOtherThanOpenOrOpenOrCreate(FileMode nonReadFileMode)
             {
                 // given
-                var dummyPath = $"dummy.txt";
+                var dummyPath = "dummy.txt";
                 var fileAccess = new FakeFileAccess();
 
                 // when
@@ -626,7 +626,7 @@ namespace Rcm.Common.TestDoubles.Tests.IO
             public void ThrowsArgumentOutOfRangeForInvalidFileShare(FileShare invalidFileShare)
             {
                 // given
-                var dummyPath = $"dummy.txt";
+                var dummyPath = "dummy.txt";
                 var fileAccess = new FakeFileAccess();
 
                 // when
@@ -646,7 +646,7 @@ namespace Rcm.Common.TestDoubles.Tests.IO
             public void ThrowsArgumentOutOfRangeForInvalidFileAccess(FileAccess invalidFileAccess)
             {
                 // given
-                var dummyPath = $"dummy.txt";
+                var dummyPath = "dummy.txt";
                 var fileAccess = new FakeFileAccess();
 
                 // when
@@ -666,7 +666,7 @@ namespace Rcm.Common.TestDoubles.Tests.IO
             public void ThrowsArgumentOutOfRangeForInvalidFileMode(FileMode invalidFileMode)
             {
                 // given
-                var dummyPath = $"dummy.txt";
+                var dummyPath = "dummy.txt";
                 var fileAccess = new FakeFileAccess();
 
                 // when

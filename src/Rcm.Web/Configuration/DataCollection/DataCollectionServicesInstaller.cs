@@ -2,8 +2,6 @@
 using Rcm.DataCollection;
 using Rcm.DataCollection.Api;
 using Rcm.DataCollection.Files;
-using Rcm.Device.Common;
-using Rcm.Web.Configuration.Common;
 using Rcm.Web.Services;
 
 namespace Rcm.Web.Configuration.DataCollection

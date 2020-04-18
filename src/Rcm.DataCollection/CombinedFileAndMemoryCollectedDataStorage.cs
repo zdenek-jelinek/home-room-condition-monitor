@@ -17,7 +17,7 @@ namespace Rcm.DataCollection
 
         private readonly ReaderWriterLockSlim _lock = new ReaderWriterLockSlim();
 
-        private List<MeasurementEntry>? _currentDayRecords = null;
+        private List<MeasurementEntry>? _currentDayRecords;
 
         private bool _disposed;
 

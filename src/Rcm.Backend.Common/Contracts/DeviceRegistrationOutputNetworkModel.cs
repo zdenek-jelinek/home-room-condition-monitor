@@ -1,4 +1,4 @@
-﻿namespace Rcm.Backend.Web.Server.Devices
+﻿namespace Rcm.Backend.Common.Contracts
 {
     public class DeviceRegistrationOutputNetworkModel
     {
