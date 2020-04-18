@@ -198,10 +198,12 @@ namespace Rcm.Bme280
 
         private bool IsMeasurementInProgress()
         {
+            const byte MeasurementDone = 1 << 3;
+
             Span<byte> config = stackalloc byte[1];
             Read(0xF3, config);
 
-            return (config[0] & 0b100) == 0b100;
+            return (config[0] & MeasurementDone) == MeasurementDone;
         }
 
         private void Read(byte startAddress, Span<byte> buffer)
