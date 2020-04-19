@@ -35,7 +35,7 @@ namespace Rcm.Web
             var measurementsConfiguration = _configuration.GetSection("measurements");
 
             services
-                .Install<CommonServicesInstaller>()
+                .Install<CommonServicesInstaller>(_configuration)
                 .Install<ModeBasedMeasurementServicesInstaller>(measurementsConfiguration.GetSection("access"))
                 .Install<DataCollectionServicesInstaller>()
                 .Install<AggregatesServicesInstaller>()
