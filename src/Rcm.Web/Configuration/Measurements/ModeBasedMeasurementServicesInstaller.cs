@@ -1,5 +1,7 @@
 ﻿using System;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Rcm.Bme280;
 using Rcm.I2c;
 using Rcm.Measurement.Api;
@@ -7,23 +9,23 @@ using Rcm.Measurement.Stubs;
 
 namespace Rcm.Web.Configuration.Measurements
 {
-    public class ModeBasedMeasurementServicesInstaller : IInstaller
+    public class ModeBasedMeasurementServicesInstaller : IConfigurableInstaller
     {
-        public void Install(IServiceCollection services)
+        public void Install(IServiceCollection services, IConfiguration configuration)
         {
-            var mode = new ApplicationHardwareModeReader().Get();
+            var mode = new MeasurementAccessModeReader().Get(configuration);
             switch (mode)
             {
-                case ApplicationHardwareMode.I2c:
-                    InstallI2cServices(services);
+                case MeasurementAccessMode.I2c:
+                    InstallI2cServices(services, configuration);
                     break;
 
-                case ApplicationHardwareMode.Stub:
+                case MeasurementAccessMode.Stub:
                     InstallStubServices(services);
                     break;
 
                 default:
-                    throw new NotSupportedException($"Application hardware mode {mode} is not supported");
+                    throw new NotSupportedException($"Measurement access mode {mode} is not supported");
 
             }
 
@@ -40,12 +42,24 @@ namespace Rcm.Web.Configuration.Measurements
             services.AddSingleton<IMeasurementProviderFactory, StubMeasurementProviderFactory>();
         }
 
-        private void InstallI2cServices(IServiceCollection services)
+        private void InstallI2cServices(IServiceCollection services, IConfiguration measurementI2cAccessConfiguration)
         {
             services
+                .AddOptions<I2cAccessConfiguration>()
+                .Bind(measurementI2cAccessConfiguration)
+                .ValidateDataAnnotations();
+
+            services
                 .AddSingleton<IMeasurementProviderFactory, Bme280DeviceFactory>()
-                .AddTransient<IBme280Configuration, EnvironmentBme280Configuration>()
+                .AddTransient<IBme280Configuration>(GetOptionValue<I2cAccessConfiguration>)
                 .AddTransient<I2cBusFactory>();
+        }
+
+        private static T GetOptionValue<T>(IServiceProvider serviceProvider) where T : class, new()
+        {
+            return serviceProvider
+                .GetRequiredService<IOptions<T>>()
+                .Value;
         }
     }
 }

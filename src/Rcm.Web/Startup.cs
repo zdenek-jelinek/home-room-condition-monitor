@@ -16,13 +16,13 @@ namespace Rcm.Web
     [SuppressMessage("Style", "IDE0058:Expression value is never used")]
     public class Startup
     {
+        private readonly IConfiguration _configuration;
+
         public Startup(IConfiguration configuration)
         {
-            Configuration = configuration;
+            _configuration = configuration;
         }
 
-        public IConfiguration Configuration { get; }
-        
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
@@ -32,9 +32,11 @@ namespace Rcm.Web
             mvc.AddRazorRuntimeCompilation();
 #endif
 
+            var measurementsConfiguration = _configuration.GetSection("measurements");
+
             services
                 .Install<CommonServicesInstaller>()
-                .Install<ModeBasedMeasurementServicesInstaller>()
+                .Install<ModeBasedMeasurementServicesInstaller>(measurementsConfiguration.GetSection("access"))
                 .Install<DataCollectionServicesInstaller>()
                 .Install<AggregatesServicesInstaller>()
                 .Install<ConnectivityInstaller>();
