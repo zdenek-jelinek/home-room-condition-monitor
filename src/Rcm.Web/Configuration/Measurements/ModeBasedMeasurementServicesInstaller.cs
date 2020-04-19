@@ -51,7 +51,7 @@ namespace Rcm.Web.Configuration.Measurements
 
             services
                 .AddSingleton<IMeasurementProviderFactory, Bme280DeviceFactory>()
-                .AddTransient<IBme280Configuration>(GetOptionValue<I2cAccessConfiguration>)
+                .AddTransient<II2cAccessConfiguration>(GetOptionValue<I2cAccessConfiguration>)
                 .AddTransient<I2cBusFactory>();
         }
 
