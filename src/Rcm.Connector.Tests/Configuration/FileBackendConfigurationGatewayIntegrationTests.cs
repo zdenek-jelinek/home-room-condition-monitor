@@ -6,7 +6,6 @@ using System.Text.Json;
 using NUnit.Framework;
 using Rcm.Connector.Api.Configuration;
 using Rcm.Connector.Configuration;
-using Rcm.Device.Common;
 using Rcm.TestDoubles.Common;
 using Rcm.TestFramework.IO;
 
@@ -15,19 +14,23 @@ namespace Rcm.Connector.Tests.Configuration
     [TestFixture]
     public class FileBackendConfigurationGatewayIntegrationTests
     {
-        private static TestDirectory DataDirectory { get; } = new TestDirectory(Path.GetFullPath("data"));
-        private static string BackendConfigurationFilePath => Path.Combine(DataDirectory.Path, "backend.json");
+        private static string ConfigurationDirectoryPath => Path.Combine(Path.GetFullPath("data"), "backend");
+
+        private static string ConnectionConfigurationFilePath =>
+            Path.Combine(ConfigurationDirectoryPath, "connection.json");
+
+        private static TestDirectory ConfigurationDirectory { get; } = new TestDirectory(ConfigurationDirectoryPath);
 
         [SetUp]
         public void EnsureCleanDataDirectory()
         {
-            DataDirectory.PrepareClean();
+            ConfigurationDirectory.PrepareClean();
         }
 
         [TearDown]
         public void ClearDataDirectory()
         {
-            DataDirectory.Delete();
+            ConfigurationDirectory.Delete();
         }
 
         [Test]
@@ -75,14 +78,14 @@ namespace Rcm.Connector.Tests.Configuration
                     ["deviceIdentifier"] = "dummy device id",
                     ["deviceKey"] = "dummy device key"
                 },
-                ReadFileAsDictionary(BackendConfigurationFilePath));
+                ReadFileAsDictionary(ConnectionConfigurationFilePath));
         }
 
         [Test]
-        public void CreatesDirectoryForConfigurationOnWriteIfItDidNotExist()
+        public void ThrowsForNonExtantConfigurationDirectoryOnWriteIfItDidNotExist()
         {
             // given
-            DataDirectory.Delete();
+            ConfigurationDirectory.Delete();
 
             var backendConfigurationGateway = CreateFileBackendConfigurationGateway();
 
@@ -92,10 +95,13 @@ namespace Rcm.Connector.Tests.Configuration
                 deviceKey: "dummy device key");
 
             // when
-            backendConfigurationGateway.WriteConfiguration(dummyConfiguration);
+            void WriteConfigurationToNonExtantDirectory()
+            {
+                backendConfigurationGateway.WriteConfiguration(dummyConfiguration);
+            }
 
             // then
-            FileAssert.Exists(BackendConfigurationFilePath);
+            Assert.Catch<DirectoryNotFoundException>(WriteConfigurationToNonExtantDirectory);
         }
 
         [Test]
@@ -104,7 +110,7 @@ namespace Rcm.Connector.Tests.Configuration
             // given
             var backendConfigurationGateway = CreateFileBackendConfigurationGateway();
 
-            File.WriteAllLines(BackendConfigurationFilePath, Enumerable.Repeat("dummy contents", 100));
+            File.WriteAllLines(ConnectionConfigurationFilePath, Enumerable.Repeat("dummy contents", 100));
 
             var dummyConfiguration = new ConnectionConfiguration(
                 baseUri: "http://dummy.server",
@@ -122,7 +128,7 @@ namespace Rcm.Connector.Tests.Configuration
                     ["deviceIdentifier"] = "dummy device id",
                     ["deviceKey"] = "dummy device key"
                 },
-                ReadFileAsDictionary(BackendConfigurationFilePath));
+                ReadFileAsDictionary(ConnectionConfigurationFilePath));
         }
 
         [Test]
@@ -142,7 +148,7 @@ namespace Rcm.Connector.Tests.Configuration
         public void ReturnsNullWhenAttemptingToReadMalformedJson()
         {
             // given
-            File.WriteAllText(BackendConfigurationFilePath, "\"malformed\": \"json\"");
+            File.WriteAllText(ConnectionConfigurationFilePath, "\"malformed\": \"json\"");
 
             var backendConfigurationGateway = CreateFileBackendConfigurationGateway();
 
@@ -161,7 +167,22 @@ namespace Rcm.Connector.Tests.Configuration
             string jsonThatDoesNotContainAllConfigurationProperties)
         {
             // given
-            File.WriteAllText(BackendConfigurationFilePath, jsonThatDoesNotContainAllConfigurationProperties);
+            File.WriteAllText(ConnectionConfigurationFilePath, jsonThatDoesNotContainAllConfigurationProperties);
+
+            var backendConfigurationGateway = CreateFileBackendConfigurationGateway();
+
+            // when
+            var configuration = backendConfigurationGateway.ReadConfiguration();
+
+            // then
+            Assert.IsNull(configuration);
+        }
+
+        [Test]
+        public void ReturnsNullWhenAttemptingToReadFromNonExtantConfigurationDirectory()
+        {
+            // given
+            ConfigurationDirectory.Delete();
 
             var backendConfigurationGateway = CreateFileBackendConfigurationGateway();
 
@@ -176,7 +197,7 @@ namespace Rcm.Connector.Tests.Configuration
         public void EraseRemovesConfiguration()
         {
             // given
-            CreateDummyConfigurationFile(BackendConfigurationFilePath);
+            CreateDummyConfigurationFile(ConnectionConfigurationFilePath);
 
             var deletingConfigurationGateway = CreateFileBackendConfigurationGateway();
             var readingConfigurationGateway = CreateFileBackendConfigurationGateway();
@@ -192,7 +213,7 @@ namespace Rcm.Connector.Tests.Configuration
         public void EraseDeletesConfigurationFileFromDisk()
         {
             // given
-            CreateDummyConfigurationFile(BackendConfigurationFilePath);
+            CreateDummyConfigurationFile(ConnectionConfigurationFilePath);
 
             var configurationGateway = CreateFileBackendConfigurationGateway();
 
@@ -200,44 +221,45 @@ namespace Rcm.Connector.Tests.Configuration
             configurationGateway.EraseConfiguration();
 
             // then
-            FileAssert.DoesNotExist(BackendConfigurationFilePath);
+            FileAssert.DoesNotExist(ConnectionConfigurationFilePath);
         }
 
         [Test]
         public void EraseDoesNotThrowWhenConfigurationFileDoesNotExist()
         {
             // given
-            DataDirectory.Delete();
+            EnsureFileNonExistence(ConnectionConfigurationFilePath);
 
             var configurationGateway = CreateFileBackendConfigurationGateway();
 
             // when
-            void EraseNonExtantConfiguration() => configurationGateway.EraseConfiguration();
+            void EraseNonExtantConfigurationFile() => configurationGateway.EraseConfiguration();
 
             // then
-            Assert.DoesNotThrow(EraseNonExtantConfiguration);
+            Assert.DoesNotThrow(EraseNonExtantConfigurationFile);
         }
 
         [Test]
         public void EraseDoesNotThrowWhenConfigurationDirectoryDoesNotExist()
         {
             // given
-            EnsureFileNonExistence(BackendConfigurationFilePath);
+            ConfigurationDirectory.Delete();
 
             var configurationGateway = CreateFileBackendConfigurationGateway();
 
             // when
-            void EraseNonExtantConfiguration() => configurationGateway.EraseConfiguration();
+            void EraseConfigurationFromNonExtantDirectory() => configurationGateway.EraseConfiguration();
 
             // then
-            Assert.DoesNotThrow(EraseNonExtantConfiguration);
+            Assert.DoesNotThrow(EraseConfigurationFromNonExtantDirectory);
+            
         }
 
         [Test]
         public void EraseThrowsOriginalExceptionWhenTheFileCannotBeDeleted()
         {
             // given
-            using var fileLock = LockFile(BackendConfigurationFilePath);
+            using var fileLock = LockFile(ConnectionConfigurationFilePath);
 
             var configurationGateway = CreateFileBackendConfigurationGateway();
 
@@ -248,11 +270,12 @@ namespace Rcm.Connector.Tests.Configuration
             Assert.Catch<IOException>(EraseLockedFile);
         }
 
-        private static FileConnectionConfigurationGateway CreateFileBackendConfigurationGateway(IDataStorageLocation? dataStorageLocation = null)
+        private static FileConnectionConfigurationGateway CreateFileBackendConfigurationGateway(
+            IFileBackendStorageLocation? backendConfigurationLocation = null)
         {
             return new FileConnectionConfigurationGateway(
                 new DummyLogger<FileConnectionConfigurationGateway>(),
-                dataStorageLocation ?? new StubDataStorageLocation());
+                backendConfigurationLocation ?? new StubFileBackendStorageLocation());
         }
 
         private static IReadOnlyDictionary<string, string> ReadFileAsDictionary(string path)
@@ -287,9 +310,12 @@ namespace Rcm.Connector.Tests.Configuration
             File.Delete(path);
         }
 
-        private class StubDataStorageLocation : IDataStorageLocation
+        private class StubFileBackendStorageLocation : IFileBackendStorageLocation
         {
-            public string Path { get; set; } = DataDirectory.Path;
+            public string GetDirectoryPath()
+            {
+                return ConfigurationDirectory.Path;
+            }
         }
     }
 }

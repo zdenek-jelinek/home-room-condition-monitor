@@ -2,7 +2,6 @@
 using System.IO;
 using NUnit.Framework;
 using Rcm.Connector.Configuration;
-using Rcm.Device.Common;
 using Rcm.TestFramework.IO;
 
 namespace Rcm.Connector.Tests.Configuration
@@ -10,19 +9,23 @@ namespace Rcm.Connector.Tests.Configuration
     [TestFixture]
     public class FileLatestUploadedMeasurementGatewayIntegrationTests
     {
-        private static TestDirectory DataDirectory { get; } = new TestDirectory(Path.GetFullPath("data"));
-        private static string LatestUploadedMeasuremenFilePath => Path.Combine(DataDirectory.Path, "latest.txt");
+        private static string BackendStorageDirectoryPath => Path.Combine(Path.GetFullPath("data"), "backend");
+
+        private static string LatestUploadedMeasurementFilePath =>
+            Path.Combine(BackendStorageDirectoryPath, "latest.txt");
+
+        private static TestDirectory BackendStorageDirectory { get; } = new TestDirectory(BackendStorageDirectoryPath);
 
         [SetUp]
         public void EnsureCleanDataDirectory()
         {
-            DataDirectory.PrepareClean();
+            BackendStorageDirectory.PrepareClean();
         }
 
         [TearDown]
         public void ClearDataDirectory()
         {
-            DataDirectory.Delete();
+            BackendStorageDirectory.Delete();
         }
 
         [Test]
@@ -48,7 +51,7 @@ namespace Rcm.Connector.Tests.Configuration
             // given
             var originalStoredTimestamp = "2000-01-01T12:00:00+02:00";
 
-            File.WriteAllText(LatestUploadedMeasuremenFilePath, originalStoredTimestamp);
+            File.WriteAllText(LatestUploadedMeasurementFilePath, originalStoredTimestamp);
 
             var olderTimestampThanStored = new DateTimeOffset(2000, 1, 1, 10, 0, 0, TimeSpan.FromHours(2));
 
@@ -58,11 +61,11 @@ namespace Rcm.Connector.Tests.Configuration
             gateway.SetLatestMeasurementUploadTime(olderTimestampThanStored);
 
             // then
-            Assert.AreEqual(originalStoredTimestamp, File.ReadAllText(LatestUploadedMeasuremenFilePath));
+            Assert.AreEqual(originalStoredTimestamp, File.ReadAllText(LatestUploadedMeasurementFilePath));
         }
 
         [Test]
-        public void PersistsLatestUploadededMeasurementTimeIntoFileInDataStorageLocation()
+        public void PersistsLatestUploadedMeasurementTimeIntoFileInBackendStorageLocation()
         {
             // given
             var time = new DateTimeOffset(2000, 1, 1, 12, 0, 0, TimeSpan.FromHours(2));
@@ -73,14 +76,14 @@ namespace Rcm.Connector.Tests.Configuration
             writer.SetLatestMeasurementUploadTime(time);
 
             // then
-            Assert.AreEqual("2000-01-01T12:00:00+02:00", File.ReadAllText(LatestUploadedMeasuremenFilePath));
+            Assert.AreEqual("2000-01-01T12:00:00+02:00", File.ReadAllText(LatestUploadedMeasurementFilePath));
         }
 
         [Test]
-        public void PersistsNullLatestUploadedMeasurement()
+        public void PersistsLatestUploadedMeasurementInRoundtripSupportingFormat()
         {
             // given
-            File.WriteAllText(LatestUploadedMeasuremenFilePath, "2000-01-01T12:00:00+02:00");
+            File.WriteAllText(LatestUploadedMeasurementFilePath, "2000-01-01T12:00:00+02:00");
 
             var writer = CreateFileLatestUploadedMeasurementGateway();
             var reader = CreateFileLatestUploadedMeasurementGateway();
@@ -94,27 +97,30 @@ namespace Rcm.Connector.Tests.Configuration
         }
 
         [Test]
-        public void CreatesDataStorageDirectoryOnWriteIfItDidNotExist()
+        public void ThrowsForNonExtantBackendStorageDirectory()
         {
             // given
-            DataDirectory.Delete();
+            BackendStorageDirectory.Delete();
 
-            var time = new DateTimeOffset(2000, 1, 1, 12, 0, 0, TimeSpan.FromHours(2));
+            var dummyTime = new DateTimeOffset(2000, 1, 1, 12, 0, 0, TimeSpan.FromHours(2));
 
             var writer = CreateFileLatestUploadedMeasurementGateway();
 
             // when
-            writer.SetLatestMeasurementUploadTime(time);
+            void WriteIntoNonExtantBackendStorageDirectory()
+            {
+                writer.SetLatestMeasurementUploadTime(dummyTime);
+            }
 
             // then
-            Assert.AreEqual("2000-01-01T12:00:00+02:00", File.ReadAllText(LatestUploadedMeasuremenFilePath));
+            Assert.Catch<DirectoryNotFoundException>(WriteIntoNonExtantBackendStorageDirectory);
         }
 
         [Test]
         public void ReturnsNullIfLatestUploadedMeasurementFileDoesNotContainValidIso8601DateTime()
         {
             // given
-            File.WriteAllText(LatestUploadedMeasuremenFilePath, "garbage");
+            File.WriteAllText(LatestUploadedMeasurementFilePath, "garbage");
 
             var gateway = CreateFileLatestUploadedMeasurementGateway();
 
@@ -130,6 +136,21 @@ namespace Rcm.Connector.Tests.Configuration
         {
             // given
             EnsureLatestUploadedMeasurementFileDoesNotExist();
+
+            var gateway = CreateFileLatestUploadedMeasurementGateway();
+
+            // when
+            var latestUploadedMeasurement = gateway.GetLatestUploadedMeasurementTime();
+
+            // then
+            Assert.IsNull(latestUploadedMeasurement);
+        }
+
+        [Test]
+        public void ReturnsNullIfBackendStorageDirectoryDoesNotExist()
+        {
+            // given
+            BackendStorageDirectory.Delete();
 
             var gateway = CreateFileLatestUploadedMeasurementGateway();
 
@@ -157,27 +178,30 @@ namespace Rcm.Connector.Tests.Configuration
 
         private static FileLatestUploadedMeasurementGateway CreateFileLatestUploadedMeasurementGateway()
         {
-            return new FileLatestUploadedMeasurementGateway(new StubDataStorageLocation());
+            return new FileLatestUploadedMeasurementGateway(new StubFileBackendStorageLocation());
         }
 
         private static void EnsureLatestUploadedMeasurementFileDoesNotExist()
         {
-            if (!File.Exists(LatestUploadedMeasuremenFilePath))
+            if (!File.Exists(LatestUploadedMeasurementFilePath))
             {
                 return;
             }
 
-            File.Delete(LatestUploadedMeasuremenFilePath);
+            File.Delete(LatestUploadedMeasurementFilePath);
         }
 
         public static IDisposable LockLatestUploadedMeasurementFile()
         {
-            return File.OpenWrite(LatestUploadedMeasuremenFilePath);
+            return File.OpenWrite(LatestUploadedMeasurementFilePath);
         }
 
-        private class StubDataStorageLocation : IDataStorageLocation
+        private class StubFileBackendStorageLocation : IFileBackendStorageLocation
         {
-            public string Path { get; set; } = DataDirectory.Path;
+            public string GetDirectoryPath()
+            {
+                return BackendStorageDirectory.Path;
+            }
         }
     }
 }

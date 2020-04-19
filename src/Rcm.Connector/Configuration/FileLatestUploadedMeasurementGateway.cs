@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using Rcm.Device.Common;
 using static System.Globalization.CultureInfo;
 using static System.Globalization.DateTimeStyles;
 using static Rcm.Common.DateTimeFormat;
@@ -8,18 +7,17 @@ using static Rcm.Common.DateTimeFormat;
 namespace Rcm.Connector.Configuration
 {
     public class FileLatestUploadedMeasurementGateway
-        : ILatestUploadedMeasurementReader, ILatestUploadedMeasurementWriter
+        : ILatestUploadedMeasurementReader,
+            ILatestUploadedMeasurementWriter
     {
-        private readonly IDataStorageLocation _dataStorageLocation;
+        private readonly IFileBackendStorageLocation _storageLocation;
 
-        private string LatestUploadedMeasurementFilePath
-        {
-            get => Path.Combine(_dataStorageLocation.Path, "latest.txt");
-        }
+        private string LatestUploadedMeasurementFilePath =>
+            Path.Combine(_storageLocation.GetDirectoryPath(), "latest.txt");
 
-        public FileLatestUploadedMeasurementGateway(IDataStorageLocation dataStorageLocation)
+        public FileLatestUploadedMeasurementGateway(IFileBackendStorageLocation storageLocation)
         {
-            _dataStorageLocation = dataStorageLocation;
+            _storageLocation = storageLocation;
         }
 
         public DateTimeOffset? GetLatestUploadedMeasurementTime()
@@ -56,20 +54,7 @@ namespace Rcm.Connector.Configuration
 
             var timeString = time?.ToString(Iso8601DateTime, InvariantCulture) ?? String.Empty;
 
-            StoreTime(timeString);
-        }
-
-        private void StoreTime(string timeString)
-        {
-            try
-            {
-                File.WriteAllText(LatestUploadedMeasurementFilePath, timeString);
-            }
-            catch (DirectoryNotFoundException)
-            {
-                Directory.CreateDirectory(_dataStorageLocation.Path);
-                File.WriteAllText(LatestUploadedMeasurementFilePath, timeString);
-            }
+            File.WriteAllText(LatestUploadedMeasurementFilePath, timeString);
         }
 
         private bool IsOlderThanCurrentlyStoredTime(DateTimeOffset? time)
