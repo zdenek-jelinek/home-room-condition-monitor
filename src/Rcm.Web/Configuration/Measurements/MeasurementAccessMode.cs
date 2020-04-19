@@ -1,6 +1,6 @@
 ﻿namespace Rcm.Web.Configuration.Measurements
 {
-    public enum ApplicationHardwareMode
+    public enum MeasurementAccessMode
     {
         I2c,
         Stub
