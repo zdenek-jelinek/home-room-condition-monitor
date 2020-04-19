@@ -3,23 +3,26 @@ using System.IO;
 using System.Text.Json;
 using Microsoft.Extensions.Logging;
 using Rcm.Connector.Api.Configuration;
-using Rcm.Device.Common;
 
 namespace Rcm.Connector.Configuration
 {
-    public class FileConnectionConfigurationGateway : IConnectionConfigurationGateway, IConnectionConfigurationReader, IConnectionConfigurationWriter
+    public class FileConnectionConfigurationGateway
+        : IConnectionConfigurationGateway,
+            IConnectionConfigurationReader,
+            IConnectionConfigurationWriter
     {
         private readonly ILogger<FileConnectionConfigurationGateway> _logger;
-        private readonly IDataStorageLocation _dataStorageLocation;
+        private readonly IFileBackendStorageLocation _storageLocation;
 
-        private string BackendConfigurationFilePath => Path.Combine(_dataStorageLocation.Path, "backend.json");
+        private string BackendConfigurationFilePath =>
+            Path.Combine(_storageLocation.GetDirectoryPath(), "connection.json");
 
         public FileConnectionConfigurationGateway(
             ILogger<FileConnectionConfigurationGateway> logger,
-            IDataStorageLocation dataStorageLocation)
+            IFileBackendStorageLocation storageLocation)
         {
             _logger = logger;
-            _dataStorageLocation = dataStorageLocation;
+            _storageLocation = storageLocation;
         }
 
         public ConnectionConfiguration? ReadConfiguration()
@@ -35,11 +38,6 @@ namespace Rcm.Connector.Configuration
 
         public void WriteConfiguration(ConnectionConfiguration configuration)
         {
-            if (!Directory.Exists(_dataStorageLocation.Path))
-            {
-                _ = Directory.CreateDirectory(_dataStorageLocation.Path);
-            }
-
             File.WriteAllText(BackendConfigurationFilePath, Serialize(configuration));
         }
 

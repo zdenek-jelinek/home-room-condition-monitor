@@ -17,12 +17,12 @@ namespace Rcm.Web.Configuration.Connectivity
             services
                 .AddTransient<IConnectionStatusAccessor, BackendConnectionStatusAccessor>()
                 .AddTransient<IMeasurementUploader, MeasurementUploader>()
+                .AddTransient<IFileBackendStorageLocation, FileBackendStorageLocation>()
                 .AddTransient<IConnectionConfigurationGateway, FileConnectionConfigurationGateway>()
                 .AddTransient<IConnectionConfigurationReader, FileConnectionConfigurationGateway>()
                 .AddTransient<IConnectionConfigurationWriter, FileConnectionConfigurationGateway>()
                 .AddTransient<ILatestUploadedMeasurementReader, FileLatestUploadedMeasurementGateway>()
                 .AddTransient<ILatestUploadedMeasurementWriter, FileLatestUploadedMeasurementGateway>();
         }
-
     }
 }
