@@ -25,7 +25,9 @@ namespace Rcm.DataCollection.Files
 
         public string GetFilePath(DateTimeOffset time)
         {
-            return Path.Combine(_dataStorageLocation.Path, "measurements", time.ToString("yyyy'-'MM'-'dd'.mst'"));
+            var fileName = time.ToString("yyyy'-'MM'-'dd'.mst'");
+
+            return Path.Combine(_dataStorageLocation.GetDirectoryPath(), "measurements", fileName);
         }
     }
 }

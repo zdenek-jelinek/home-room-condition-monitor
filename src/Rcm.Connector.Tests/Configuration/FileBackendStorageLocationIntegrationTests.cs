@@ -58,6 +58,8 @@ namespace Rcm.Connector.Tests.Configuration
         private class StubDataStorageLocation : IDataStorageLocation
         {
             public string Path { get; set; } = null!;
+
+            public string GetDirectoryPath() => Path;
         }
     }
 }
