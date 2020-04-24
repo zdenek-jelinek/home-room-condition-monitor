@@ -25,7 +25,7 @@ namespace Rcm.Connector.Configuration
 
         private string ComposeDirectoryPathAndEnsureExistence()
         {
-            var path = Path.Combine(_dataStorageLocation.Path, BackendConfigurationDirectoryName);
+            var path = Path.Combine(_dataStorageLocation.GetDirectoryPath(), BackendConfigurationDirectoryName);
             EnsureDirectoryExists(path);
             return path;
         }

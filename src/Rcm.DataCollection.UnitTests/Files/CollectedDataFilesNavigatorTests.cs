@@ -59,12 +59,14 @@ namespace Rcm.DataCollection.UnitTests.Files
 
         private class StubDataStorageLocation : IDataStorageLocation
         {
-            public string Path { get; }
+            private readonly string _path;
 
             public StubDataStorageLocation(string path)
             {
-                Path = path;
+                _path = path;
             }
+
+            public string GetDirectoryPath() => _path;
         }
     }
 }

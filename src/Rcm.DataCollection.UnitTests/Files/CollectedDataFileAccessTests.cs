@@ -239,12 +239,14 @@ namespace Rcm.DataCollection.UnitTests.Files
 
         private class DataStorageLocation : IDataStorageLocation
         {
-            public string Path { get; }
+            private readonly string _path;
 
             public DataStorageLocation(string path)
             {
-                Path = path;
+                _path = path;
             }
+
+            public string GetDirectoryPath() => _path;
         }
 
         private sealed class MeasurementEntryEqualityComparer : IEqualityComparer<MeasurementEntry>

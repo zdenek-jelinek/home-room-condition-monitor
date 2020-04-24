@@ -13,13 +13,12 @@ namespace Rcm.Web.Configuration.Common
         [Required(AllowEmptyStrings = false)]
         public string? Path { get; set; }
 
-
-        string IDataStorageLocation.Path => _fullPath.Value;
-
         public DataStorageLocation()
         {
             _fullPath = new Lazy<string>(GetFullPath, LazyThreadSafetyMode.ExecutionAndPublication);
         }
+
+        public string GetDirectoryPath() => _fullPath.Value;
 
         private string GetFullPath()
         {
