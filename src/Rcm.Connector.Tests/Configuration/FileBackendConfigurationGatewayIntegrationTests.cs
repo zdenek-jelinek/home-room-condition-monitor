@@ -256,6 +256,7 @@ namespace Rcm.Connector.Tests.Configuration
         }
 
         [Test]
+        [Platform(Include = "Win")]
         public void EraseThrowsOriginalExceptionWhenTheFileCannotBeDeleted()
         {
             // given
