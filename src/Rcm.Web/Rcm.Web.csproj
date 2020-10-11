@@ -47,8 +47,4 @@
     <TypeScriptCompile Include="wwwroot\js\Views\Now.ts" />
   </ItemGroup>
 
-  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
-    <Exec Command="echo Copying npm packages to wwwroot/lib&#xD;&#xA;robocopy node_modules\flatpickr wwwroot\lib\flatpickr /mir &gt; nul&#xD;&#xA;robocopy node_modules\requirejs wwwroot\lib\requirejs require.js &gt; nul&#xD;&#xA;echo Finished copying npm packages to wwwroot/lib" />
-  </Target>
-
 </Project>
