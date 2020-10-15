@@ -2,7 +2,7 @@
   "version": "1.0.0",
   "name": "rcm-web",
   "private": true,
-  "devDependencies": {
+  "dependencies": {
     "flatpickr": "^4.5.2",
     "requirejs": "^2.3.6"
   }
