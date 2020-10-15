@@ -17,22 +17,6 @@ The implementation currently supports Linux with BME280 sensor connected over I2
 * [.NET Core 3.1 SDK](https://dotnet.microsoft.com/download)
 * [Node.js and npm](https://nodejs.org/en/) (npm is auto-included in Node.js)
 
-### Setup
-1. Install npm packages in src/Rcm.Web: `cd src/Rcm.Web && npm install && cd ../..`
-2. Copy npm files to wwwroot/lib:  
-   * Windows  
-      ```
-     robocopy src\Rcm.Web\node_modules\flatpickr src\Rcm.Web\wwwroot\lib\flatpickr /mir > nul
-     robocopy src\Rcm.Web\node_modules\requirejs src\Rcm.Web\wwwroot\lib\requirejs require.js > nul
-     ```  
-   * Linux  
-      ```
-     mkdir -p src/Rcm.Web/wwwroot/lib
-     cp -r src/Rcm.Web/node_modules/flatpickr src/Rcm.Web/wwwroot/lib/flatpickr
-     mkdir -p src/Rcm.Web/wwwroot/lib/requirejs
-     cp src/Rcm.Web/node_modules/requirejs/require.js src/Rcm.Web/wwwroot/lib/requirejs/
-     ```  
-
 ### Configuration
 The application is configured according to [ASP.NET Core configuration](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/configuration/?view=aspnetcore-3.1).
 
