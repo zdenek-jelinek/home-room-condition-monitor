@@ -5,5 +5,8 @@
   "dependencies": {
     "flatpickr": "^4.5.2",
     "requirejs": "^2.3.6"
+  },
+  "devDependencies": {
+    "typescript": "^4.0.3"
   }
 }
