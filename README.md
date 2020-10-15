@@ -41,7 +41,7 @@ The following additional properties are supported:
 | Property | Possible values | Required | Description |
 | --- | --- | --- | --- |
 | Measurements:Access:Mode | STUB, I2C | Required | Defines the data access mode for periodic condition measurements.<br>In STUB mode, measurements are generated randomly within sensible ranges.<br>In I2C mode, measurements are read from I2C bus. |
-| DataStorage:Path | path string | Required | Specifies a storage directory used to store measurements and backend connection parameters. |
+| DataStorage:Path | path string | Required | Specifies a directory used to store measurements and backend connection parameters. |
 
 
 #### I2C
