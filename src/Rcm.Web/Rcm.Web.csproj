@@ -47,4 +47,21 @@
     <TypeScriptCompile Include="wwwroot\js\Views\Now.ts" />
   </ItemGroup>
 
+  <Target Name="EnsureNodeAndPackages" BeforeTargets="BeforeBuild" Condition="!Exists('node_modules')">
+    <Exec Command="node --version" ContinueOnError="true" StandardOutputImportance="low">
+      <Output TaskParameter="ExitCode" PropertyName="ErrorCode" />
+    </Exec>
+    <Error
+      Condition="'$(ErrorCode)' != '0'"
+      Text="Node.js is required to build and run this project. To continue, please install Node.js from https://nodejs.org/, and then restart your command prompt or IDE." />
+    <Message
+      Importance="high"
+      Text="Restoring dependencies using npm..." />
+    <Exec Command="npm install --quiet --no-progress" />
+  </Target>
+
+  <Target Name="CopyNodePackages" AfterTargets="EnsureNodeAndPackages">
+    <Exec Command="npx grunt copy" />
+  </Target>
+
 </Project>
