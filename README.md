@@ -38,7 +38,7 @@ When configured with Measurement:Access:Mode = I2C, the following options are al
 
 ### Running
 #### Development
-Executing  `dotnet run --project src/Rcm.Web --measurements:access:mode=STUB --dataStorage:path=../../data --console` will run the data collection and web UI service with basic development configuration.  
+Executing  `dotnet run --project src/Device/Rcm.Device.Web --measurements:access:mode=STUB --dataStorage:path=../../data --console` will run the data collection and web UI service with basic development configuration.  
 
 The `--console` switch causes the application to run in console. If the switch is omitted, the application will asume it is running as a Linux systemd service.
 
@@ -49,7 +49,7 @@ Except `--console`, the parameters may also be specified in appsettings.json fil
 #### Device
 For actual device deployment, it is suggested to publish the application binary and run it as a systemd service on the target system.
 
-For a self-contained release publish, run `dotnet publish src/Rcm.Web/Rcm.Web.csproj --runtime linux-arm --configuration Release --self-contained`
+For a self-contained release publish, run `dotnet publish src/Device/Rcm.Device.Web/Rcm.Device.Web.csproj --runtime linux-arm --configuration Release --self-contained`
 
 The following unit definition can be used as a baseline, it assumes the application was deployed to `/home/pi/apps/rcm/bin` and binds to port 80 (HTTP).
 ```
