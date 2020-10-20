@@ -1,3 +1,5 @@
+[![Build Status](https://dev.azure.com/zdenek-jelinek/home-room-condition-monitor/_apis/build/status/zdenek-jelinek.home-room-condition-monitor?branchName=master)](https://dev.azure.com/zdenek-jelinek/home-room-condition-monitor/_build/latest?definitionId=1&branchName=master)
+
 # Room Condition Monitor (rcm)
 A pet project for room temperature, pressure and humidity monitoring and reporting.
 
