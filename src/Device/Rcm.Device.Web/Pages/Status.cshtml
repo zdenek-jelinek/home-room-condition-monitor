@@ -1,0 +1,55 @@
+﻿@page
+@model StatusModel
+
+@{
+    ViewData["Title"] = "System status";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/status.css" asp-append-version="true" />
+}
+
+<div class="page-entries">
+    <div class="page-entry">
+        <h2>Back-end connection</h2>
+        <div class="details">
+            <div class="descriptions">
+                <div class="status-detail">
+                    @{
+                        if (Model.IsConfigured)
+                        {
+                            <div class="status-icon positive">
+                                <p>✔</p>
+                            </div>
+                            <div class="status-description">
+                                <p>Active</p>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="status-icon unknown">
+                                <p>🗙</p>
+                            </div>
+                            <div class="status-description">
+                                <p>Not configured</p>
+                            </div>
+                        }
+                    }
+                </div>
+                @if (@Model.LastUploadedMeasurementTime.HasValue)
+                {
+                    <p>Last uploaded measurement at @Model.LastUploadedMeasurementTime</p>
+                }
+                else
+                {
+                    <p>No measurements uploaded yet.</p>
+                }
+            </div>
+            <div class="actions">
+                @{
+                    <a asp-page="/Connection/Configure" class="pseudo-button primary">Configure</a>
+                }
+            </div>
+        </div>
+    </div>
+</div>

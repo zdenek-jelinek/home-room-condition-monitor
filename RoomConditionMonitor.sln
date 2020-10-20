@@ -3,51 +3,51 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.28531.58
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rcm.Web", "src\Rcm.Web\Rcm.Web.csproj", "{A5F9D1D0-C963-4650-A5E9-955CF679F03F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rcm.Web", "src\Device\Rcm.Device.Web\Rcm.Device.Web.csproj", "{A5F9D1D0-C963-4650-A5E9-955CF679F03F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rcm.Bme280", "src\Rcm.Bme280\Rcm.Bme280.csproj", "{0E88CD9B-A30E-40FD-BE7D-6307E8A1840C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rcm.Device.Bme280", "src\Device\Rcm.Device.Bme280\Rcm.Device.Bme280.csproj", "{0E88CD9B-A30E-40FD-BE7D-6307E8A1840C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rcm.Measurement.Api", "src\Rcm.Measurement.Api\Rcm.Measurement.Api.csproj", "{7F17B05C-DFFB-42EA-8E21-5A7E5237BDC2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rcm.Device.Measurement.Api", "src\Device\Rcm.Device.Measurement.Api\Rcm.Device.Measurement.Api.csproj", "{7F17B05C-DFFB-42EA-8E21-5A7E5237BDC2}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rcm.I2c", "src\Rcm.I2c\Rcm.I2c.csproj", "{F0FC83A8-8379-4DA2-9E88-4F4EF3AE54BF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rcm.Device.I2c", "src\Device\Rcm.Device.I2c\Rcm.Device.I2c.csproj", "{F0FC83A8-8379-4DA2-9E88-4F4EF3AE54BF}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rcm.Bme280.UnitTests", "src\Rcm.Bme280.UnitTests\Rcm.Bme280.UnitTests.csproj", "{C9F52BDC-B8D0-4B39-912C-87BF870F6D28}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rcm.Device.Bme280.UnitTests", "src\Device\Rcm.Device.Bme280.UnitTests\Rcm.Device.Bme280.UnitTests.csproj", "{C9F52BDC-B8D0-4B39-912C-87BF870F6D28}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rcm.Measurement.Stubs", "src\Rcm.Measurement.Stubs\Rcm.Measurement.Stubs.csproj", "{254C8931-010C-4375-A87D-B10D3BC64CFD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rcm.Device.Measurement.Stubs", "src\Device\Rcm.Device.Measurement.Stubs\Rcm.Device.Measurement.Stubs.csproj", "{254C8931-010C-4375-A87D-B10D3BC64CFD}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rcm.Common", "src\Rcm.Common\Rcm.Common.csproj", "{EB1E7FED-74F3-4E06-90C6-E3BB193FF83A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rcm.Common", "src\Common\Rcm.Common\Rcm.Common.csproj", "{EB1E7FED-74F3-4E06-90C6-E3BB193FF83A}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Measurements", "Measurements", "{AA6975CE-88E1-4D55-AA40-F9880CEB61F0}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DataCollection", "DataCollection", "{FC3A186F-299A-49D1-96E2-F761BDEA3682}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rcm.DataCollection.Api", "src\Rcm.DataCollection.Api\Rcm.DataCollection.Api.csproj", "{28309CE3-A31E-4668-B035-04EA6FF5BB26}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rcm.Device.DataCollection.Api", "src\Device\Rcm.Device.DataCollection.Api\Rcm.Device.DataCollection.Api.csproj", "{28309CE3-A31E-4668-B035-04EA6FF5BB26}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rcm.DataCollection", "src\Rcm.DataCollection\Rcm.DataCollection.csproj", "{1A78C8B8-45EB-4A7A-AEE0-936E60B7E06D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rcm.Device.DataCollection", "src\Device\Rcm.Device.DataCollection\Rcm.Device.DataCollection.csproj", "{1A78C8B8-45EB-4A7A-AEE0-936E60B7E06D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rcm.DataCollection.UnitTests", "src\Rcm.DataCollection.UnitTests\Rcm.DataCollection.UnitTests.csproj", "{97518401-C08A-494C-9024-203703397A37}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rcm.Device.DataCollection.UnitTests", "src\Device\Rcm.Device.DataCollection.UnitTests\Rcm.Device.DataCollection.UnitTests.csproj", "{97518401-C08A-494C-9024-203703397A37}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{B22B8FEC-3D43-4EFA-B198-0D8EADBFB0D2}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rcm.TestDoubles", "src\Rcm.TestDoubles\Rcm.TestDoubles.csproj", "{517E5BB0-2FF8-4582-A80B-33D91B464551}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rcm.Common.TestDoubles", "src\Common\Rcm.Common.TestDoubles\Rcm.Common.TestDoubles.csproj", "{517E5BB0-2FF8-4582-A80B-33D91B464551}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Aggregates", "Aggregates", "{FEA048C8-224E-4FBF-8A28-DC8CA46E5792}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rcm.Aggregates", "src\Rcm.Aggregates\Rcm.Aggregates.csproj", "{1A15F655-8988-4D96-8EAB-0601E673C600}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rcm.Device.Aggregates", "src\Device\Rcm.Device.Aggregates\Rcm.Device.Aggregates.csproj", "{1A15F655-8988-4D96-8EAB-0601E673C600}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rcm.Aggregates.Api", "src\Rcm.Aggregates.Api\Rcm.Aggregates.Api.csproj", "{12F0F9D1-C57C-481A-B9A6-88B878EB1E15}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rcm.Device.Aggregates.Api", "src\Device\Rcm.Device.Aggregates.Api\Rcm.Device.Aggregates.Api.csproj", "{12F0F9D1-C57C-481A-B9A6-88B878EB1E15}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rcm.Aggregates.UnitTests", "src\Rcm.Aggregates.UnitTests\Rcm.Aggregates.UnitTests.csproj", "{136D1929-EC18-4848-A371-9463553FBAC2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rcm.Device.Aggregates.UnitTests", "src\Device\Rcm.Device.Aggregates.UnitTests\Rcm.Device.Aggregates.UnitTests.csproj", "{136D1929-EC18-4848-A371-9463553FBAC2}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Connectivity", "Connectivity", "{29941A6E-533B-4F99-941F-A497F64E6982}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rcm.Connector.Api", "src\Rcm.Connector.Api\Rcm.Connector.Api.csproj", "{154EB859-99F3-461D-B646-521F74DE15F6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rcm.Device.Connector.Api", "src\Device\Rcm.Device.Connector.Api\Rcm.Device.Connector.Api.csproj", "{154EB859-99F3-461D-B646-521F74DE15F6}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Device", "Device", "{5052BF6E-2B11-4278-8FC8-C35FBCA240EF}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Backend", "Backend", "{797FE663-3D9A-425B-A6C2-B98998AD398F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rcm.Backend.Device", "src\Rcm.Backend.Device\Rcm.Backend.Device.csproj", "{AAEB8BF7-C076-4452-9FCF-CF656D33C554}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rcm.Backend.Device", "src\Backend\Rcm.Backend.Device\Rcm.Backend.Device.csproj", "{AAEB8BF7-C076-4452-9FCF-CF656D33C554}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{C9C45C9D-054E-4449-9426-282D02499F1E}"
 	ProjectSection(SolutionItems) = preProject
@@ -57,25 +57,25 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rcm.Backend.Device.Api", "src\Rcm.Backend.Device.Api\Rcm.Backend.Device.Api.csproj", "{6BF9A2F1-980D-4359-9017-D3E6C6FF26BF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rcm.Backend.Device.Api", "src\Backend\Rcm.Backend.Device.Api\Rcm.Backend.Device.Api.csproj", "{6BF9A2F1-980D-4359-9017-D3E6C6FF26BF}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rcm.Backend.Persistence", "src\Rcm.Backend.Persistence\Rcm.Backend.Persistence.csproj", "{5FE66931-130F-4157-89EB-155A38C093B3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rcm.Backend.Persistence", "src\Backend\Rcm.Backend.Persistence\Rcm.Backend.Persistence.csproj", "{5FE66931-130F-4157-89EB-155A38C093B3}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rcm.Backend.Common", "src\Rcm.Backend.Common\Rcm.Backend.Common.csproj", "{2A50BB6B-6203-492B-A954-D793BAFD8B10}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rcm.Backend.Common", "src\Backend\Rcm.Backend.Common\Rcm.Backend.Common.csproj", "{2A50BB6B-6203-492B-A954-D793BAFD8B10}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rcm.Backend.Web.Server", "src\Rcm.Backend.Web.Server\Rcm.Backend.Web.Server.csproj", "{808B53D9-36CA-4489-AAF4-9B391C04909E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rcm.Backend.Web.Server", "src\Backend\Rcm.Backend.Web.Server\Rcm.Backend.Web.Server.csproj", "{808B53D9-36CA-4489-AAF4-9B391C04909E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rcm.Connector", "src\Rcm.Connector\Rcm.Connector.csproj", "{02CF50DB-2C14-4EF7-81EF-D89B383A231E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rcm.Device.Connector", "src\Device\Rcm.Device.Connector\Rcm.Device.Connector.csproj", "{02CF50DB-2C14-4EF7-81EF-D89B383A231E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rcm.Connector.Tests", "src\Rcm.Connector.Tests\Rcm.Connector.Tests.csproj", "{82982389-7807-411B-A8A6-10C979BD6428}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rcm.Device.Connector.Tests", "src\Device\Rcm.Device.Connector.Tests\Rcm.Device.Connector.Tests.csproj", "{82982389-7807-411B-A8A6-10C979BD6428}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rcm.Device.Common", "src\Rcm.Device.Common\Rcm.Device.Common.csproj", "{0C492F08-7950-40C4-8977-6046AA6D6C6C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rcm.Device.Common", "src\Device\Rcm.Device.Common\Rcm.Device.Common.csproj", "{0C492F08-7950-40C4-8977-6046AA6D6C6C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rcm.TestFramework", "src\Rcm.TestFramework\Rcm.TestFramework.csproj", "{52C70BE9-E3B9-406F-8FFD-36C66E819D33}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rcm.Common.TestFramework", "src\Common\Rcm.Common.TestFramework\Rcm.Common.TestFramework.csproj", "{52C70BE9-E3B9-406F-8FFD-36C66E819D33}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rcm.Web.Tests", "src\Rcm.Web.Tests\Rcm.Web.Tests.csproj", "{7F82CC2A-F7E7-4354-8E8F-51FF32DF518A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rcm.Device.Web.Tests", "src\Device\Rcm.Device.Web.Tests\Rcm.Device.Web.Tests.csproj", "{7F82CC2A-F7E7-4354-8E8F-51FF32DF518A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rcm.Common.TestDoubles.Tests", "src\Rcm.Common.TestDoubles.Tests\Rcm.Common.TestDoubles.Tests.csproj", "{16F4D2F2-E6C9-462C-93F4-8DEB7E104C0A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rcm.Common.TestDoubles.Tests", "src\Common\Rcm.Common.TestDoubles.Tests\Rcm.Common.TestDoubles.Tests.csproj", "{16F4D2F2-E6C9-462C-93F4-8DEB7E104C0A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -212,7 +212,7 @@ Global
 		{29941A6E-533B-4F99-941F-A497F64E6982} = {5052BF6E-2B11-4278-8FC8-C35FBCA240EF}
 		{154EB859-99F3-461D-B646-521F74DE15F6} = {29941A6E-533B-4F99-941F-A497F64E6982}
 		{AAEB8BF7-C076-4452-9FCF-CF656D33C554} = {797FE663-3D9A-425B-A6C2-B98998AD398F}
-		{6BF9A2F1-980D-4359-9017-D3E6C6FF26BF} = {B22B8FEC-3D43-4EFA-B198-0D8EADBFB0D2}
+		{6BF9A2F1-980D-4359-9017-D3E6C6FF26BF} = {797FE663-3D9A-425B-A6C2-B98998AD398F}
 		{5FE66931-130F-4157-89EB-155A38C093B3} = {797FE663-3D9A-425B-A6C2-B98998AD398F}
 		{2A50BB6B-6203-492B-A954-D793BAFD8B10} = {797FE663-3D9A-425B-A6C2-B98998AD398F}
 		{808B53D9-36CA-4489-AAF4-9B391C04909E} = {797FE663-3D9A-425B-A6C2-B98998AD398F}
