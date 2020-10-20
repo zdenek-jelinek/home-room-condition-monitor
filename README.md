@@ -40,7 +40,7 @@ When configured with Measurement:Access:Mode = I2C, the following options are al
 
 ### Running
 #### Development
-Executing  `dotnet run --project src/Device/Rcm.Device.Web --measurements:access:mode=STUB --dataStorage:path=../../data --console` will run the data collection and web UI service with basic development configuration.  
+Executing  `dotnet run --project src/Device/Rcm.Device.Web --measurements:access:mode=STUB --dataStorage:path=../../../data --console` will run the data collection and web UI service with basic development configuration.  
 
 The `--console` switch causes the application to run in console. If the switch is omitted, the application will asume it is running as a Linux systemd service.
 
