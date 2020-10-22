@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.WindowsAzure.Storage.Table;
+using Microsoft.Azure.Cosmos.Table;
 using Rcm.Backend.Common;
 using CryptoRandomNumberGenerator = System.Security.Cryptography.RandomNumberGenerator;
 
