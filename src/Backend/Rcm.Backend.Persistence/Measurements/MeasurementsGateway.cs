@@ -5,12 +5,12 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.WindowsAzure.Storage.Table;
+using Microsoft.Azure.Cosmos.Table;
 using Rcm.Common;
 using static System.Globalization.CultureInfo;
-using static Microsoft.WindowsAzure.Storage.Table.QueryComparisons;
-using static Microsoft.WindowsAzure.Storage.Table.TableOperators;
-using static Microsoft.WindowsAzure.Storage.Table.TableQuery;
+using static Microsoft.Azure.Cosmos.Table.QueryComparisons;
+using static Microsoft.Azure.Cosmos.Table.TableOperators;
+using static Microsoft.Azure.Cosmos.Table.TableQuery;
 
 namespace Rcm.Backend.Persistence.Measurements
 {
