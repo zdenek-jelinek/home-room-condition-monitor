@@ -38,6 +38,8 @@ When configured with Measurement:Access:Mode = I2C, the following options are al
 | Measurements:Access:BusAddress | string | Required | I2C bus address, e.g. `/dev/i2c-1` from `ls /dev/*i2c*` |
 | Measurements:Access:DeviceAddress | byte | Required | I2C device address, e.g. `0x76` from `i2cdetect -y 1` |
 
+Note that the above requires I2C interface to be enabled on the device through `raspi-config` to detect I2C device and i2c-tools to be installed (`sudo apt-get install i2c-tools`) to run i2cdetect.
+
 ### Running
 #### Development
 Executing  `dotnet run --project src/Device/Rcm.Device.Web --measurements:access:mode=STUB --dataStorage:path=../../../data --console` will run the data collection and web UI service with basic development configuration.  
