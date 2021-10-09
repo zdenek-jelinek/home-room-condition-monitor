@@ -67,7 +67,7 @@ Type=notify
 Environment=DATASTORAGE__PATH=/home/pi/apps/rcm/data MEASUREMENTS__ACCESS__MODE=I2C MEASUREMENTS__ACCESS__BUSADDRESS=/dev/i2c-1 MEASUREMENTS__ACCESS__DEVICEADDRESS=0x76
 
 # Start the self-contained application with binding on port 80
-ExecStart=/home/pi/apps/rcm/bin/Rcm.Web --urls="http://0.0.0.0:80"
+ExecStart=/home/pi/apps/rcm/bin/Rcm.Device.Web --urls="http://0.0.0.0:80"
 
 # Restart on error after 60s timeout
 Restart=on-failure
