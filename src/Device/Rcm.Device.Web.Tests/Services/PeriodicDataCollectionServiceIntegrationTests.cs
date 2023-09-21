@@ -2,9 +2,9 @@ using System;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging.Abstractions;
 using NUnit.Framework;
 using Rcm.Common.Tasks;
-using Rcm.Common.TestDoubles;
 using Rcm.Device.DataCollection.Api;
 using Rcm.Device.Web.Services;
 
@@ -158,7 +158,7 @@ namespace Rcm.Device.Web.Tests.Services
             IMeasurementCollector measurementCollector)
         {
             return new PeriodicDataCollectionService(
-                new DummyLogger<PeriodicDataCollectionService>(),
+                NullLogger<PeriodicDataCollectionService>.Instance,
                 measurementCollector);
         }
 

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging.Abstractions;
 using NUnit.Framework;
 using Rcm.Common;
 using Rcm.Common.TestDoubles;
@@ -21,7 +22,7 @@ namespace Rcm.Device.DataCollection.UnitTests
                 var blockingSpyMeasurementProvider = new BlockingSpyMeasurementProvider();
 
                 var measurementCollector = new MeasurementCollector(
-                    new DummyLogger<MeasurementCollector>(),
+                    NullLogger<MeasurementCollector>.Instance,
                     new Clock(),
                     blockingSpyMeasurementProvider,
                     new DummyCollectedDataWriter());
@@ -46,7 +47,7 @@ namespace Rcm.Device.DataCollection.UnitTests
                 var throwingSpyMeasurementProvider = new ThrowingSpyMeasurementProvider();
 
                 var measurementCollector = new MeasurementCollector(
-                    new DummyLogger<MeasurementCollector>(),
+                    NullLogger<MeasurementCollector>.Instance,
                     new Clock(),
                     throwingSpyMeasurementProvider,
                     new DummyCollectedDataWriter());
@@ -74,7 +75,7 @@ namespace Rcm.Device.DataCollection.UnitTests
                 var spyCollectedDataStorage = new SpyCollectedDataWriter();
 
                 var measurementCollector = new MeasurementCollector(
-                    new DummyLogger<MeasurementCollector>(),
+                    NullLogger<MeasurementCollector>.Instance,
                     new Clock(),
                     new FakeMeasurementProvider(new[] { firstMeasurement, secondMeasurementWithinSameMinute, measurementInNextMinute }),
                     spyCollectedDataStorage);
@@ -198,7 +199,7 @@ namespace Rcm.Device.DataCollection.UnitTests
                 var clock = new FixedClock(nonZeroSecondsTime);
 
                 var measurementCollector = new MeasurementCollector(
-                    new DummyLogger<MeasurementCollector>(),
+                    NullLogger<MeasurementCollector>.Instance,
                     clock,
                     new DummyMeasurementProvider(),
                     new DummyCollectedDataWriter());
@@ -219,7 +220,7 @@ namespace Rcm.Device.DataCollection.UnitTests
                 var clock = new FixedClock(zeroSecondsTime);
 
                 var measurementCollector = new MeasurementCollector(
-                    new DummyLogger<MeasurementCollector>(),
+                    NullLogger<MeasurementCollector>.Instance,
                     clock,
                     new DummyMeasurementProvider(),
                     new DummyCollectedDataWriter());

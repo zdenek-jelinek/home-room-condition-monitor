@@ -14,7 +14,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Rcm.Device.DataCollection.Api\Rcm.Device.DataCollection.Api.csproj" />
-    <ProjectReference Include="..\..\Common\Rcm.Common.TestDoubles\Rcm.Common.TestDoubles.csproj" />
     <ProjectReference Include="..\Rcm.Device.Web\Rcm.Device.Web.csproj" />
   </ItemGroup>
 

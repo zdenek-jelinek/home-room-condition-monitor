@@ -4,11 +4,11 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging.Abstractions;
 using NUnit.Framework;
 using Rcm.Common;
 using Rcm.Common.IO;
 using Rcm.Common.Tasks;
-using Rcm.Common.TestDoubles;
 using Rcm.Common.TestDoubles.IO;
 using Rcm.Device.Common;
 using Rcm.Device.DataCollection.Files;
@@ -198,7 +198,7 @@ namespace Rcm.Device.DataCollection.UnitTests.Files
             IDataStorageLocation? dataStorageLocation = null)
         {
             return new CollectedDataFileAccess(
-                new DummyLogger<CollectedDataFileAccess>(),
+                NullLogger<CollectedDataFileAccess>.Instance,
                 dataStorageLocation ?? new DataStorageLocation(DataPath),
                 fileAccess);
         }

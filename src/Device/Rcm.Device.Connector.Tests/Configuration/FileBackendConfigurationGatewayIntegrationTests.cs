@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
+using Microsoft.Extensions.Logging.Abstractions;
 using NUnit.Framework;
-using Rcm.Common.TestDoubles;
 using Rcm.Common.TestFramework.IO;
 using Rcm.Device.Connector.Api.Configuration;
 using Rcm.Device.Connector.Configuration;
@@ -275,7 +275,7 @@ namespace Rcm.Device.Connector.Tests.Configuration
             IFileBackendStorageLocation? backendConfigurationLocation = null)
         {
             return new FileConnectionConfigurationGateway(
-                new DummyLogger<FileConnectionConfigurationGateway>(),
+                NullLogger<FileConnectionConfigurationGateway>.Instance,
                 backendConfigurationLocation ?? new StubFileBackendStorageLocation());
         }
 

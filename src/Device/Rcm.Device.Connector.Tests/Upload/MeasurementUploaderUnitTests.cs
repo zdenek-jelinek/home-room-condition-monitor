@@ -2,10 +2,10 @@
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging.Abstractions;
 using NUnit.Framework;
 using Rcm.Common;
 using Rcm.Common.Http;
-using Rcm.Common.TestDoubles;
 using Rcm.Common.TestDoubles.Http;
 using Rcm.Device.Connector.Api.Configuration;
 using Rcm.Device.Connector.Api.Upload;
@@ -47,7 +47,8 @@ namespace Rcm.Device.Connector.Tests.Upload
             Assert.AreEqual(uploadedMeasurement.Time, spyLatestUploadedMeasurementWriter.AssignedLatestMeasurementTime);
             var sentRequest = spyHttpClient.SentRequest!;
             Assert.IsNotNull(sentRequest);
-            Assert.AreEqual(configuration.BaseUri, $"{sentRequest.RequestUri.Scheme}://{sentRequest.RequestUri.Host}");
+            Assert.IsNotNull(sentRequest.RequestUri);
+            Assert.AreEqual(configuration.BaseUri, $"{sentRequest.RequestUri!.Scheme}://{sentRequest.RequestUri.Host}");
         }
 
         [Test]
@@ -106,7 +107,7 @@ namespace Rcm.Device.Connector.Tests.Upload
             ILatestUploadedMeasurementWriter? latestUploadedMeasurementWriter = null)
         {
             return new MeasurementUploader(
-                new DummyLogger<MeasurementUploader>(),
+                NullLogger<MeasurementUploader>.Instance,
                 new StubHttpClientFactory { Client = httpClient ?? new StubHttpClient() },
                 new StubConnectionConfigurationReader { Configuration = connectionConfiguration },
                 latestUploadedMeasurementWriter ?? new SpyLatestUploadedMeasurementWriter());
