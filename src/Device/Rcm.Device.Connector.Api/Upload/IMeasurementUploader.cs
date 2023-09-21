@@ -3,10 +3,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using Rcm.Common;
 
-namespace Rcm.Device.Connector.Api.Upload
+namespace Rcm.Device.Connector.Api.Upload;
+
+public interface IMeasurementUploader
 {
-    public interface IMeasurementUploader
-    {
-        Task UploadAsync(IReadOnlyCollection<MeasurementEntry> measurements, CancellationToken token);
-    }
+    Task UploadAsync(IReadOnlyCollection<MeasurementEntry> measurements, CancellationToken token);
 }

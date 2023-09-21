@@ -5,24 +5,23 @@ using System.Threading;
 using System.Threading.Tasks;
 using Rcm.Common;
 
-namespace Rcm.Device.DataCollection
+namespace Rcm.Device.DataCollection;
+
+public class InMemoryCollectedDataStorage : ICollectedDataStorage
 {
-    public class InMemoryCollectedDataStorage : ICollectedDataStorage
+    private readonly ICollection<MeasurementEntry> _entries = new List<MeasurementEntry>();
+
+    public Task StoreAsync(MeasurementEntry value, CancellationToken token)
     {
-        private readonly ICollection<MeasurementEntry> _entries = new List<MeasurementEntry>();
+        _entries.Add(value);
+        return Task.CompletedTask;
+    }
 
-        public Task StoreAsync(MeasurementEntry value, CancellationToken token)
-        {
-            _entries.Add(value);
-            return Task.CompletedTask;
-        }
-
-        public IEnumerable<MeasurementEntry> GetCollectedData(
-            DateTimeOffset start,
-            DateTimeOffset end,
-            CancellationToken token)
-        {
-            return _entries.Where(e => e.Time >= start && e.Time <= end);
-        }
+    public IEnumerable<MeasurementEntry> GetCollectedData(
+        DateTimeOffset start,
+        DateTimeOffset end,
+        CancellationToken token)
+    {
+        return _entries.Where(e => e.Time >= start && e.Time <= end);
     }
 }

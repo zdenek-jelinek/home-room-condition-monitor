@@ -7,185 +7,184 @@ using System.Text;
 using Microsoft.Extensions.Logging;
 using Microsoft.Win32.SafeHandles;
 
-namespace Rcm.Device.I2c
+namespace Rcm.Device.I2c;
+
+public class I2cBus : IDisposable
 {
-    public class I2cBus : IDisposable
+    private const int OpenFlagsReadWrite = 2;
+    private const int SelectI2cSlave = 0x703;
+
+    private readonly FileHandle _i2cBusHandle;
+    private readonly ILogger<I2cBus> _logger;
+
+    private bool _disposed;
+
+    private byte? _selectedDeviceAddress;
+
+    private I2cBus(ILogger<I2cBus> logger, FileHandle i2cBusHandle)
     {
-        private const int OpenFlagsReadWrite = 2;
-        private const int SelectI2cSlave = 0x703;
+        _logger = logger;
+        _i2cBusHandle = i2cBusHandle;
+    }
 
-        private readonly FileHandle _i2cBusHandle;
-        private readonly ILogger<I2cBus> _logger;
+    [DllImport("libc.so.6", EntryPoint = "open", SetLastError = true)]
+    private static extern FileHandle Open(string fileName, int flags);
 
-        private bool _disposed;
+    [DllImport("libc.so.6", EntryPoint = "close", SetLastError = true)]
+    private static extern int Close(IntPtr handle);
 
-        private byte? _selectedDeviceAddress;
+    [DllImport("libc.so.6", EntryPoint = "ioctl", SetLastError = true)]
+    private static extern int Ioctl(FileHandle handle, int request, int data);
 
-        private I2cBus(ILogger<I2cBus> logger, FileHandle i2cBusHandle)
+    [DllImport("libc.so.6", EntryPoint = "read", SetLastError = true)]
+    private static extern int Read(FileHandle handle, in byte data, int length);
+
+    [DllImport("libc.so.6", EntryPoint = "write", SetLastError = true)]
+    private static extern int Write(FileHandle handle, in byte data, int length);
+
+    internal static I2cBus Open(ILogger<I2cBus> logger, string i2cBus)
+    {
+        var i2cBusHandle = Open(i2cBus, OpenFlagsReadWrite);
+        if (i2cBusHandle.IsInvalid)
         {
-            _logger = logger;
-            _i2cBusHandle = i2cBusHandle;
+            throw new IOException(
+                $"Could not open I2C bus \"{i2cBus}\".",
+                new Win32Exception(Marshal.GetLastWin32Error()));
         }
 
-        [DllImport("libc.so.6", EntryPoint = "open", SetLastError = true)]
-        private static extern FileHandle Open(string fileName, int flags);
+        logger.LogDebug($"I2C bus \"{i2cBus}\" initialized.");
 
-        [DllImport("libc.so.6", EntryPoint = "close", SetLastError = true)]
-        private static extern int Close(IntPtr handle);
+        return new I2cBus(logger, i2cBusHandle);
+    }
 
-        [DllImport("libc.so.6", EntryPoint = "ioctl", SetLastError = true)]
-        private static extern int Ioctl(FileHandle handle, int request, int data);
-
-        [DllImport("libc.so.6", EntryPoint = "read", SetLastError = true)]
-        private static extern int Read(FileHandle handle, in byte data, int length);
-
-        [DllImport("libc.so.6", EntryPoint = "write", SetLastError = true)]
-        private static extern int Write(FileHandle handle, in byte data, int length);
-
-        internal static I2cBus Open(ILogger<I2cBus> logger, string i2cBus)
+    private void SelectDevice(byte address)
+    {
+        if (_selectedDeviceAddress == address)
         {
-            var i2cBusHandle = Open(i2cBus, OpenFlagsReadWrite);
-            if (i2cBusHandle.IsInvalid)
-            {
-                throw new IOException(
-                    $"Could not open I2C bus \"{i2cBus}\".",
-                    new Win32Exception(Marshal.GetLastWin32Error()));
-            }
-
-            logger.LogDebug($"I2C bus \"{i2cBus}\" initialized.");
-
-            return new I2cBus(logger, i2cBusHandle);
+            return;
         }
 
-        private void SelectDevice(byte address)
+        var selectionResult = Ioctl(_i2cBusHandle, SelectI2cSlave, address);
+        if (selectionResult == -1)
         {
-            if (_selectedDeviceAddress == address)
-            {
-                return;
-            }
-
-            var selectionResult = Ioctl(_i2cBusHandle, SelectI2cSlave, address);
-            if (selectionResult == -1)
-            {
-                throw new IOException(
-                    $"Could not select I2C device at \"{address}\"",
-                    new Win32Exception(Marshal.GetLastWin32Error()));
-            }
-
-            _selectedDeviceAddress = address;
-
-            _logger.LogTrace($"Selected I2C device at {address:x}.");
+            throw new IOException(
+                $"Could not select I2C device at \"{address}\"",
+                new Win32Exception(Marshal.GetLastWin32Error()));
         }
 
-        private unsafe void Read(Span<byte> buffer)
+        _selectedDeviceAddress = address;
+
+        _logger.LogTrace($"Selected I2C device at {address:x}.");
+    }
+
+    private unsafe void Read(Span<byte> buffer)
+    {
+        int read;
+        fixed (byte* ptr = buffer)
         {
-            int read;
-            fixed (byte* ptr = buffer)
-            {
-                read = Read(_i2cBusHandle, Unsafe.AsRef<byte>(ptr), buffer.Length);
-            }
-
-            if (read == -1)
-            {
-                throw new IOException(
-                    $"Could not read from I2C device at \"{_selectedDeviceAddress}\"",
-                    new Win32Exception(Marshal.GetLastWin32Error()));
-            }
-
-            if (read != buffer.Length)
-            {
-                throw new IOException(
-                    $"Failed to read expected data from I2C device at \"{_selectedDeviceAddress}\".\n"
-                    + $"Expected: {buffer.Length}\nRead: {read}");
-            }
-
-            if (_logger.IsEnabled(LogLevel.Trace))
-            {
-                _logger.LogTrace($"Read {read} bytes from I2C bus.\n{PrintBuffer(buffer, read)}");
-            }
+            read = Read(_i2cBusHandle, Unsafe.AsRef<byte>(ptr), buffer.Length);
         }
 
-        public void Read(byte deviceAddress, Span<byte> buffer)
+        if (read == -1)
         {
-            SelectDevice(deviceAddress);
-            Read(buffer);
+            throw new IOException(
+                $"Could not read from I2C device at \"{_selectedDeviceAddress}\"",
+                new Win32Exception(Marshal.GetLastWin32Error()));
         }
 
-        private unsafe void Write(ReadOnlySpan<byte> data)
+        if (read != buffer.Length)
         {
-            int written;
-            fixed (byte* ptr = data)
-            {
-                written = Write(_i2cBusHandle, Unsafe.AsRef<byte>(ptr), data.Length);
-            }
-
-            if (written == -1)
-            {
-                throw new IOException(
-                    $"Could not write to I2C device at \"{_selectedDeviceAddress}\"",
-                    new Win32Exception(Marshal.GetLastWin32Error()));
-            }
-
-            if (written != data.Length)
-            {
-                throw new IOException(
-                    $"Failed to write all data to I2C device at \"{_selectedDeviceAddress}\".\n"
-                    + $"Expected: {data.Length}\nWritten: {written}");
-            }
-
-            if (_logger.IsEnabled(LogLevel.Trace))
-            {
-                _logger.LogTrace($"Written {written} bytes to I2C bus.\n"
-                    + PrintBuffer(data, written));
-            }
+            throw new IOException(
+                $"Failed to read expected data from I2C device at \"{_selectedDeviceAddress}\".\n"
+                + $"Expected: {buffer.Length}\nRead: {read}");
         }
 
-        public void Write(byte deviceAddress, ReadOnlySpan<byte> data)
+        if (_logger.IsEnabled(LogLevel.Trace))
         {
-            SelectDevice(deviceAddress);
-            Write(data);
+            _logger.LogTrace($"Read {read} bytes from I2C bus.\n{PrintBuffer(buffer, read)}");
+        }
+    }
+
+    public void Read(byte deviceAddress, Span<byte> buffer)
+    {
+        SelectDevice(deviceAddress);
+        Read(buffer);
+    }
+
+    private unsafe void Write(ReadOnlySpan<byte> data)
+    {
+        int written;
+        fixed (byte* ptr = data)
+        {
+            written = Write(_i2cBusHandle, Unsafe.AsRef<byte>(ptr), data.Length);
         }
 
-        public void Dispose()
+        if (written == -1)
         {
-            if (_disposed)
-            {
-                return;
-            }
-
-            _disposed = true;
-            _i2cBusHandle.Dispose();
-
-            _logger.LogDebug("I2C bus closed.");
+            throw new IOException(
+                $"Could not write to I2C device at \"{_selectedDeviceAddress}\"",
+                new Win32Exception(Marshal.GetLastWin32Error()));
         }
 
-        private static string PrintBuffer(ReadOnlySpan<byte> buffer, int length)
+        if (written != data.Length)
         {
-            var str = new StringBuilder(2 * length);
-
-            foreach (var @byte in buffer.Slice(0, length))
-            {
-                str.AppendFormat("{0:X2}", @byte);
-            }
-
-            return str.ToString();
+            throw new IOException(
+                $"Failed to write all data to I2C device at \"{_selectedDeviceAddress}\".\n"
+                + $"Expected: {data.Length}\nWritten: {written}");
         }
 
-        private class FileHandle : SafeHandleMinusOneIsInvalid
+        if (_logger.IsEnabled(LogLevel.Trace))
         {
-            public FileHandle() : base(true)
-            {
-            }
+            _logger.LogTrace($"Written {written} bytes to I2C bus.\n"
+                + PrintBuffer(data, written));
+        }
+    }
 
-            public FileHandle(IntPtr handle, bool isOwned) : base(isOwned)
-            {
-                SetHandle(handle);
-            }
+    public void Write(byte deviceAddress, ReadOnlySpan<byte> data)
+    {
+        SelectDevice(deviceAddress);
+        Write(data);
+    }
 
-            protected override bool ReleaseHandle()
-            {
-                return I2cBus.Close(handle) != -1;
-            }
+    public void Dispose()
+    {
+        if (_disposed)
+        {
+            return;
+        }
+
+        _disposed = true;
+        _i2cBusHandle.Dispose();
+
+        _logger.LogDebug("I2C bus closed.");
+    }
+
+    private static string PrintBuffer(ReadOnlySpan<byte> buffer, int length)
+    {
+        var str = new StringBuilder(2 * length);
+
+        foreach (var @byte in buffer.Slice(0, length))
+        {
+            str.AppendFormat("{0:X2}", @byte);
+        }
+
+        return str.ToString();
+    }
+
+    private class FileHandle : SafeHandleMinusOneIsInvalid
+    {
+        public FileHandle() : base(true)
+        {
+        }
+
+        public FileHandle(IntPtr handle, bool isOwned) : base(isOwned)
+        {
+            SetHandle(handle);
+        }
+
+        protected override bool ReleaseHandle()
+        {
+            return I2cBus.Close(handle) != -1;
         }
     }
 }

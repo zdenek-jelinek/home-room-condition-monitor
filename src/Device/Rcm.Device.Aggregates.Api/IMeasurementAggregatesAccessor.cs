@@ -2,14 +2,13 @@
 using System.Collections.Generic;
 using System.Threading;
 
-namespace Rcm.Device.Aggregates.Api
+namespace Rcm.Device.Aggregates.Api;
+
+public interface IMeasurementAggregatesAccessor
 {
-    public interface IMeasurementAggregatesAccessor
-    {
-        IEnumerable<MeasurementAggregates> GetMeasurementAggregates(
-            DateTimeOffset startTime,
-            DateTimeOffset endTime,
-            int count,
-            CancellationToken token);
-    }
+    IEnumerable<MeasurementAggregates> GetMeasurementAggregates(
+        DateTimeOffset startTime,
+        DateTimeOffset endTime,
+        int count,
+        CancellationToken token);
 }

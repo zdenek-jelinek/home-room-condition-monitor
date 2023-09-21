@@ -1,8 +1,7 @@
-﻿namespace Rcm.Device.Web.Configuration.Measurements
+﻿namespace Rcm.Device.Web.Configuration.Measurements;
+
+public enum MeasurementAccessMode
 {
-    public enum MeasurementAccessMode
-    {
-        I2c,
-        Stub
-    }
+    I2c,
+    Stub
 }

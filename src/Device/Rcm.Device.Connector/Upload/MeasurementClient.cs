@@ -12,61 +12,60 @@ using Rcm.Device.Connector.Api.Configuration;
 using static System.Globalization.CultureInfo;
 using static System.Text.Encoding;
 
-namespace Rcm.Device.Connector.Upload
+namespace Rcm.Device.Connector.Upload;
+
+public class MeasurementClient
 {
-    public class MeasurementClient
+    public static string HttpClientName => "Backend";
+
+    private readonly IHttpClient _httpClient;
+    private readonly ConnectionConfiguration _connectionConfiguration;
+
+    public MeasurementClient(IHttpClient httpClient, ConnectionConfiguration connectionConfiguration)
     {
-        public static string HttpClientName => "Backend";
+        _httpClient = httpClient;
+        _connectionConfiguration = connectionConfiguration;
+    }
 
-        private readonly IHttpClient _httpClient;
-        private readonly ConnectionConfiguration _connectionConfiguration;
+    public Task UploadAsync(IEnumerable<MeasurementEntry> measurements, CancellationToken token)
+    {
+        var payload = Serialize(measurements);
 
-        public MeasurementClient(IHttpClient httpClient, ConnectionConfiguration connectionConfiguration)
+        return UploadAsync(payload, token);
+    }
+
+    private async Task UploadAsync(string payload, CancellationToken token)
+    {
+        var uploadRequest = new HttpRequestMessage(HttpMethod.Post, $"{_connectionConfiguration.BaseUri}/{DeviceRoutes.MeasurementsIngress}")
         {
-            _httpClient = httpClient;
-            _connectionConfiguration = connectionConfiguration;
-        }
+            Headers = { Authorization = new AuthenticationHeaderValue("Bearer", _connectionConfiguration.DeviceKey) },
+            Content = new StringContent(payload, UTF8, "application/json")
+        };
 
-        public Task UploadAsync(IEnumerable<MeasurementEntry> measurements, CancellationToken token)
+        var response = await _httpClient.SendAsync(uploadRequest, token);
+
+        _ = response.EnsureSuccessStatusCode();
+    }
+
+    private string Serialize(IEnumerable<MeasurementEntry> measurements)
+    {
+        var ingressModel = new MeasurementsIngressModel
         {
-            var payload = Serialize(measurements);
+            DeviceIdentifier = _connectionConfiguration.DeviceIdentifier,
+            Measurements = measurements.Select(ToIngressModel)
+        };
 
-            return UploadAsync(payload, token);
-        }
+        return JsonSerializer.Serialize(ingressModel);
+    }
 
-        private async Task UploadAsync(string payload, CancellationToken token)
+    private MeasurementEntryIngressModel ToIngressModel(MeasurementEntry measurement)
+    {
+        return new MeasurementEntryIngressModel
         {
-            var uploadRequest = new HttpRequestMessage(HttpMethod.Post, $"{_connectionConfiguration.BaseUri}/{DeviceRoutes.MeasurementsIngress}")
-            {
-                Headers = { Authorization = new AuthenticationHeaderValue("Bearer", _connectionConfiguration.DeviceKey) },
-                Content = new StringContent(payload, UTF8, "application/json")
-            };
-
-            var response = await _httpClient.SendAsync(uploadRequest, token);
-
-            _ = response.EnsureSuccessStatusCode();
-        }
-
-        private string Serialize(IEnumerable<MeasurementEntry> measurements)
-        {
-            var ingressModel = new MeasurementsIngressModel
-            {
-                DeviceIdentifier = _connectionConfiguration.DeviceIdentifier,
-                Measurements = measurements.Select(ToIngressModel)
-            };
-
-            return JsonSerializer.Serialize(ingressModel);
-        }
-
-        private MeasurementEntryIngressModel ToIngressModel(MeasurementEntry measurement)
-        {
-            return new MeasurementEntryIngressModel
-            {
-                Time = measurement.Time.ToString(DateTimeFormat.Iso8601DateTime, InvariantCulture),
-                Humidity = measurement.RelativeHumidity,
-                Pressure = measurement.HpaPressure,
-                Temperature = measurement.CelsiusTemperature
-            };
-        }
+            Time = measurement.Time.ToString(DateTimeFormat.Iso8601DateTime, InvariantCulture),
+            Humidity = measurement.RelativeHumidity,
+            Pressure = measurement.HpaPressure,
+            Temperature = measurement.CelsiusTemperature
+        };
     }
 }

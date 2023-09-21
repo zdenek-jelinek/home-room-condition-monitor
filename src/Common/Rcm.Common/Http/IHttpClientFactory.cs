@@ -1,7 +1,6 @@
-﻿namespace Rcm.Common.Http
+﻿namespace Rcm.Common.Http;
+
+public interface IHttpClientFactory
 {
-    public interface IHttpClientFactory
-    {
-        IHttpClient Create(string name);
-    }
+    IHttpClient Create(string name);
 }

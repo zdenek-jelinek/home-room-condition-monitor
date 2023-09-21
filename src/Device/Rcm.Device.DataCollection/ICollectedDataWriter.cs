@@ -2,10 +2,9 @@
 using System.Threading.Tasks;
 using Rcm.Common;
 
-namespace Rcm.Device.DataCollection
+namespace Rcm.Device.DataCollection;
+
+public interface ICollectedDataWriter
 {
-    public interface ICollectedDataWriter
-    {
-        Task StoreAsync(MeasurementEntry value, CancellationToken token);
-    }
+    Task StoreAsync(MeasurementEntry value, CancellationToken token);
 }

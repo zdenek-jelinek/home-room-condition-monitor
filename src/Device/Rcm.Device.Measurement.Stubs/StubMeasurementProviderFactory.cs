@@ -2,17 +2,16 @@
 using Rcm.Common;
 using Rcm.Device.Measurement.Api;
 
-namespace Rcm.Device.Measurement.Stubs
+namespace Rcm.Device.Measurement.Stubs;
+
+public class StubMeasurementProviderFactory : IMeasurementProviderFactory
 {
-    public class StubMeasurementProviderFactory : IMeasurementProviderFactory
+    private readonly Lazy<IMeasurementProvider> _instance;
+
+    public StubMeasurementProviderFactory(IClock clock)
     {
-        private readonly Lazy<IMeasurementProvider> _instance;
-
-        public StubMeasurementProviderFactory(IClock clock)
-        {
-            _instance = new Lazy<IMeasurementProvider>(() => new StubMeasurementProvider(clock));
-        }
-
-        public IMeasurementProvider Create() => _instance.Value;
+        _instance = new Lazy<IMeasurementProvider>(() => new StubMeasurementProvider(clock));
     }
+
+    public IMeasurementProvider Create() => _instance.Value;
 }

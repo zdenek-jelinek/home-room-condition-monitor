@@ -2,16 +2,15 @@
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Rcm.Device.Web.Extensions
+namespace Rcm.Device.Web.Extensions;
+
+public static class HttpContextExtensions
 {
-    public static class HttpContextExtensions
+    public static string AppendVersionToPath(this HttpContext context, string path)
     {
-        public static string AppendVersionToPath(this HttpContext context, string path)
-        {
-            return context
-                .RequestServices
-                .GetRequiredService<IFileVersionProvider>()
-                .AddFileVersionToPath(context.Request.PathBase, path);
-        }
+        return context
+            .RequestServices
+            .GetRequiredService<IFileVersionProvider>()
+            .AddFileVersionToPath(context.Request.PathBase, path);
     }
 }

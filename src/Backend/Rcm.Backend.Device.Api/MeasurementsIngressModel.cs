@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
 
-namespace Rcm.Backend.Device.Api
+namespace Rcm.Backend.Device.Api;
+
+public class MeasurementsIngressModel
 {
-    public class MeasurementsIngressModel
-    {
-        public string? DeviceIdentifier { get; set; }
-        public IEnumerable<MeasurementEntryIngressModel>? Measurements { get; set; }
-    }
+    public string? DeviceIdentifier { get; set; }
+    public IEnumerable<MeasurementEntryIngressModel>? Measurements { get; set; }
 }

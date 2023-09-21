@@ -1,9 +1,8 @@
 ﻿using Rcm.Device.Connector.Api.Configuration;
 
-namespace Rcm.Device.Connector.Configuration
+namespace Rcm.Device.Connector.Configuration;
+
+public interface IConnectionConfigurationWriter
 {
-    public interface IConnectionConfigurationWriter
-    {
-        void WriteConfiguration(ConnectionConfiguration configuration);
-    }
+    void WriteConfiguration(ConnectionConfiguration configuration);
 }

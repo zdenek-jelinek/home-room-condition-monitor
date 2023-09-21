@@ -6,23 +6,22 @@ using Rcm.Common.Http;
 using Rcm.Common.IO;
 using Rcm.Device.Common;
 
-namespace Rcm.Device.Web.Configuration.Common
-{
-    public class CommonServicesInstaller : IConfigurableInstaller
-    {
-        public void Install(IServiceCollection services, IConfiguration configuration)
-        {
-            services
-                .AddOptions<DataStorageLocation>()
-                .Bind(configuration.GetSection("dataStorage"))
-                .ValidateDataAnnotations();
+namespace Rcm.Device.Web.Configuration.Common;
 
-            services
-                .AddTransient<IClock, Clock>()
-                .AddTransient<IFileAccess, FileAccessAdapter>()
-                .AddTransient<IHttpClientFactory, HttpClientFactoryAdapter>()
-                .AddTransient<IDataStorageLocation>(
-                    sp => sp.GetRequiredService<IOptions<DataStorageLocation>>().Value);
-        }
+public class CommonServicesInstaller : IConfigurableInstaller
+{
+    public void Install(IServiceCollection services, IConfiguration configuration)
+    {
+        services
+            .AddOptions<DataStorageLocation>()
+            .Bind(configuration.GetSection("dataStorage"))
+            .ValidateDataAnnotations();
+
+        services
+            .AddTransient<IClock, Clock>()
+            .AddTransient<IFileAccess, FileAccessAdapter>()
+            .AddTransient<IHttpClientFactory, HttpClientFactoryAdapter>()
+            .AddTransient<IDataStorageLocation>(
+                sp => sp.GetRequiredService<IOptions<DataStorageLocation>>().Value);
     }
 }

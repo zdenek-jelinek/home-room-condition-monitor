@@ -1,10 +1,9 @@
 ﻿using System;
 
-namespace Rcm.Device.Connector.Api.Status
+namespace Rcm.Device.Connector.Api.Status;
+
+public interface IConnectionStatusAccessor
 {
-    public interface IConnectionStatusAccessor
-    {
-        bool IsConfigured { get; }
-        DateTimeOffset? LastUploadedMeasurementTime { get; }
-    }
+    bool IsConfigured { get; }
+    DateTimeOffset? LastUploadedMeasurementTime { get; }
 }

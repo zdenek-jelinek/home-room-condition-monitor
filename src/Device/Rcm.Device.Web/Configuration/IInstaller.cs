@@ -1,9 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 
-namespace Rcm.Device.Web.Configuration
+namespace Rcm.Device.Web.Configuration;
+
+public interface IInstaller
 {
-    public interface IInstaller
-    {
-        void Install(IServiceCollection services);
-    }
+    void Install(IServiceCollection services);
 }

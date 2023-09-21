@@ -1,9 +1,8 @@
-﻿namespace Rcm.Device.Connector.Api.Configuration
+﻿namespace Rcm.Device.Connector.Api.Configuration;
+
+public interface IConnectionConfigurationGateway
 {
-    public interface IConnectionConfigurationGateway
-    {
-        ConnectionConfiguration? ReadConfiguration();
-        void WriteConfiguration(ConnectionConfiguration configuration);
-        void EraseConfiguration();
-    }
+    ConnectionConfiguration? ReadConfiguration();
+    void WriteConfiguration(ConnectionConfiguration configuration);
+    void EraseConfiguration();
 }

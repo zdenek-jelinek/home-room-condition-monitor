@@ -3,31 +3,30 @@ using System.Collections.Generic;
 using System.IO;
 using Rcm.Device.Common;
 
-namespace Rcm.Device.DataCollection.Files
+namespace Rcm.Device.DataCollection.Files;
+
+public class CollectedDataFilesNavigator
 {
-    public class CollectedDataFilesNavigator
+    private readonly IDataStorageLocation _dataStorageLocation;
+
+    public CollectedDataFilesNavigator(IDataStorageLocation dataStorageLocation)
     {
-        private readonly IDataStorageLocation _dataStorageLocation;
+        _dataStorageLocation = dataStorageLocation;
+    }
 
-        public CollectedDataFilesNavigator(IDataStorageLocation dataStorageLocation)
+    public IEnumerable<(DateTime date, string path)> GetFilePaths(DateTimeOffset start, DateTimeOffset end)
+    {
+        var startDate = new DateTimeOffset(start.Date, start.Offset);
+        for (var date = startDate; date <= end; date = date.AddDays(1))
         {
-            _dataStorageLocation = dataStorageLocation;
+            yield return (date.Date, GetFilePath(date));
         }
+    }
 
-        public IEnumerable<(DateTime date, string path)> GetFilePaths(DateTimeOffset start, DateTimeOffset end)
-        {
-            var startDate = new DateTimeOffset(start.Date, start.Offset);
-            for (var date = startDate; date <= end; date = date.AddDays(1))
-            {
-                yield return (date.Date, GetFilePath(date));
-            }
-        }
+    public string GetFilePath(DateTimeOffset time)
+    {
+        var fileName = time.ToString("yyyy'-'MM'-'dd'.mst'");
 
-        public string GetFilePath(DateTimeOffset time)
-        {
-            var fileName = time.ToString("yyyy'-'MM'-'dd'.mst'");
-
-            return Path.Combine(_dataStorageLocation.GetDirectoryPath(), "measurements", fileName);
-        }
+        return Path.Combine(_dataStorageLocation.GetDirectoryPath(), "measurements", fileName);
     }
 }

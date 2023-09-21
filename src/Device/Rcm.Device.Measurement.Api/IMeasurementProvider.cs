@@ -2,10 +2,9 @@
 using System.Threading.Tasks;
 using Rcm.Common;
 
-namespace Rcm.Device.Measurement.Api
+namespace Rcm.Device.Measurement.Api;
+
+public interface IMeasurementProvider
 {
-    public interface IMeasurementProvider
-    {
-        Task<MeasurementEntry> MeasureAsync(CancellationToken token);
-    }
+    Task<MeasurementEntry> MeasureAsync(CancellationToken token);
 }

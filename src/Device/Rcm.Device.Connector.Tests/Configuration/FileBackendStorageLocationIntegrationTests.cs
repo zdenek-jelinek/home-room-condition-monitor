@@ -4,62 +4,61 @@ using Rcm.Common.TestFramework.IO;
 using Rcm.Device.Common;
 using Rcm.Device.Connector.Configuration;
 
-namespace Rcm.Device.Connector.Tests.Configuration
+namespace Rcm.Device.Connector.Tests.Configuration;
+
+[TestFixture]
+public class FileBackendStorageLocationIntegrationTests
 {
-    [TestFixture]
-    public class FileBackendStorageLocationIntegrationTests
+    private static string DataStorageDirectoryPath => Path.GetFullPath("data");
+
+    private static TestDirectory DataStorageDirectory { get; } = new TestDirectory(DataStorageDirectoryPath);
+
+    [SetUp]
+    public void PrepareCleanDataStorageDirectory()
     {
-        private static string DataStorageDirectoryPath => Path.GetFullPath("data");
+        DataStorageDirectory.PrepareClean();
+    }
 
-        private static TestDirectory DataStorageDirectory { get; } = new TestDirectory(DataStorageDirectoryPath);
+    [TearDown]
+    public void DeleteDataStorageDirectory()
+    {
+        DataStorageDirectory.Delete();
+    }
 
-        [SetUp]
-        public void PrepareCleanDataStorageDirectory()
-        {
-            DataStorageDirectory.PrepareClean();
-        }
+    [Test]
+    public void FileBackendStorageLocationPathIsEqualToDataStorageLocationPathPlusBackend()
+    {
+        // given
+        var dataStorageLocation = new StubDataStorageLocation { Path = DataStorageDirectoryPath };
 
-        [TearDown]
-        public void DeleteDataStorageDirectory()
-        {
-            DataStorageDirectory.Delete();
-        }
+        var backendStorageLocation = new FileBackendStorageLocation(dataStorageLocation);
 
-        [Test]
-        public void FileBackendStorageLocationPathIsEqualToDataStorageLocationPathPlusBackend()
-        {
-            // given
-            var dataStorageLocation = new StubDataStorageLocation { Path = DataStorageDirectoryPath };
+        // when
+        var backendStorageDirectoryPath = backendStorageLocation.GetDirectoryPath();
 
-            var backendStorageLocation = new FileBackendStorageLocation(dataStorageLocation);
+        // then
+        Assert.AreEqual(Path.Combine(DataStorageDirectoryPath, "backend"), backendStorageDirectoryPath);
+    }
 
-            // when
-            var backendStorageDirectoryPath = backendStorageLocation.GetDirectoryPath();
+    [Test]
+    public void EnsuresBackendDataStorageDirectoryExistsWhenQueryingItsPath()
+    {
+        // given
+        var dataStorageLocation = new StubDataStorageLocation { Path = DataStorageDirectoryPath };
 
-            // then
-            Assert.AreEqual(Path.Combine(DataStorageDirectoryPath, "backend"), backendStorageDirectoryPath);
-        }
+        var backendStorageLocation = new FileBackendStorageLocation(dataStorageLocation);
 
-        [Test]
-        public void EnsuresBackendDataStorageDirectoryExistsWhenQueryingItsPath()
-        {
-            // given
-            var dataStorageLocation = new StubDataStorageLocation { Path = DataStorageDirectoryPath };
+        // when
+        var backendStorageDirectoryPath = backendStorageLocation.GetDirectoryPath();
 
-            var backendStorageLocation = new FileBackendStorageLocation(dataStorageLocation);
+        // then
+        DirectoryAssert.Exists(Path.Combine(backendStorageDirectoryPath));
+    }
 
-            // when
-            var backendStorageDirectoryPath = backendStorageLocation.GetDirectoryPath();
+    private class StubDataStorageLocation : IDataStorageLocation
+    {
+        public string Path { get; set; } = null!;
 
-            // then
-            DirectoryAssert.Exists(Path.Combine(backendStorageDirectoryPath));
-        }
-
-        private class StubDataStorageLocation : IDataStorageLocation
-        {
-            public string Path { get; set; } = null!;
-
-            public string GetDirectoryPath() => Path;
-        }
+        public string GetDirectoryPath() => Path;
     }
 }

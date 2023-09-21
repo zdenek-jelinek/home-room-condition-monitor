@@ -2,10 +2,9 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Rcm.Common.Http
+namespace Rcm.Common.Http;
+
+public interface IHttpClient
 {
-    public interface IHttpClient
-    {
-        Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken token);
-    }
+    Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken token);
 }

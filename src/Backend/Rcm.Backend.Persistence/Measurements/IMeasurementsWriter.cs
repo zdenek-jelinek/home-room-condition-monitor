@@ -1,10 +1,9 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 
-namespace Rcm.Backend.Persistence.Measurements
+namespace Rcm.Backend.Persistence.Measurements;
+
+public interface IMeasurementsWriter
 {
-    public interface IMeasurementsWriter
-    {
-        Task StoreAsync(DeviceMeasurements measurements, CancellationToken token);
-    }
+    Task StoreAsync(DeviceMeasurements measurements, CancellationToken token);
 }

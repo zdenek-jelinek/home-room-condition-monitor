@@ -1,9 +1,8 @@
 ﻿using System;
 
-namespace Rcm.Device.Connector.Configuration
+namespace Rcm.Device.Connector.Configuration;
+
+public interface ILatestUploadedMeasurementWriter
 {
-    public interface ILatestUploadedMeasurementWriter
-    {
-        void SetLatestMeasurementUploadTime(DateTimeOffset? time);
-    }
+    void SetLatestMeasurementUploadTime(DateTimeOffset? time);
 }

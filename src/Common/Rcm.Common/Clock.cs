@@ -1,9 +1,8 @@
 ﻿using System;
 
-namespace Rcm.Common
+namespace Rcm.Common;
+
+public class Clock : IClock
 {
-    public class Clock : IClock
-    {
-        public DateTimeOffset Now => DateTimeOffset.Now;
-    }
+    public DateTimeOffset Now => DateTimeOffset.Now;
 }

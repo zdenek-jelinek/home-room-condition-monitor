@@ -3,18 +3,17 @@ using System.Threading;
 using System.Threading.Tasks;
 using Rcm.Common.Http;
 
-namespace Rcm.Common.TestDoubles.Http
+namespace Rcm.Common.TestDoubles.Http;
+
+public class SpyHttpClient : IHttpClient
 {
-    public class SpyHttpClient : IHttpClient
+    public HttpRequestMessage? SentRequest { get; private set; }
+    public HttpResponseMessage Response { get; set; } = new HttpResponseMessage();
+
+    public Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken token)
     {
-        public HttpRequestMessage? SentRequest { get; private set; }
-        public HttpResponseMessage Response { get; set; } = new HttpResponseMessage();
+        SentRequest = request;
 
-        public Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken token)
-        {
-            SentRequest = request;
-
-            return Task.FromResult(Response);
-        }
+        return Task.FromResult(Response);
     }
 }

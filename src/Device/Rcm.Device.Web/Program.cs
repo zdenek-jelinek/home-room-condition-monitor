@@ -7,70 +7,69 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 
-namespace Rcm.Device.Web
+namespace Rcm.Device.Web;
+
+public static class Program
 {
-    public static class Program
+    public static TimeSpan ShutdownTimeout => TimeSpan.FromSeconds(10);
+
+    public static async Task Main(string[] args)
     {
-        public static TimeSpan ShutdownTimeout => TimeSpan.FromSeconds(10);
-
-        public static async Task Main(string[] args)
+        var isService = !args.Contains("--console");
+        if (isService)
         {
-            var isService = !args.Contains("--console");
-            if (isService)
+            InitializeCurrentDirectory();
+        }
+
+        var webHostBuilder = CreateWebHostBuilder(args);
+
+        if (isService)
+        {
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
-                InitializeCurrentDirectory();
+                webHostBuilder.UseSystemd();
             }
-
-            var webHostBuilder = CreateWebHostBuilder(args);
-
-            if (isService)
+            else
             {
-                if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-                {
-                    webHostBuilder.UseSystemd();
-                }
-                else
-                {
-                    throw new NotImplementedException("Windows service support is not implemented yet.");
-                }
-            }
-
-            var webHost = webHostBuilder.Build();
-
-            try
-            {
-                await webHost.RunAsync();
-            }
-            catch (OperationCanceledException)
-            {
+                throw new NotImplementedException("Windows service support is not implemented yet.");
             }
         }
 
-        private static IHostBuilder CreateWebHostBuilder(string[] args)
+        var webHost = webHostBuilder.Build();
+
+        try
         {
-            return Host
-                .CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(ConfigureWebHost);
+            await webHost.RunAsync();
         }
-
-        private static void ConfigureWebHost(IWebHostBuilder webBuilder)
+        catch (OperationCanceledException)
         {
-            webBuilder
-                .UseShutdownTimeout(ShutdownTimeout)
-                .UseStartup<Startup>();
         }
+    }
 
-        private static void InitializeCurrentDirectory()
-        {
-            var currentProcessModule = Process.GetCurrentProcess().MainModule
-                ?? throw new Exception("Could not access metadata of main module of current process.");
+    private static IHostBuilder CreateWebHostBuilder(string[] args)
+    {
+        return Host
+            .CreateDefaultBuilder(args)
+            .ConfigureWebHostDefaults(ConfigureWebHost);
+    }
 
-            var currentProcessFileName = currentProcessModule.FileName
-                ?? throw new Exception("The current process main module has no file name.");
+    private static void ConfigureWebHost(IWebHostBuilder webBuilder)
+    {
+        webBuilder
+            .UseShutdownTimeout(ShutdownTimeout)
+            .UseStartup<Startup>();
+    }
 
-            var currentProcessModuleDirectory = Path.GetDirectoryName(currentProcessFileName)!;
+    private static void InitializeCurrentDirectory()
+    {
+        var currentProcessModule = Process.GetCurrentProcess().MainModule
+            ?? throw new Exception("Could not access metadata of main module of current process.");
 
-            Directory.SetCurrentDirectory(currentProcessModuleDirectory);
-        }
+        var currentProcessFileName = currentProcessModule.FileName
+            ?? throw new Exception("The current process main module has no file name.");
+
+        var currentProcessModuleDirectory = Path.GetDirectoryName(currentProcessFileName)!;
+
+        Directory.SetCurrentDirectory(currentProcessModuleDirectory);
     }
 }

@@ -1,9 +1,8 @@
 ﻿using System;
 
-namespace Rcm.Common
+namespace Rcm.Common;
+
+public interface IClock
 {
-    public interface IClock
-    {
-        DateTimeOffset Now { get; }
-    }
+    DateTimeOffset Now { get; }
 }

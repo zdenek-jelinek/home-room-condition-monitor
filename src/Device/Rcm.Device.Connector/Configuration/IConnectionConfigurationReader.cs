@@ -1,9 +1,8 @@
 ﻿using Rcm.Device.Connector.Api.Configuration;
 
-namespace Rcm.Device.Connector.Configuration
+namespace Rcm.Device.Connector.Configuration;
+
+public interface IConnectionConfigurationReader
 {
-    public interface IConnectionConfigurationReader
-    {
-        ConnectionConfiguration? ReadConfiguration();
-    }
+    ConnectionConfiguration? ReadConfiguration();
 }

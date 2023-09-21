@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using System.Threading;
 using Rcm.Common;
 
-namespace Rcm.Device.DataCollection.Api
+namespace Rcm.Device.DataCollection.Api;
+
+public interface ICollectedDataAccessor
 {
-    public interface ICollectedDataAccessor
-    {
-        IEnumerable<MeasurementEntry> GetCollectedData(DateTimeOffset start, DateTimeOffset end, CancellationToken token);
-    }
+    IEnumerable<MeasurementEntry> GetCollectedData(DateTimeOffset start, DateTimeOffset end, CancellationToken token);
 }

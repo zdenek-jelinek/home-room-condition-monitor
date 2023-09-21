@@ -4,40 +4,39 @@ using System.IO;
 using System.Threading;
 using Rcm.Device.Common;
 
-namespace Rcm.Device.Web.Configuration.Common
+namespace Rcm.Device.Web.Configuration.Common;
+
+internal class DataStorageLocation : IDataStorageLocation
 {
-    internal class DataStorageLocation : IDataStorageLocation
+    private readonly Lazy<string> _fullPath;
+
+    [Required(AllowEmptyStrings = false)]
+    public string? Path { get; set; }
+
+    public DataStorageLocation()
     {
-        private readonly Lazy<string> _fullPath;
+        _fullPath = new Lazy<string>(GetFullPath, LazyThreadSafetyMode.ExecutionAndPublication);
+    }
 
-        [Required(AllowEmptyStrings = false)]
-        public string? Path { get; set; }
+    public string GetDirectoryPath() => _fullPath.Value;
 
-        public DataStorageLocation()
+    private string GetFullPath()
+    {
+        var path = Path
+            ?? throw new InvalidOperationException($"{nameof(Path)} is unexpectedly null.");
+
+        var fullPath = System.IO.Path.GetFullPath(path);
+
+        EnsureDirectoryExists(fullPath);
+
+        return fullPath;
+    }
+
+    private static void EnsureDirectoryExists(string path)
+    {
+        if (!Directory.Exists(path))
         {
-            _fullPath = new Lazy<string>(GetFullPath, LazyThreadSafetyMode.ExecutionAndPublication);
-        }
-
-        public string GetDirectoryPath() => _fullPath.Value;
-
-        private string GetFullPath()
-        {
-            var path = Path
-                ?? throw new InvalidOperationException($"{nameof(Path)} is unexpectedly null.");
-
-            var fullPath = System.IO.Path.GetFullPath(path);
-
-            EnsureDirectoryExists(fullPath);
-
-            return fullPath;
-        }
-
-        private static void EnsureDirectoryExists(string path)
-        {
-            if (!Directory.Exists(path))
-            {
-                Directory.CreateDirectory(path);
-            }
+            Directory.CreateDirectory(path);
         }
     }
 }

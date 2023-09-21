@@ -3,65 +3,64 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Rcm.Device.Connector.Api.Configuration;
 
-namespace Rcm.Device.Web.Pages.Connection
+namespace Rcm.Device.Web.Pages.Connection;
+
+public class ConfigureModel : PageModel
 {
-    public class ConfigureModel : PageModel
+    private readonly IConnectionConfigurationGateway _configurationGateway;
+
+    public bool IsConfigured { get; private set; }
+
+    [Url]
+    [Required]
+    [Display(Name = "Back-end URI")]
+    [BindProperty]
+    public string? BackendUri { get; set; }
+
+    [Required]
+    [Display(Name = "Device identifier")]
+    [BindProperty]
+    public string? DeviceIdentifier { get; set; }
+
+    [Required]
+    [Display(Name = "Device key")]
+    [BindProperty]
+    public string? DeviceKey { get; set; }
+
+    public ConfigureModel(IConnectionConfigurationGateway configurationGateway)
     {
-        private readonly IConnectionConfigurationGateway _configurationGateway;
+        _configurationGateway = configurationGateway;
+    }
 
-        public bool IsConfigured { get; private set; }
+    public void OnGet()
+    {
+        var configuration = _configurationGateway.ReadConfiguration();
 
-        [Url]
-        [Required]
-        [Display(Name = "Back-end URI")]
-        [BindProperty]
-        public string? BackendUri { get; set; }
+        IsConfigured = configuration != null;
 
-        [Required]
-        [Display(Name = "Device identifier")]
-        [BindProperty]
-        public string? DeviceIdentifier { get; set; }
+        BackendUri = configuration?.BaseUri;
+        DeviceIdentifier = configuration?.DeviceIdentifier;
+    }
 
-        [Required]
-        [Display(Name = "Device key")]
-        [BindProperty]
-        public string? DeviceKey { get; set; }
-
-        public ConfigureModel(IConnectionConfigurationGateway configurationGateway)
+    public IActionResult OnPost()
+    {
+        if (!ModelState.IsValid)
         {
-            _configurationGateway = configurationGateway;
+            return Page();
         }
 
-        public void OnGet()
-        {
-            var configuration = _configurationGateway.ReadConfiguration();
+        _configurationGateway.WriteConfiguration(
+            new ConnectionConfiguration(
+                baseUri: BackendUri!,
+                deviceIdentifier: DeviceIdentifier!,
+                deviceKey: DeviceKey!));
 
-            IsConfigured = configuration != null;
+        return RedirectToPage("/Status");
+    }
 
-            BackendUri = configuration?.BaseUri;
-            DeviceIdentifier = configuration?.DeviceIdentifier;
-        }
-
-        public IActionResult OnPost()
-        {
-            if (!ModelState.IsValid)
-            {
-                return Page();
-            }
-
-            _configurationGateway.WriteConfiguration(
-                new ConnectionConfiguration(
-                    baseUri: BackendUri!,
-                    deviceIdentifier: DeviceIdentifier!,
-                    deviceKey: DeviceKey!));
-
-            return RedirectToPage("/Status");
-        }
-
-        public IActionResult OnDelete()
-        {
-            _configurationGateway.EraseConfiguration();
-            return new NoContentResult();
-        }
+    public IActionResult OnDelete()
+    {
+        _configurationGateway.EraseConfiguration();
+        return new NoContentResult();
     }
 }

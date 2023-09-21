@@ -4,50 +4,49 @@ using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
-namespace Rcm.Backend.Common.Http
+namespace Rcm.Backend.Common.Http;
+
+public class ExceptionHandler
 {
-    public class ExceptionHandler
+    private readonly ILogger _logger;
+    private readonly string _environment;
+
+    public ExceptionHandler(ILogger logger, string environment)
     {
-        private readonly ILogger _logger;
-        private readonly string _environment;
+        (_logger, _environment) = (logger, environment);
+    }
 
-        public ExceptionHandler(ILogger logger, string environment)
+    public IActionResult Handle(Exception exception)
+    {
+        _logger.LogError(exception.ToString());
+
+        if (exception is InputValidationException validationException)
         {
-            (_logger, _environment) = (logger, environment);
+            return new ObjectResult(JsonSerializer.Serialize(new { validationException.Path, validationException.ErrorMessage }))
+            {
+                StatusCode = (int)HttpStatusCode.BadRequest
+            };
         }
-
-        public IActionResult Handle(Exception exception)
+        else if (exception is AuthorizationException)
         {
-            _logger.LogError(exception.ToString());
-
-            if (exception is InputValidationException validationException)
+            return new UnauthorizedResult();
+        }
+        else if (exception is ConflictException)
+        {
+            return new ConflictObjectResult(exception.Message);
+        }
+        else
+        {
+            if (EnvironmentNames.IsDevelopment(_environment) || EnvironmentNames.IsStaging(_environment))
             {
-                return new ObjectResult(JsonSerializer.Serialize(new { validationException.Path, validationException.ErrorMessage }))
+                return new ObjectResult(exception.ToString())
                 {
-                    StatusCode = (int)HttpStatusCode.BadRequest
+                    StatusCode = (int)HttpStatusCode.InternalServerError
                 };
-            }
-            else if (exception is AuthorizationException)
-            {
-                return new UnauthorizedResult();
-            }
-            else if (exception is ConflictException)
-            {
-                return new ConflictObjectResult(exception.Message);
             }
             else
             {
-                if (EnvironmentNames.IsDevelopment(_environment) || EnvironmentNames.IsStaging(_environment))
-                {
-                    return new ObjectResult(exception.ToString())
-                    {
-                        StatusCode = (int)HttpStatusCode.InternalServerError
-                    };
-                }
-                else
-                {
-                    return new StatusCodeResult((int)HttpStatusCode.InternalServerError);
-                }
+                return new StatusCodeResult((int)HttpStatusCode.InternalServerError);
             }
         }
     }

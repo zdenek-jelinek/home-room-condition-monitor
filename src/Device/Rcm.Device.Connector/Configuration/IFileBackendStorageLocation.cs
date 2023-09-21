@@ -1,7 +1,6 @@
-﻿namespace Rcm.Device.Connector.Configuration
+﻿namespace Rcm.Device.Connector.Configuration;
+
+public interface IFileBackendStorageLocation
 {
-    public interface IFileBackendStorageLocation
-    {
-        string GetDirectoryPath();
-    }
+    string GetDirectoryPath();
 }

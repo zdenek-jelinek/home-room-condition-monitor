@@ -14,68 +14,67 @@ using Rcm.Backend.Common.Contracts;
 using Rcm.Backend.Common.Http;
 using Rcm.Backend.Persistence.Devices;
 
-namespace Rcm.Backend.Web.Server
+namespace Rcm.Backend.Web.Server;
+
+public static class DevicesResource
 {
-    public static class DevicesResource
+    [FunctionName("Devices")]
+    public static async Task<IActionResult> CreateDeviceAsync(
+        [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "devices")] HttpRequest request,
+        [Table("devices")] CloudTable devices,
+        ILogger logger,
+        CancellationToken cancellationToken)
     {
-        [FunctionName("Devices")]
-        public static async Task<IActionResult> CreateDeviceAsync(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "devices")] HttpRequest request,
-            [Table("devices")] CloudTable devices,
-            ILogger logger,
-            CancellationToken cancellationToken)
+        try
         {
-            try
-            {
-                var deviceName = await GetDeviceNameAsync(request.Body, cancellationToken);
+            var deviceName = await GetDeviceNameAsync(request.Body, cancellationToken);
 
-                var deviceRegistration = await CreateDeviceAsync(deviceName, devices, cancellationToken);
+            var deviceRegistration = await CreateDeviceAsync(deviceName, devices, cancellationToken);
 
-                return new OkObjectResult(MapToOutput(deviceRegistration));
-            }
-            catch (Exception e)
-            {
-                return new ExceptionHandler(logger, EnvironmentProperties.Name).Handle(e);
-            }
+            return new OkObjectResult(MapToOutput(deviceRegistration));
+        }
+        catch (Exception e)
+        {
+            return new ExceptionHandler(logger, EnvironmentProperties.Name).Handle(e);
+        }
+    }
+
+    private static Task<DeviceRegistration> CreateDeviceAsync(string deviceName, CloudTable devices, CancellationToken cancellationToken)
+    {
+        var deviceGateway = new DeviceGateway(devices);
+
+        return deviceGateway.CreateAsync(deviceName, cancellationToken);
+    }
+
+    private static DeviceRegistrationOutputNetworkModel MapToOutput(DeviceRegistration deviceRegistration)
+    {
+        return new DeviceRegistrationOutputNetworkModel
+        {
+            Identifier = deviceRegistration.Identifier,
+            Key = deviceRegistration.Key,
+            Name = deviceRegistration.Name
+        };
+    }
+
+    private static async Task<string> GetDeviceNameAsync(Stream stream, CancellationToken cancellationToken)
+    {
+        var deviceRegistration = await JsonSerializer.DeserializeAsync<DeviceRegistrationInputNetworkModel>(
+            stream,
+            new JsonSerializerOptions { PropertyNameCaseInsensitive = true },
+            cancellationToken);
+
+        if (deviceRegistration == null)
+        {
+            throw new InputValidationException("Non-null object payload is required.");
         }
 
-        private static Task<DeviceRegistration> CreateDeviceAsync(string deviceName, CloudTable devices, CancellationToken cancellationToken)
+        if (String.IsNullOrEmpty(deviceRegistration.Name))
         {
-            var deviceGateway = new DeviceGateway(devices);
-
-            return deviceGateway.CreateAsync(deviceName, cancellationToken);
+            throw new InputValidationException(
+                $"{nameof(DeviceRegistrationInputNetworkModel.Name)}",
+                "The value must not be null or empty.");
         }
 
-        private static DeviceRegistrationOutputNetworkModel MapToOutput(DeviceRegistration deviceRegistration)
-        {
-            return new DeviceRegistrationOutputNetworkModel
-            {
-                Identifier = deviceRegistration.Identifier,
-                Key = deviceRegistration.Key,
-                Name = deviceRegistration.Name
-            };
-        }
-
-        private static async Task<string> GetDeviceNameAsync(Stream stream, CancellationToken cancellationToken)
-        {
-            var deviceRegistration = await JsonSerializer.DeserializeAsync<DeviceRegistrationInputNetworkModel>(
-                stream,
-                new JsonSerializerOptions { PropertyNameCaseInsensitive = true },
-                cancellationToken);
-
-            if (deviceRegistration == null)
-            {
-                throw new InputValidationException("Non-null object payload is required.");
-            }
-
-            if (String.IsNullOrEmpty(deviceRegistration.Name))
-            {
-                throw new InputValidationException(
-                    $"{nameof(DeviceRegistrationInputNetworkModel.Name)}",
-                    "The value must not be null or empty.");
-            }
-
-            return deviceRegistration.Name;
-        }
+        return deviceRegistration.Name;
     }
 }

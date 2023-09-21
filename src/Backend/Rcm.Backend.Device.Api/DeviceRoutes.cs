@@ -1,7 +1,6 @@
-﻿namespace Rcm.Backend.Device.Api
+﻿namespace Rcm.Backend.Device.Api;
+
+public class DeviceRoutes
 {
-    public class DeviceRoutes
-    {
-        public const string MeasurementsIngress = "api/ingress/measurements";
-    }
+    public const string MeasurementsIngress = "api/ingress/measurements";
 }

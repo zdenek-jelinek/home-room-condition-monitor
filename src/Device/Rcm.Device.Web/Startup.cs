@@ -11,56 +11,55 @@ using Rcm.Device.Web.Configuration.Connectivity;
 using Rcm.Device.Web.Configuration.DataCollection;
 using Rcm.Device.Web.Configuration.Measurements;
 
-namespace Rcm.Device.Web
+namespace Rcm.Device.Web;
+
+[SuppressMessage("Style", "IDE0058:Expression value is never used")]
+public class Startup
 {
-    [SuppressMessage("Style", "IDE0058:Expression value is never used")]
-    public class Startup
+    private readonly IConfiguration _configuration;
+
+    public Startup(IConfiguration configuration)
     {
-        private readonly IConfiguration _configuration;
+        _configuration = configuration;
+    }
 
-        public Startup(IConfiguration configuration)
-        {
-            _configuration = configuration;
-        }
-
-        public void ConfigureServices(IServiceCollection services)
-        {
-            services.AddControllers();
-            var mvc = services.AddRazorPages(o => o.Conventions.AddPageRoute("/Now", ""));
+    public void ConfigureServices(IServiceCollection services)
+    {
+        services.AddControllers();
+        var mvc = services.AddRazorPages(o => o.Conventions.AddPageRoute("/Now", ""));
 
 #if DEBUG
-            mvc.AddRazorRuntimeCompilation();
+        mvc.AddRazorRuntimeCompilation();
 #endif
 
-            var measurementsConfiguration = _configuration.GetSection("measurements");
+        var measurementsConfiguration = _configuration.GetSection("measurements");
 
-            services
-                .Install<CommonServicesInstaller>(_configuration)
-                .Install<ModeBasedMeasurementServicesInstaller>(measurementsConfiguration.GetSection("access"))
-                .Install<DataCollectionServicesInstaller>()
-                .Install<AggregatesServicesInstaller>()
-                .Install<ConnectivityInstaller>();
-        }
+        services
+            .Install<CommonServicesInstaller>(_configuration)
+            .Install<ModeBasedMeasurementServicesInstaller>(measurementsConfiguration.GetSection("access"))
+            .Install<DataCollectionServicesInstaller>()
+            .Install<AggregatesServicesInstaller>()
+            .Install<ConnectivityInstaller>();
+    }
 
-        public void Configure(IApplicationBuilder application, IWebHostEnvironment environment)
+    public void Configure(IApplicationBuilder application, IWebHostEnvironment environment)
+    {
+        if (environment.IsDevelopment())
         {
-            if (environment.IsDevelopment())
-            {
-                application.UseDeveloperExceptionPage();
-            }
-            else
-            {
-                application.UseExceptionHandler("/Error");
-            }
-
-            application
-                .UseStaticFiles()
-                .UseRouting()
-                .UseEndpoints(e => 
-                {
-                    e.MapControllers();
-                    e.MapRazorPages();
-                });
+            application.UseDeveloperExceptionPage();
         }
+        else
+        {
+            application.UseExceptionHandler("/Error");
+        }
+
+        application
+            .UseStaticFiles()
+            .UseRouting()
+            .UseEndpoints(e => 
+            {
+                e.MapControllers();
+                e.MapRazorPages();
+            });
     }
 }

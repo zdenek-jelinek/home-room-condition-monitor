@@ -1,19 +1,18 @@
 ﻿using Rcm.Common.Http;
 
-namespace Rcm.Device.Web.Configuration.Common
+namespace Rcm.Device.Web.Configuration.Common;
+
+public class HttpClientFactoryAdapter : IHttpClientFactory
 {
-    public class HttpClientFactoryAdapter : IHttpClientFactory
+    private readonly System.Net.Http.IHttpClientFactory _wrappedFactory;
+
+    public HttpClientFactoryAdapter(System.Net.Http.IHttpClientFactory wrappedFactory)
     {
-        private readonly System.Net.Http.IHttpClientFactory _wrappedFactory;
+        _wrappedFactory = wrappedFactory;
+    }
 
-        public HttpClientFactoryAdapter(System.Net.Http.IHttpClientFactory wrappedFactory)
-        {
-            _wrappedFactory = wrappedFactory;
-        }
-
-        public IHttpClient Create(string name)
-        {
-            return new HttpClientAdapter(_wrappedFactory.CreateClient(name));
-        }
+    public IHttpClient Create(string name)
+    {
+        return new HttpClientAdapter(_wrappedFactory.CreateClient(name));
     }
 }
