@@ -9,6 +9,7 @@
             _compensationParameters = compensationParameters;
         }
 
+        // The calculation logic in the following method is adapted from BME280 data sheet, chapter 4.2.3 Compensation Formulas
         public (decimal temperature, int fineTemperature) CalculateTemperature(int rawTemperature)
         {
             var firstPart  = (((rawTemperature >> 3) - (_compensationParameters.Temperature1 << 1)) * _compensationParameters.Temperature2) >> 11;

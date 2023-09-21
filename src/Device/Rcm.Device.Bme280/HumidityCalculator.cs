@@ -11,6 +11,7 @@ namespace Rcm.Device.Bme280
             _compensationParameters = compensationParameters;
         }
 
+        // The calculation logic in the following method is adapted from BME280 data sheet, chapter 4.2.3 Compensation Formulas
         public decimal CalculateHumidity(int rawHumidity, int fineTemperature)
         {
             var init = fineTemperature - 76800;

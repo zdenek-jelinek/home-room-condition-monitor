@@ -143,6 +143,7 @@ namespace Rcm.Device.Bme280
                 pressure);
         }
 
+        // The calculation logic in the following method is adapted from BME280 data sheet, chapter 4.2.3 Compensation Formulas
         private decimal CompensatePressure(
             int rawPressure,
             int fineTemperature,
