@@ -251,7 +251,7 @@ namespace Rcm.Device.DataCollection.UnitTests.Files
 
         private sealed class MeasurementEntryEqualityComparer : IEqualityComparer<MeasurementEntry>
         {
-            public bool Equals(MeasurementEntry x, MeasurementEntry y)
+            public bool Equals(MeasurementEntry? x, MeasurementEntry? y)
             {
                 if (ReferenceEquals(x, y))
                 {

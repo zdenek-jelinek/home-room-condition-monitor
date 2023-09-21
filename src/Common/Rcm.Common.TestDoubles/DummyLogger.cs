@@ -3,6 +3,8 @@ using Microsoft.Extensions.Logging;
 
 namespace Rcm.Common.TestDoubles
 {
+    // TODO Replace with NullLogger<T>.Instance (Zdenek Jelinek, 21. 9. 2023)
+    [Obsolete("Use NullLogger<T>.Instance")]
     public class DummyLogger<T> : ILogger<T>
     {
         private class DummyScope : IDisposable
@@ -19,7 +21,7 @@ namespace Rcm.Common.TestDoubles
             LogLevel logLevel,
             EventId eventId,
             TState state,
-            Exception exception,
+            Exception? exception,
             Func<TState, Exception, string> formatter)
         {
         }

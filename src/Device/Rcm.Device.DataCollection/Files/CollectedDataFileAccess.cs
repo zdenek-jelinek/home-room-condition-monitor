@@ -47,6 +47,11 @@ namespace Rcm.Device.DataCollection.Files
                     token.ThrowIfCancellationRequested();
 
                     var line = file.ReadLine();
+                    if (line == null)
+                    {
+                        // End of file
+                        break;
+                    }
 
                     var entry = TryParseEntry(date, path, lineNumber, line);
                     if (entry != null && entry.Time >= start && entry.Time <= end)

@@ -9,9 +9,9 @@ using Microsoft.Extensions.Hosting;
 
 namespace Rcm.Device.Web
 {
-    public class Program
+    public static class Program
     {
-        public static readonly TimeSpan ShutdownTimeout = TimeSpan.FromSeconds(10);
+        public static TimeSpan ShutdownTimeout => TimeSpan.FromSeconds(10);
 
         public static async Task Main(string[] args)
         {
@@ -62,9 +62,13 @@ namespace Rcm.Device.Web
 
         private static void InitializeCurrentDirectory()
         {
-            var currentProcessModule = Process.GetCurrentProcess().MainModule;
+            var currentProcessModule = Process.GetCurrentProcess().MainModule
+                ?? throw new Exception("Could not access metadata of main module of current process.");
 
-            var currentProcessModuleDirectory = Path.GetDirectoryName(currentProcessModule.FileName);
+            var currentProcessFileName = currentProcessModule.FileName
+                ?? throw new Exception("The current process main module has no file name.");
+
+            var currentProcessModuleDirectory = Path.GetDirectoryName(currentProcessFileName)!;
 
             Directory.SetCurrentDirectory(currentProcessModuleDirectory);
         }

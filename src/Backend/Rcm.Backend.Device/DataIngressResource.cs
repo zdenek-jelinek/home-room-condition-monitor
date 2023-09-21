@@ -33,7 +33,7 @@ namespace Rcm.Backend.Device
             try
             {
                 var authorizationToken = GetAuthorizationToken(request);
-                
+
                 var measurements = await ParseMeasurements(request.Body, token);
 
                 await AuthorizeAsync(measurements.DeviceIdentifier, authorizationToken, devices, token);
@@ -85,6 +85,11 @@ namespace Rcm.Backend.Device
                 stream,
                 new JsonSerializerOptions { PropertyNameCaseInsensitive = true },
                 token);
+
+            if (measurements == null)
+            {
+                throw new InputValidationException("A non-null object payload is required.");
+            }
 
             return Convert(measurements);
         }

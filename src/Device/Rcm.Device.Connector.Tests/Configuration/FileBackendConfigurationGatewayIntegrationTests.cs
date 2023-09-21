@@ -279,7 +279,7 @@ namespace Rcm.Device.Connector.Tests.Configuration
                 backendConfigurationLocation ?? new StubFileBackendStorageLocation());
         }
 
-        private static IReadOnlyDictionary<string, string> ReadFileAsDictionary(string path)
+        private static IReadOnlyDictionary<string, string>? ReadFileAsDictionary(string path)
         {
             return JsonSerializer.Deserialize<Dictionary<string, string>>(File.ReadAllText(path));
         }

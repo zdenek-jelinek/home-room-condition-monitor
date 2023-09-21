@@ -65,12 +65,15 @@ namespace Rcm.Device.Connector.Tests.Upload
 
             // then
             var sentRequest = spyHttpClient.SentRequest!;
+            Assert.IsNotNull(sentRequest);
             Assert.AreEqual(HttpMethod.Post, sentRequest.Method);
-            Assert.AreEqual($"{Configuration.BaseUri}/{DeviceRoutes.MeasurementsIngress}", sentRequest.RequestUri.AbsoluteUri);
-            Assert.AreEqual("Bearer", sentRequest.Headers.Authorization.Scheme);
+            Assert.AreEqual($"{Configuration.BaseUri}/{DeviceRoutes.MeasurementsIngress}", sentRequest.RequestUri?.AbsoluteUri);
+            Assert.IsNotNull(sentRequest.Headers.Authorization);
+            Assert.AreEqual("Bearer", sentRequest.Headers.Authorization!.Scheme);
             Assert.AreEqual(Configuration.DeviceKey, sentRequest.Headers.Authorization.Parameter);
 
-            var requestBody = await sentRequest.Content.ReadAsStreamAsync();
+            Assert.IsNotNull(sentRequest.Content);
+            var requestBody = await sentRequest.Content!.ReadAsStreamAsync();
             var sentPayload = await JsonSerializer.DeserializeAsync<MeasurementsIngressModel>(requestBody);
             Assert.That(expectedPayload, Is.EqualTo(sentPayload).Using<MeasurementsIngressModel>(MeasurementIngressModelEquals));
         }

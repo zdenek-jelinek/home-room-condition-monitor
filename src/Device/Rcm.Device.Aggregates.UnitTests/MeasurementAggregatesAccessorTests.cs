@@ -1,11 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
 using NUnit.Framework;
 using Rcm.Common;
 using Rcm.Device.Aggregates.Api;
 using Rcm.Device.DataCollection.Api;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
 
 namespace Rcm.Device.Aggregates.UnitTests
 {
@@ -208,7 +208,7 @@ namespace Rcm.Device.Aggregates.UnitTests
             var measurementInSecondPartition = new MeasurementEntry(endTime, 30m, 40m, 1000m);
 
             var aggregatesAccessor = new MeasurementAggregatesAccessor(
-                new StubCollectedDataAccessor 
+                new StubCollectedDataAccessor
                 {
                     Data = new[] { measurementInFirstPartition, measurementOnBorderOfPartitions, measurementInSecondPartition }
                 });
@@ -350,10 +350,10 @@ namespace Rcm.Device.Aggregates.UnitTests
         {
             private readonly IEqualityComparer<Api.Aggregates> _aggregatesComparer = new AggregatesEqualityComparer();
 
-            public bool Equals(MeasurementAggregates x, MeasurementAggregates y) =>
-                _aggregatesComparer.Equals(x.Temperature, y.Temperature)
-                    && _aggregatesComparer.Equals(x.Pressure, y.Pressure)
-                    && _aggregatesComparer.Equals(x.Humidity, y.Humidity);
+            public bool Equals(MeasurementAggregates? x, MeasurementAggregates? y) =>
+                _aggregatesComparer.Equals(x?.Temperature, y?.Temperature)
+                    && _aggregatesComparer.Equals(x?.Pressure, y?.Pressure)
+                    && _aggregatesComparer.Equals(x?.Humidity, y?.Humidity);
 
             public int GetHashCode(MeasurementAggregates obj) =>
                 HashCode.Combine(
@@ -366,11 +366,11 @@ namespace Rcm.Device.Aggregates.UnitTests
         {
             private readonly IEqualityComparer<AggregateEntry> _entryComparer = new AggregateEntryEqualityComparer();
 
-            public bool Equals(Api.Aggregates x, Api.Aggregates y) => 
-                _entryComparer.Equals(x.First, y.First)
-                    && _entryComparer.Equals(x.Min, y.Min)
-                    && _entryComparer.Equals(x.Max, y.Max)
-                    && _entryComparer.Equals(x.Last, y.Last);
+            public bool Equals(Api.Aggregates? x, Api.Aggregates? y) =>
+                _entryComparer.Equals(x?.First, y?.First)
+                    && _entryComparer.Equals(x?.Min, y?.Min)
+                    && _entryComparer.Equals(x?.Max, y?.Max)
+                    && _entryComparer.Equals(x?.Last, y?.Last);
 
             public int GetHashCode(Api.Aggregates obj) =>
                 HashCode.Combine(
@@ -382,8 +382,8 @@ namespace Rcm.Device.Aggregates.UnitTests
 
         private class AggregateEntryEqualityComparer : IEqualityComparer<AggregateEntry>
         {
-            public bool Equals(AggregateEntry x, AggregateEntry y) =>
-                x.Time == y.Time && x.Value == y.Value;
+            public bool Equals(AggregateEntry? x, AggregateEntry? y) =>
+                x?.Time == y?.Time && x?.Value == y?.Value;
 
             public int GetHashCode(AggregateEntry obj) =>
                 HashCode.Combine(obj.Time, obj.Value);

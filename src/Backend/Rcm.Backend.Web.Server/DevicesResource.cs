@@ -63,6 +63,11 @@ namespace Rcm.Backend.Web.Server
                 new JsonSerializerOptions { PropertyNameCaseInsensitive = true },
                 cancellationToken);
 
+            if (deviceRegistration == null)
+            {
+                throw new InputValidationException("Non-null object payload is required.");
+            }
+
             if (String.IsNullOrEmpty(deviceRegistration.Name))
             {
                 throw new InputValidationException(
