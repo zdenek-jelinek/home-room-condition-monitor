@@ -31,15 +31,15 @@ public class Bme280I2cDevice : IMeasurementProvider, IDisposable
 
     public async Task<MeasurementEntry> MeasureAsync(CancellationToken token)
     {
-        _logger.LogDebug("Initiating measurement...");
+        _logger.LogDebug("Initiating measurement");
         InitiateMeasurement();
 
         await WaitForMeasurementCompletionAsync(token);
 
-        _logger.LogDebug("Reading measurement results...");
+        _logger.LogDebug("Reading measurement results");
         var (rawPressure, rawTemperature, rawHumidity) = ReadMeasurementResults();
 
-        _logger.LogDebug("Compensating measurement results...");
+        _logger.LogDebug("Compensating measurement results");
         return CompensateResults(rawPressure, rawTemperature, rawHumidity, _compensationParameters.Value);
     }
 
@@ -67,7 +67,7 @@ public class Bme280I2cDevice : IMeasurementProvider, IDisposable
         {
             if (!reported && stopwatch.Elapsed > TimeSpan.FromSeconds(10))
             {
-                _logger.LogWarning("Measurement is taking longer than 10 seconds to complete.");
+                _logger.LogWarning("Measurement is taking longer than 10 seconds to complete");
                 reported = true;
             }
 
@@ -94,11 +94,11 @@ public class Bme280I2cDevice : IMeasurementProvider, IDisposable
     {
         if (duration > TimeSpan.FromMilliseconds(100) + MeasurementDelayTolerance)
         {
-            _logger.LogWarning($"Measurement took {duration.TotalMilliseconds}ms");
+            _logger.LogWarning("Measurement took {DurationInMilliseconds}ms", duration.TotalMilliseconds);
         }
         else
         {
-            _logger.LogDebug($"Measurement took {duration.TotalMilliseconds}ms");
+            _logger.LogDebug("Measurement took {DurationInMilliseconds}ms", duration.TotalMilliseconds);
         }
     }
 
@@ -114,7 +114,7 @@ public class Bme280I2cDevice : IMeasurementProvider, IDisposable
         var temperature = (results[3] << 12) | (results[4] << 4) | (results[5] >> 4);
         var humidity = (results[6] << 8) | results[7];
 
-        _logger.LogTrace($"Read pressure {pressure:X5}, temperature {temperature:X5}, humidity {humidity:X4}");
+        _logger.LogTrace("Read pressure {Pressure:X5}, temperature {Temperature:X5}, humidity {Humidity:X4}", pressure, temperature, humidity);
 
         return (pressure, temperature, humidity);
     }
@@ -134,7 +134,7 @@ public class Bme280I2cDevice : IMeasurementProvider, IDisposable
 
         var humidity = humidityCalculator.CalculateHumidity(rawHumidity, fineTemperature);
 
-        _logger.LogTrace($"Compensated values as {resultingTemperature}°C, {pressure}hPa, {humidity}%rH");
+        _logger.LogTrace("Compensated values as {Temperature}°C, {Pressure}hPa, {Humidity}%rH", resultingTemperature, pressure, humidity);
 
         return new MeasurementEntry(
             _clock.Now,
@@ -174,7 +174,7 @@ public class Bme280I2cDevice : IMeasurementProvider, IDisposable
 
     private CompensationParameters ReadCompensationParameters()
     {
-        _logger.LogDebug("Loading compensation parameters.");
+        _logger.LogDebug("Loading compensation parameters");
 
         const int lowCompensationRegistersStartAddress = 0x88;
         const int lowCompensationRegistersSize = 0xA1 - lowCompensationRegistersStartAddress + 1;
@@ -219,8 +219,8 @@ public class Bme280I2cDevice : IMeasurementProvider, IDisposable
                 pressureCompensation,
                 humidityCompensation);
 
-            _logger.LogDebug("Finished loading compensation parameters.");
-            _logger.LogTrace(parameters.ToString("\n"));
+            _logger.LogDebug("Finished loading compensation parameters");
+            _logger.LogTrace("{ParameterValues}", parameters.ToString("\n"));
 
             return parameters;
         }

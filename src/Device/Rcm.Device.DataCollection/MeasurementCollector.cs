@@ -59,16 +59,16 @@ public class MeasurementCollector : IMeasurementCollector
 
     private async Task AddMeasurementAsync(MeasurementEntry measurement, CancellationToken token)
     {
-        _logger.LogTrace($"Adding new record of {measurement}");
+        _logger.LogTrace("Adding new record {Record}", measurement);
 
         if (_entries.Count != 0 && _entries[0].Time.Minute != measurement.Time.Minute)
         {
-            _logger.LogTrace($"Persisting previous minute measurement records");
+            _logger.LogTrace("Persisting previous minute measurement records");
             await PropagateCollectedDataAsync(_entries, token);
             _entries.Clear();
         }
 
-        _logger.LogTrace($"Storing record for further processing");
+        _logger.LogTrace("Storing record for further processing");
         _entries.Add(measurement);
     }
 

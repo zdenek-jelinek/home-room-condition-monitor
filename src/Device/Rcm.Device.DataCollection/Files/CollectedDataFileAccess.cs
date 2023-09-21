@@ -35,10 +35,12 @@ public class CollectedDataFileAccess : ICollectedDataFileAccess
         {
             token.ThrowIfCancellationRequested();
 
+            var fullFilePath = Path.GetFullPath(path);
+
             using var file = _file.OpenText(path, CannotOpenFile);
             if (file is null)
             {
-                _logger.LogTrace($"Skipping read from \"{Path.GetFullPath(path)}\" as the file does not exist");
+                _logger.LogTrace("Skipping read from '{FullSourceFilePath}', the file does not exist", fullFilePath);
                 continue;
             }
 
@@ -53,10 +55,10 @@ public class CollectedDataFileAccess : ICollectedDataFileAccess
                     break;
                 }
 
-                var entry = TryParseEntry(date, path, lineNumber, line);
+                var entry = TryParseEntry(date, fullFilePath, lineNumber, line);
                 if (entry != null && entry.Time >= start && entry.Time <= end)
                 {
-                    _logger.LogTrace($"Read record of {entry} from \"{Path.GetFullPath(path)}\"");
+                    _logger.LogTrace("Read record {Record} from '{FullSourceFilePath}'", entry, fullFilePath);
                     yield return entry;
                 }
             }
@@ -71,14 +73,14 @@ public class CollectedDataFileAccess : ICollectedDataFileAccess
         }
         catch (FormatException e)
         {
-            _logger.LogWarning(e, $"Skipping corrupt entry in \"{filePath}\", line: {lineNumber}, value: \"{line}\".");
-            return default;
+            _logger.LogWarning(e, "Skipping corrupt entry in '{FullSourceFilePath}', line: {LineNumber}, value: '{LineText}'", filePath, lineNumber, line);
+            return null;
         }
     }
 
     private void CannotOpenFile(string path, Exception e)
     {
-        _logger.LogWarning(e, $"Could not open measurements file \"{path}\"(\"{Path.GetFullPath(path)}\") for reading");
+        _logger.LogWarning(e, "Could not open measurements file '{Path}' ('{FullPath}') for reading", path, Path.GetFullPath(path));
     }
 
     public async Task SaveAsync(MeasurementEntry entry, CancellationToken token)
@@ -87,7 +89,7 @@ public class CollectedDataFileAccess : ICollectedDataFileAccess
         var path = _filesNavigator.GetFilePath(entry.Time);
         EnsureDirectoryExists(path);
 
-        _logger.LogTrace($"Storing record of {entry} to \"{Path.GetFullPath(path)}\"");
+        _logger.LogTrace("Storing record {Record} to '{FullDestinationPath}'", entry, Path.GetFullPath(path));
 
         using var file = _file.AppendText(path);
 

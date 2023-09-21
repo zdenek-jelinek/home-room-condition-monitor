@@ -51,7 +51,7 @@ public class PeriodicDataCollectionService : IHostedService, IAsyncDisposable
         {
             _logger.LogWarning(
                 "Graceful periodic measurement cancellation failed: "
-                + "Could not enter pending measurement lock within shutdown timeout.");
+                + "Could not enter pending measurement lock within shutdown timeout");
             throw;
         }
 
@@ -59,11 +59,11 @@ public class PeriodicDataCollectionService : IHostedService, IAsyncDisposable
         {
             if (_pendingMeasurement is null || _pendingMeasurement.IsCompleted)
             {
-                _logger.LogInformation("Periodic measurement cancelled: No measurement in progress.");
+                _logger.LogInformation("Periodic measurement cancelled: No measurement in progress");
                 return;
             }
 
-            _logger.LogInformation("Periodic measurement cancelled: Waiting for last measurement to finish.");
+            _logger.LogInformation("Periodic measurement cancelled: Waiting for last measurement to finish");
             await Task.WhenAny(_pendingMeasurement, Task.Delay(Timeout.Infinite, cancellationToken));
         }
         catch (OperationCanceledException)

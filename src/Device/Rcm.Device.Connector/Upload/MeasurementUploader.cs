@@ -64,7 +64,7 @@ public class MeasurementUploader : IMeasurementUploader
         }
         catch (HttpRequestException e)
         {
-            _logger.LogInformation(e, "Failed to upload measurements to back-end.");
+            _logger.LogInformation(e, "Failed to upload measurements to back-end");
         }
     }
 }

@@ -18,8 +18,6 @@ public class ExceptionHandler
 
     public IActionResult Handle(Exception exception)
     {
-        _logger.LogError(exception.ToString());
-
         if (exception is InputValidationException validationException)
         {
             return new ObjectResult(JsonSerializer.Serialize(new { validationException.Path, validationException.ErrorMessage }))
@@ -37,6 +35,8 @@ public class ExceptionHandler
         }
         else
         {
+            _logger.LogError(exception, "An unhandled exception occurred");
+
             if (EnvironmentNames.IsDevelopment(_environment) || EnvironmentNames.IsStaging(_environment))
             {
                 return new ObjectResult(exception.ToString())

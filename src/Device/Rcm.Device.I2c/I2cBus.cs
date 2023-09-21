@@ -52,7 +52,7 @@ public class I2cBus : IDisposable
                 new Win32Exception(Marshal.GetLastWin32Error()));
         }
 
-        logger.LogDebug($"I2C bus \"{i2cBus}\" initialized.");
+        logger.LogDebug("I2C bus '{I2cBus}' initialized", i2cBus);
 
         return new I2cBus(logger, i2cBusHandle);
     }
@@ -74,7 +74,7 @@ public class I2cBus : IDisposable
 
         _selectedDeviceAddress = address;
 
-        _logger.LogTrace($"Selected I2C device at {address:x}.");
+        _logger.LogTrace("Selected I2C device at {DeviceAddress:x}", address);
     }
 
     private unsafe void Read(Span<byte> buffer)
@@ -101,7 +101,7 @@ public class I2cBus : IDisposable
 
         if (_logger.IsEnabled(LogLevel.Trace))
         {
-            _logger.LogTrace($"Read {read} bytes from I2C bus.\n{PrintBuffer(buffer, read)}");
+            _logger.LogTrace("Read {ByteCount} bytes from I2C bus\n{ReadData}", read, PrintBuffer(buffer, read));
         }
     }
 
@@ -135,8 +135,7 @@ public class I2cBus : IDisposable
 
         if (_logger.IsEnabled(LogLevel.Trace))
         {
-            _logger.LogTrace($"Written {written} bytes to I2C bus.\n"
-                + PrintBuffer(data, written));
+            _logger.LogTrace("Written {ByteCount} bytes to I2C bus\n{WrittenData}", written, PrintBuffer(data, written));
         }
     }
 
@@ -156,7 +155,7 @@ public class I2cBus : IDisposable
         _disposed = true;
         _i2cBusHandle.Dispose();
 
-        _logger.LogDebug("I2C bus closed.");
+        _logger.LogDebug("I2C bus closed");
     }
 
     private static string PrintBuffer(ReadOnlySpan<byte> buffer, int length)
