@@ -64,7 +64,7 @@ public class PeriodicDataCollectionServiceIntegrationTests
         await periodicDataCollecitonService.StartAsync(CancellationToken.None);
 
         await blockingMeasurementCollector.MeasurementStarted;
-            
+
         var subsequentMeasurementIssued = await blockingMeasurementCollector.MeasurementStarted.TryWait(4 * measurementPeriod);
 
         // then

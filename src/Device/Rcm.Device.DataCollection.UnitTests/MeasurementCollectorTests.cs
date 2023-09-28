@@ -172,7 +172,7 @@ public class MeasurementCollectorTests
         public class BlockingSpyMeasurementProvider : IMeasurementProvider
         {
             private readonly Task<MeasurementEntry> _task = new Task<MeasurementEntry>(() => new MeasurementEntry(DateTimeOffset.Now, 0m, 0m, 0m));
-                
+
             private int _invocationCount;
             public int InvocationCount => _invocationCount;
 

@@ -48,14 +48,14 @@ public class CollectedDataSerializer
         if (nextSpaceIndex < 0)
         {
             var result = Decimal.Parse(record.Slice(offset), provider: InvariantCulture);
-                
+
             offset = record.Length;
             return result;
         }
         else
         {
             var result = Decimal.Parse(record.Slice(offset, nextSpaceIndex), provider: InvariantCulture);
-                
+
             offset += nextSpaceIndex;
             return result;
         }

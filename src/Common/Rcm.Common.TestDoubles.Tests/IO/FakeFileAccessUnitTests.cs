@@ -124,7 +124,7 @@ public class FakeFileAccessUnitTests
             Assert.AreEqual(contents.Length, readCount);
             Assert.AreEqual(contents, Encoding.UTF8.GetString(buffer.AsSpan(0, readCount)));
         }
-            
+
         [Test]
         [TestCase(FileAccess.Read)]
         [TestCase(FileAccess.ReadWrite)]

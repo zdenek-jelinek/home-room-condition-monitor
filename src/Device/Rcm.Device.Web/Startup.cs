@@ -56,7 +56,7 @@ public class Startup
         application
             .UseStaticFiles()
             .UseRouting()
-            .UseEndpoints(e => 
+            .UseEndpoints(e =>
             {
                 e.MapControllers();
                 e.MapRazorPages();

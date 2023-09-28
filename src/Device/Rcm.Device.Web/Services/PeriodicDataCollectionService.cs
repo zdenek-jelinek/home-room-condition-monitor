@@ -30,7 +30,7 @@ public class PeriodicDataCollectionService : IHostedService, IAsyncDisposable
     {
         var (nextMeasurementDelay, measurementPeriod) = _measurementCollector.MeasurementTimings;
         _timer = new Timer(_ => RunMeasurement(), null, nextMeasurementDelay, measurementPeriod);
-            
+
         _logger.LogInformation("Periodic measurement started");
 
         return Task.CompletedTask;
@@ -107,7 +107,7 @@ public class PeriodicDataCollectionService : IHostedService, IAsyncDisposable
 
             _pendingMeasurement = _measurementCollector
                 .MeasureAsync(_stoppingSource.Token)
-                .ContinueWith(t => 
+                .ContinueWith(t =>
                 {
                     if (t.IsCompletedSuccessfully)
                     {

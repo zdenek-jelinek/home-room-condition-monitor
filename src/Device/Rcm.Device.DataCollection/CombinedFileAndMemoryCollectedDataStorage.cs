@@ -43,7 +43,7 @@ public class CombinedFileAndMemoryCollectedDataStorage : ICollectedDataStorage, 
             {
                 _currentDayRecords.Clear();
             }
-                    
+
             _currentDayRecords.Add(value);
         }
         finally

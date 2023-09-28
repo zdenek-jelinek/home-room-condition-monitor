@@ -42,7 +42,7 @@ public class CombinedFileAndMemoryCollectedDataStorageTests
         Assert.AreEqual(entry.RelativeHumidity, spyCollectedDataFileAccess.SavedEntry.RelativeHumidity);
         Assert.AreEqual(entry.HpaPressure, spyCollectedDataFileAccess.SavedEntry.HpaPressure);
     }
-        
+
     [Test]
     public async Task AccessFilesForDataInThePastReadsTodayDataFromMemoryAndDoesNotReadDataFromFuture()
     {

@@ -24,7 +24,7 @@ public class Bme280DeviceFactory : IMeasurementProviderFactory, IDisposable
         _device = new Lazy<Bme280I2cDevice>(CreateDevice);
     }
 
-    public IMeasurementProvider Create() => 
+    public IMeasurementProvider Create() =>
         _device.Value;
 
     public void Dispose()

@@ -16,7 +16,7 @@ public class MeasurementEntryIngressModel
     /// Pressure [hPa]
     /// </summary>
     public decimal? Pressure { get; set; }
-        
+
     /// <summary>
     /// Relative humidity [%]
     /// </summary>
