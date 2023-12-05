@@ -58,7 +58,7 @@ public static class DataIngressResource
     private static async Task AuthorizeAsync(string deviceId, string authorizationToken, CloudTable devices, CancellationToken token)
     {
         var deviceGateway = new DeviceGateway(devices);
-            
+
         var authorized = await deviceGateway.AuthorizeAsync(deviceId, authorizationToken, token);
         if (!authorized)
         {
@@ -68,15 +68,15 @@ public static class DataIngressResource
 
     private static string GetAuthorizationToken(HttpRequest request)
     {
-        if (!request.Headers.TryGetValue("Authorization", out var token)
-            || String.IsNullOrEmpty(token)
-            || token.Count != 1
-            || !token[0].StartsWith("Bearer ", StringComparison.InvariantCultureIgnoreCase))
+        if (request.Headers.TryGetValue("Authorization", out var authorizationValues)
+            && authorizationValues is [var authorization]
+            && authorization?.StartsWith("Bearer ", StringComparison.OrdinalIgnoreCase) == true)
         {
-            throw new AuthorizationException();
+            return authorization.Substring("Bearer ".Length);
         }
 
-        return token[0].Substring("Bearer ".Length);
+        throw new AuthorizationException();
+
     }
 
     private static async Task<DeviceMeasurements> ParseMeasurements(Stream stream, CancellationToken token)
