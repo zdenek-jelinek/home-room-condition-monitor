@@ -16,7 +16,7 @@ The collected data are also available over a locally served ASP.NET Core Razor P
 The implementation currently supports Linux with BME280 sensor connected over I2C.
 
 ### Prerequisities
-* [.NET Core 3.1 SDK](https://dotnet.microsoft.com/download)
+* [.NET 6 SDK](https://dotnet.microsoft.com/download)
 * [Node.js and npm](https://nodejs.org/en/) (npm is auto-included in Node.js)
 
 ### Configuration
