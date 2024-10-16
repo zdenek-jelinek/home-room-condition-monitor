@@ -6,10 +6,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="System.Text.Json" Version="8.0.0" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\..\Backend\Rcm.Backend.Device.Api\Rcm.Backend.Device.Api.csproj" />
     <ProjectReference Include="..\..\Common\Rcm.Common\Rcm.Common.csproj" />
     <ProjectReference Include="..\Rcm.Device.Connector.Api\Rcm.Device.Connector.Api.csproj" />
