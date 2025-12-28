@@ -15,7 +15,7 @@
 
     <!-- Device -->
     <PackageVersion Include="Microsoft.Extensions.Hosting.Systemd" Version="8.0.0" />
-    <PackageVersion Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="8.0.0" Condition="'$(Configuration)' == 'Debug'" />
+    <PackageVersion Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="8.0.0" />
 
     <!-- Azure -->
     <PackageVersion Include="Microsoft.Azure.Cosmos.Table" Version="1.0.8" />
