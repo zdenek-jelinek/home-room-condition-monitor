@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "flatpickr": "^4.6.13",
-    "requirejs": "^2.3.6"
+    "requirejs": "^2.3.7"
   },
   "devDependencies": {
     "grunt": "^1.6.1",
