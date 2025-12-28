@@ -1,0 +1,49 @@
+<Solution>
+  <Folder Name="/Backend/">
+    <Project Path="src/Backend/Rcm.Backend.Common/Rcm.Backend.Common.csproj" />
+    <Project Path="src/Backend/Rcm.Backend.Device.Api/Rcm.Backend.Device.Api.csproj" />
+    <Project Path="src/Backend/Rcm.Backend.Device/Rcm.Backend.Device.csproj" />
+    <Project Path="src/Backend/Rcm.Backend.Persistence/Rcm.Backend.Persistence.csproj" />
+    <Project Path="src/Backend/Rcm.Backend.Web.Server/Rcm.Backend.Web.Server.csproj" />
+  </Folder>
+  <Folder Name="/Common/">
+    <Project Path="src/Common/Rcm.Common.TestDoubles.Tests/Rcm.Common.TestDoubles.Tests.csproj" />
+    <Project Path="src/Common/Rcm.Common.TestDoubles/Rcm.Common.TestDoubles.csproj" />
+    <Project Path="src/Common/Rcm.Common.TestFramework/Rcm.Common.TestFramework.csproj" />
+    <Project Path="src/Common/Rcm.Common/Rcm.Common.csproj" />
+  </Folder>
+  <Folder Name="/Device/">
+    <Project Path="src/Device/Rcm.Device.Common/Rcm.Device.Common.csproj" />
+    <Project Path="src/Device/Rcm.Device.Web.Tests/Rcm.Device.Web.Tests.csproj" />
+    <Project Path="src/Device/Rcm.Device.Web/Rcm.Device.Web.csproj" />
+  </Folder>
+  <Folder Name="/Device/Aggregates/">
+    <Project Path="src/Device/Rcm.Device.Aggregates.Api/Rcm.Device.Aggregates.Api.csproj" />
+    <Project Path="src/Device/Rcm.Device.Aggregates.UnitTests/Rcm.Device.Aggregates.UnitTests.csproj" />
+    <Project Path="src/Device/Rcm.Device.Aggregates/Rcm.Device.Aggregates.csproj" />
+  </Folder>
+  <Folder Name="/Device/Connectivity/">
+    <Project Path="src/Device/Rcm.Device.Connector.Api/Rcm.Device.Connector.Api.csproj" />
+    <Project Path="src/Device/Rcm.Device.Connector.Tests/Rcm.Device.Connector.Tests.csproj" />
+    <Project Path="src/Device/Rcm.Device.Connector/Rcm.Device.Connector.csproj" />
+  </Folder>
+  <Folder Name="/Device/DataCollection/">
+    <Project Path="src/Device/Rcm.Device.DataCollection.Api/Rcm.Device.DataCollection.Api.csproj" />
+    <Project Path="src/Device/Rcm.Device.DataCollection.UnitTests/Rcm.Device.DataCollection.UnitTests.csproj" />
+    <Project Path="src/Device/Rcm.Device.DataCollection/Rcm.Device.DataCollection.csproj" />
+  </Folder>
+  <Folder Name="/Device/Measurements/">
+    <Project Path="src/Device/Rcm.Device.Bme280.UnitTests/Rcm.Device.Bme280.UnitTests.csproj" />
+    <Project Path="src/Device/Rcm.Device.Bme280/Rcm.Device.Bme280.csproj" />
+    <Project Path="src/Device/Rcm.Device.I2c/Rcm.Device.I2c.csproj" />
+    <Project Path="src/Device/Rcm.Device.Measurement.Api/Rcm.Device.Measurement.Api.csproj" />
+    <Project Path="src/Device/Rcm.Device.Measurement.Stubs/Rcm.Device.Measurement.Stubs.csproj" />
+  </Folder>
+  <Folder Name="/Solution Items/">
+    <File Path=".gitignore" />
+    <File Path="azure-pipelines.yml" />
+    <File Path="Directory.Packages.props" />
+    <File Path="LICENSE" />
+    <File Path="README.md" />
+  </Folder>
+</Solution>
