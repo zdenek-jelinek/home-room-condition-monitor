@@ -1,13 +1,25 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TypeScriptToolsVersion>Latest</TypeScriptToolsVersion>
+    <TypeScriptToolsVersion>6.0.3</TypeScriptToolsVersion>
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Composition\**" />
+    <Content Remove="Composition\**" />
+    <EmbeddedResource Remove="Composition\**" />
+    <None Remove="Composition\**" />
+    <TypeScriptCompile Remove="Composition\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Hosting.Systemd" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Condition="'$(Configuration)' == 'Debug'" />
+    <PackageReference Include="Microsoft.TypeScript.MSBuild">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
 
   <ItemGroup>
@@ -20,28 +32,15 @@
     <ProjectReference Include="..\Rcm.Device.Measurement.Stubs\Rcm.Device.Measurement.Stubs.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <TypeScriptCompile Include="wwwroot\js\Aggregates\MeasurementAggregates.ts" />
-    <TypeScriptCompile Include="wwwroot\js\Views\Common\DataLifecyclePage.ts" />
-    <TypeScriptCompile Include="wwwroot\js\Views\Common\View.ts" />
-    <TypeScriptCompile Include="wwwroot\js\Views\Components\DateRangePicker.ts" />
-    <TypeScriptCompile Include="wwwroot\js\Views\ConfigureConnection.ts" />
-    <TypeScriptCompile Include="wwwroot\js\Views\History.ts" />
-    <TypeScriptCompile Include="wwwroot\js\Views\Daily.ts" />
-    <TypeScriptCompile Include="wwwroot\js\Measurements\Measurement.ts" />
-    <TypeScriptCompile Include="wwwroot\js\Aggregates\MeasurementAggregatesClient.ts" />
-    <TypeScriptCompile Include="wwwroot\js\Measurements\MeasurementsClient.ts" />
-    <TypeScriptCompile Include="wwwroot\js\Views\Now.ts" />
-  </ItemGroup>
-
   <PropertyGroup>
     <!--
       The files may not exist at build evaluation time due to npm install not having run yet.
       Absence of actual files causes wildcards expansion in Item->Include to fail so project-level items cannot be used for this.
     -->
     <NpmPackageFiles>
-      node_modules\requirejs\require.js;
-      node_modules\flatpickr\dist\flatpickr.*
+      node_modules\flatpickr\dist\flatpickr.css;
+      node_modules\flatpickr\dist\flatpickr.min.css;
+      node_modules\flatpickr\dist\esm\**
     </NpmPackageFiles>
   </PropertyGroup>
 
@@ -59,10 +58,7 @@
       <_NpmPackageFile Include="$(NpmPackageFiles)" />
     </ItemGroup>
 
-    <Copy
-      SourceFiles="@(_NpmPackageFile)"
-      DestinationFiles="@(_NpmPackageFile -> 'wwwroot\lib$([System.String]::new(%(Identity)).TrimStart('node_modules'))')"
-      SkipUnchangedFiles="true" />
+    <Copy SourceFiles="@(_NpmPackageFile)" DestinationFiles="@(_NpmPackageFile -&gt; 'wwwroot\lib$([System.String]::new(%(Identity)).TrimStart('node_modules'))')" SkipUnchangedFiles="true" />
 
   </Target>
 

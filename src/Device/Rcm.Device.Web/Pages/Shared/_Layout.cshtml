@@ -15,6 +15,8 @@
         <link rel="stylesheet" href="~/lib/flatpickr/dist/flatpickr.min.css" />
     </environment>
     @RenderSection("Styles", false)
+
+    <script type="importmap"></script>
 </head>
 <body>
     <nav>
@@ -40,12 +42,18 @@
         @RenderBody()
     </div>
 
-    <script type="text/javascript">
-        const pageModule = "@ViewData["Module"]";
-    </script>
-    <script
-        data-main=@Context.AppendVersionToPath(Href("~/js/bootstrap.js"))
-        src=@Href("~/lib/requirejs/require.js")></script>
+    @{
+        var module = (string?)ViewData["Module"];
+        if (module != null)
+        {
+            <script type="module">
+                import { initialize } from "/js/Views/@(module).js";
+
+                initialize();
+            </script>
+        }
+    }
+
     @RenderSection("Scripts", required: false)
 </body>
 </html>

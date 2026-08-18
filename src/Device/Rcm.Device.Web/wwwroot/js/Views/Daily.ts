@@ -1,6 +1,6 @@
-﻿import { MeasurementAggregatesClient } from "../Aggregates/MeasurementAggregatesClient";
-import { DataLifecyclePage } from "./Common/DataLifecyclePage";
-import { MeasurementAggregates, Aggregates } from "../Aggregates/MeasurementAggregates";
+﻿import { MeasurementAggregatesClient } from "../Aggregates/MeasurementAggregatesClient.js";
+import { DataLifecyclePage } from "./Common/DataLifecyclePage.js";
+import { MeasurementAggregates, Aggregates } from "../Aggregates/MeasurementAggregates.js";
 
 export function initialize()
 {

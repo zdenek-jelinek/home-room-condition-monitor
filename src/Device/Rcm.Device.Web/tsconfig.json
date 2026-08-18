@@ -1,17 +1,14 @@
 {
   "compilerOptions": {
-    "strict": true,
+    "noImplicitAny": true,
     "noEmitOnError": true,
     "removeComments": false,
     "sourceMap": true,
-    "target": "es6",
-    "baseUrl": "wwwroot/lib",
+    "target": "es2020",
     "diagnostics": true,
-    "module": "amd",
-    "moduleResolution": "node",
-    "outFile": "wwwroot/js/compiled.js",
-    "esModuleInterop": true
+    "module": "es2020",
+    "rootDir": "wwwroot/js",
+    "paths": { "*": [ "./wwwroot/lib/*" ] }
   },
-
-  "include": [ "wwwroot/js/**/*.ts"]
+  "include": [ "wwwroot/js/**/*.ts" ]
 }

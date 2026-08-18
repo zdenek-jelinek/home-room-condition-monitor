@@ -1,4 +1,4 @@
-﻿import { Measurement } from "./Measurement";
+﻿import { Measurement } from "./Measurement.js";
 
 export class MeasurementsClient
 {

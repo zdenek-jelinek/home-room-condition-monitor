@@ -1,4 +1,4 @@
-﻿import { MeasurementAggregates, Aggregates, AggregateEntry } from "./MeasurementAggregates";
+﻿import { MeasurementAggregates, Aggregates, AggregateEntry } from "./MeasurementAggregates.js";
 
 export class MeasurementAggregatesClient
 {

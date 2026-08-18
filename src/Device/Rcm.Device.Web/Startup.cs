@@ -10,6 +10,7 @@ using Rcm.Device.Web.Configuration.Common;
 using Rcm.Device.Web.Configuration.Connectivity;
 using Rcm.Device.Web.Configuration.DataCollection;
 using Rcm.Device.Web.Configuration.Measurements;
+using Rcm.Device.Web.Extensions;
 
 namespace Rcm.Device.Web;
 
@@ -54,12 +55,12 @@ public class Startup
         }
 
         application
-            .UseStaticFiles()
             .UseRouting()
             .UseEndpoints(e =>
             {
+                e.MapStaticAssets().ShortCircuit();
                 e.MapControllers();
-                e.MapRazorPages();
+                e.MapRazorPages().WithFlatpickrImportMap();
             });
     }
 }

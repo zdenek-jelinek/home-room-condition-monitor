@@ -3,10 +3,6 @@
   "name": "rcm-web",
   "private": true,
   "dependencies": {
-    "flatpickr": "^4.6.13",
-    "requirejs": "^2.3.8"
-  },
-  "devDependencies": {
-    "typescript": "^4.9.5"
+    "flatpickr": "^4.6.13"
   }
 }

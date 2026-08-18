@@ -1,6 +1,6 @@
-﻿import { DataLifecyclePage } from "./Common/DataLifecyclePage";
-import { MeasurementsClient } from "../Measurements/MeasurementsClient";
-import { Measurement } from "../Measurements/Measurement";
+﻿import { DataLifecyclePage } from "./Common/DataLifecyclePage.js";
+import { MeasurementsClient } from "../Measurements/MeasurementsClient.js";
+import { Measurement } from "../Measurements/Measurement.js";
 
 
 export function initialize()
