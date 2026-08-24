@@ -26,11 +26,7 @@ public class Startup
     public void ConfigureServices(IServiceCollection services)
     {
         services.AddControllers();
-        var mvc = services.AddRazorPages(o => o.Conventions.AddPageRoute("/Now", ""));
-
-#if DEBUG
-        mvc.AddRazorRuntimeCompilation();
-#endif
+        services.AddRazorPages(o => o.Conventions.AddPageRoute("/Now", ""));
 
         var measurementsConfiguration = _configuration.GetSection("measurements");
 
