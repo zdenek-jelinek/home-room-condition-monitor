@@ -10,18 +10,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <!-- General -->
-    <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.1" />
-
-    <!-- Device -->
     <PackageVersion Include="Microsoft.Extensions.Hosting.Systemd" Version="10.0.1" />
+    <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.1" />
     <PackageVersion Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="10.0.1" />
-    <PackageVersion Include="Microsoft.TypeScript.MSBuild" Version="6.0.3" />
 
-    <!-- Azure -->
-    <PackageVersion Include="Microsoft.Azure.Cosmos.Table" Version="1.0.8" />
-    <PackageVersion Include="Microsoft.Azure.WebJobs.Extensions.Storage" Version="4.0.3" />
-    <PackageVersion Include="Microsoft.NET.Sdk.Functions" Version="4.2.0" />
+    <!-- Tooling -->
+    <PackageVersion Include="Microsoft.TypeScript.MSBuild" Version="6.0.3" />
 
     <!-- Testing -->
     <PackageVersion Include="nunit" Version="3.13.3" />
