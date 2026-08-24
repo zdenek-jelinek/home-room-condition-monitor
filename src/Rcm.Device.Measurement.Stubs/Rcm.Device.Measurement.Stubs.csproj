@@ -5,7 +5,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Common\Rcm.Common\Rcm.Common.csproj" />
+    <ProjectReference Include="..\Rcm.Common\Rcm.Common.csproj" />
     <ProjectReference Include="..\Rcm.Device.Measurement.Api\Rcm.Device.Measurement.Api.csproj" />
   </ItemGroup>
 
