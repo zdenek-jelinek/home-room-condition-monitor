@@ -1,11 +1,4 @@
 <Solution>
-  <Folder Name="/Backend/">
-    <Project Path="src/Backend/Rcm.Backend.Common/Rcm.Backend.Common.csproj" />
-    <Project Path="src/Backend/Rcm.Backend.Device.Api/Rcm.Backend.Device.Api.csproj" />
-    <Project Path="src/Backend/Rcm.Backend.Device/Rcm.Backend.Device.csproj" />
-    <Project Path="src/Backend/Rcm.Backend.Persistence/Rcm.Backend.Persistence.csproj" />
-    <Project Path="src/Backend/Rcm.Backend.Web.Server/Rcm.Backend.Web.Server.csproj" />
-  </Folder>
   <Folder Name="/Common/">
     <Project Path="src/Common/Rcm.Common.TestDoubles.Tests/Rcm.Common.TestDoubles.Tests.csproj" />
     <Project Path="src/Common/Rcm.Common.TestDoubles/Rcm.Common.TestDoubles.csproj" />

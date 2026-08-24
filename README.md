@@ -3,34 +3,35 @@
 # Room Condition Monitor (rcm)
 A pet project for room temperature, pressure and humidity monitoring and reporting.
 
-The project consists of device, back-end and planned front-end parts.
+_Please note that this is an effort with limited resources focusing on exploring technologies.
+Some parts may not be cross-platform or may be more complex than necessary in order to facilitate experimentation._
 
-Please note that this is an effort with limited resources focusing on exploring technologies.
-Some parts may unfortunately not be cross-platform or may be somewhat more complex than necessary.
+## Technical introduction
+This is a .NET application intended to run as a service on a device equipped with sensors for collecting room condition data.
+The sensor data are collected periodically and stored on the device's local filesystem.
 
-## Device
-The device part focuses on collecting data locally and optionally uploading them to remote storage of back end.
-
-The collected data are also available over a locally served ASP.NET Core Razor Pages web UI.
+A simple UI for accessing the data is served locally using ASP.NET Core Razor Pages framework.
 
 The implementation currently supports Linux with BME280 sensor connected over I2C.
 
-### Prerequisities
+It can also run locally on any platform, using generated data instead of sensors.
+
+## Development prerequisities
 * [.NET 10 SDK](https://dotnet.microsoft.com/download)
 * [Node.js and npm](https://nodejs.org/en/) (npm is auto-included in Node.js)
 
-### Configuration
-The application is configured according to [ASP.NET Core configuration](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/configuration/?view=aspnetcore-3.1).
+## Configuration
+The application uses [ASP.NET Core configuration](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/configuration).
 
-The following additional properties are supported:
+In addition, the following properties are supported:
 
 | Property | Possible values | Required | Description |
 | --- | --- | --- | --- |
 | Measurements:Access:Mode | STUB, I2C | Required | Defines the data access mode for periodic condition measurements.<br>In STUB mode, measurements are generated randomly within sensible ranges.<br>In I2C mode, measurements are read from I2C bus. |
-| DataStorage:Path | path string | Required | Specifies a directory used to store measurements and backend connection parameters. If a relative path is supplied, it is evaluated based on the working directory of the executing binary. |
+| DataStorage:Path | path string | Required | Specifies a directory used to store measurements. If a relative path is supplied, it is evaluated based on the working directory of the executing binary. |
 
 
-#### I2C
+### I2C
 When configured with Measurement:Access:Mode = I2C, the following options are also applied:
 
 | Property | Possible values | Required | Description |
@@ -40,8 +41,8 @@ When configured with Measurement:Access:Mode = I2C, the following options are al
 
 Note that the above requires I2C interface to be enabled on the device through `raspi-config` to detect I2C device and i2c-tools to be installed (`sudo apt-get install i2c-tools`) to run i2cdetect.
 
-### Running
-#### Development
+## Running
+### Development
 Executing  `dotnet run --project src/Device/Rcm.Device.Web --measurements:access:mode=STUB --dataStorage:path=../../../data --console` will run the data collection and web UI service with basic development configuration.  
 
 The `--console` switch causes the application to run in console. If the switch is omitted, the application will asume it is running as a Linux systemd service.
@@ -50,7 +51,7 @@ Note that the `--console` switch is required to come last in order to avoid misi
 
 Except `--console`, the parameters may also be specified in appsettings.json files or environment variables. See [configuration section](#configuration) for more details.
 
-#### Device
+### Device
 For actual device deployment, it is suggested to publish the application binary and run it as a systemd service on the target system.
 
 For a self-contained release publish, run `dotnet publish src/Device/Rcm.Device.Web/Rcm.Device.Web.csproj --runtime linux-arm --configuration Release --self-contained`
@@ -78,8 +79,6 @@ RestartSec=60
 WantedBy=multi-user.target
 ```
 
-## Back end
-TODO
-
-## Front end
-This component is not implemented yet.
+## Addendum
+Originally, I also planned adding a serverless back-end to store the sensor data, and a publicly accessible front-end for presentation.
+However, given this is a low-priority effort, I never fully completed these parts and they became a maintenance burden over the years.
