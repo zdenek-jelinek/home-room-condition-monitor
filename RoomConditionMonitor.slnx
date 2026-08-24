@@ -2,7 +2,6 @@
   <Folder Name="/Common/">
     <Project Path="src/Common/Rcm.Common.TestDoubles.Tests/Rcm.Common.TestDoubles.Tests.csproj" />
     <Project Path="src/Common/Rcm.Common.TestDoubles/Rcm.Common.TestDoubles.csproj" />
-    <Project Path="src/Common/Rcm.Common.TestFramework/Rcm.Common.TestFramework.csproj" />
     <Project Path="src/Common/Rcm.Common/Rcm.Common.csproj" />
   </Folder>
   <Folder Name="/Device/">
