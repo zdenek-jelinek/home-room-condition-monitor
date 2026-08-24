@@ -22,11 +22,6 @@
     <Project Path="src/Device/Rcm.Device.Aggregates.UnitTests/Rcm.Device.Aggregates.UnitTests.csproj" />
     <Project Path="src/Device/Rcm.Device.Aggregates/Rcm.Device.Aggregates.csproj" />
   </Folder>
-  <Folder Name="/Device/Connectivity/">
-    <Project Path="src/Device/Rcm.Device.Connector.Api/Rcm.Device.Connector.Api.csproj" />
-    <Project Path="src/Device/Rcm.Device.Connector.Tests/Rcm.Device.Connector.Tests.csproj" />
-    <Project Path="src/Device/Rcm.Device.Connector/Rcm.Device.Connector.csproj" />
-  </Folder>
   <Folder Name="/Device/DataCollection/">
     <Project Path="src/Device/Rcm.Device.DataCollection.Api/Rcm.Device.DataCollection.Api.csproj" />
     <Project Path="src/Device/Rcm.Device.DataCollection.UnitTests/Rcm.Device.DataCollection.UnitTests.csproj" />

@@ -7,7 +7,6 @@ using Microsoft.Extensions.Hosting;
 using Rcm.Device.Web.Configuration;
 using Rcm.Device.Web.Configuration.Aggregates;
 using Rcm.Device.Web.Configuration.Common;
-using Rcm.Device.Web.Configuration.Connectivity;
 using Rcm.Device.Web.Configuration.DataCollection;
 using Rcm.Device.Web.Configuration.Measurements;
 using Rcm.Device.Web.Extensions;
@@ -39,8 +38,7 @@ public class Startup
             .Install<CommonServicesInstaller>(_configuration)
             .Install<ModeBasedMeasurementServicesInstaller>(measurementsConfiguration.GetSection("access"))
             .Install<DataCollectionServicesInstaller>()
-            .Install<AggregatesServicesInstaller>()
-            .Install<ConnectivityInstaller>();
+            .Install<AggregatesServicesInstaller>();
     }
 
     public void Configure(IApplicationBuilder application, IWebHostEnvironment environment)

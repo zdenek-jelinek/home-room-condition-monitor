@@ -16,8 +16,6 @@
   <ItemGroup>
     <ProjectReference Include="..\Rcm.Device.Aggregates\Rcm.Device.Aggregates.csproj" />
     <ProjectReference Include="..\Rcm.Device.Bme280\Rcm.Device.Bme280.csproj" />
-    <ProjectReference Include="..\Rcm.Device.Connector.Api\Rcm.Device.Connector.Api.csproj" />
-    <ProjectReference Include="..\Rcm.Device.Connector\Rcm.Device.Connector.csproj" />
     <ProjectReference Include="..\Rcm.Device.DataCollection\Rcm.Device.DataCollection.csproj" />
     <ProjectReference Include="..\Rcm.Device.I2c\Rcm.Device.I2c.csproj" />
     <ProjectReference Include="..\Rcm.Device.Measurement.Stubs\Rcm.Device.Measurement.Stubs.csproj" />
@@ -49,7 +47,7 @@
       <_NpmPackageFile Include="$(NpmPackageFiles)" />
     </ItemGroup>
 
-    <Copy SourceFiles="@(_NpmPackageFile)" DestinationFiles="@(_NpmPackageFile -> 'wwwroot\lib$([System.String]::new(%(Identity)).TrimStart('node_modules'))')" SkipUnchangedFiles="true" />
+    <Copy SourceFiles="@(_NpmPackageFile)" DestinationFiles="@(_NpmPackageFile -&gt; 'wwwroot\lib$([System.String]::new(%(Identity)).TrimStart('node_modules'))')" SkipUnchangedFiles="true" />
 
   </Target>
 

@@ -2,7 +2,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Rcm.Common;
-using Rcm.Common.Http;
 using Rcm.Common.IO;
 using Rcm.Device.Common;
 
@@ -20,7 +19,6 @@ public class CommonServicesInstaller : IConfigurableInstaller
         services
             .AddTransient<IClock, Clock>()
             .AddTransient<IFileAccess, FileAccessAdapter>()
-            .AddTransient<IHttpClientFactory, HttpClientFactoryAdapter>()
             .AddTransient<IDataStorageLocation>(
                 sp => sp.GetRequiredService<IOptions<DataStorageLocation>>().Value);
     }
