@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Rcm.Common;
 
-namespace Rcm.Measurement.Api;
+namespace Rcm.Sensors.Abstractions;
 
 public interface IMeasurementProvider
 {

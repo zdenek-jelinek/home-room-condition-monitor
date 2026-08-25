@@ -1,4 +1,4 @@
-﻿namespace Rcm.Bme280;
+﻿namespace Rcm.Sensors.Bme280;
 
 public class TemperatureCompensationParameters
 {

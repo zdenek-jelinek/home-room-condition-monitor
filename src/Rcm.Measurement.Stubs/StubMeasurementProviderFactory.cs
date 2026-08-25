@@ -1,8 +1,8 @@
 ﻿using System;
 using Rcm.Common;
-using Rcm.Measurement.Api;
+using Rcm.Sensors.Abstractions;
 
-namespace Rcm.Measurement.Stubs;
+namespace Rcm.Sensors.Fakes;
 
 public class StubMeasurementProviderFactory : IMeasurementProviderFactory
 {

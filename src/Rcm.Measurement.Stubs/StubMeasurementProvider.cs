@@ -2,9 +2,9 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Rcm.Common;
-using Rcm.Measurement.Api;
+using Rcm.Sensors.Abstractions;
 
-namespace Rcm.Measurement.Stubs;
+namespace Rcm.Sensors.Fakes;
 
 public class StubMeasurementProvider : IMeasurementProvider
 {

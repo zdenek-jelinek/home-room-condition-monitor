@@ -1,6 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
-using Rcm.Bme280;
+using Rcm.Sensors.Bme280;
 
 namespace Rcm.Web.Configuration.Measurements;
 

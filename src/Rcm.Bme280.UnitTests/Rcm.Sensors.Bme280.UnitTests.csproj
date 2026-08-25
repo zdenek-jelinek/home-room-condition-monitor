@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Rcm.Bme280\Rcm.Bme280.csproj" />
+    <ProjectReference Include="..\Rcm.Bme280\Rcm.Sensors.Bme280.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,4 +1,4 @@
-﻿namespace Rcm.Measurement.Api;
+﻿namespace Rcm.Sensors.Abstractions;
 
 public interface IMeasurementProviderFactory
 {

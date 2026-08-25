@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Rcm.Common;
 using Rcm.DataCollection.Api;
-using Rcm.Measurement.Api;
+using Rcm.Sensors.Abstractions;
 
 namespace Rcm.DataCollection;
 

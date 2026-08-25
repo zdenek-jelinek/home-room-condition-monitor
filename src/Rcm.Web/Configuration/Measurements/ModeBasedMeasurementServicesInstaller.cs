@@ -2,10 +2,10 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-using Rcm.Bme280;
 using Rcm.I2c;
-using Rcm.Measurement.Api;
-using Rcm.Measurement.Stubs;
+using Rcm.Sensors.Abstractions;
+using Rcm.Sensors.Bme280;
+using Rcm.Sensors.Fakes;
 
 namespace Rcm.Web.Configuration.Measurements;
 

@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Rcm.Common;
 using Rcm.I2c;
-using Rcm.Measurement.Api;
+using Rcm.Sensors.Abstractions;
 
-namespace Rcm.Bme280;
+namespace Rcm.Sensors.Bme280;
 
 public class Bme280I2cDevice : IMeasurementProvider, IDisposable
 {
