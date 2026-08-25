@@ -1,6 +1,6 @@
 ﻿namespace Rcm.Sensors.Abstractions;
 
-public interface IMeasurementProviderFactory
+public interface ISensorFactory
 {
     ISensor Create();
 }

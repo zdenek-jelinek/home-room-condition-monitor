@@ -34,12 +34,12 @@ public class ModeBasedMeasurementServicesInstaller : IConfigurableInstaller
 
     private void InstallCommonServices(IServiceCollection services)
     {
-        services.AddTransient(s => s.GetRequiredService<IMeasurementProviderFactory>().Create());
+        services.AddTransient(s => s.GetRequiredService<ISensorFactory>().Create());
     }
 
     private void InstallFakeServices(IServiceCollection services)
     {
-        services.AddSingleton<IMeasurementProviderFactory, FakeMeasurementProviderFactory>();
+        services.AddSingleton<ISensorFactory, FakeSensorFactory>();
     }
 
     private void InstallI2cServices(IServiceCollection services, IConfiguration measurementI2cAccessConfiguration)
@@ -50,7 +50,7 @@ public class ModeBasedMeasurementServicesInstaller : IConfigurableInstaller
             .ValidateDataAnnotations();
 
         services
-            .AddSingleton<IMeasurementProviderFactory, Bme280DeviceFactory>()
+            .AddSingleton<ISensorFactory, Bme280DeviceFactory>()
             .AddTransient<II2cAccessConfiguration>(GetOptionValue<I2cAccessConfiguration>)
             .AddTransient<I2cBusFactory>();
     }

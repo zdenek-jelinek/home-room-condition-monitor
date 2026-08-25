@@ -4,11 +4,11 @@ using Rcm.Sensors.Abstractions;
 
 namespace Rcm.Sensors.Fakes;
 
-public class FakeMeasurementProviderFactory : IMeasurementProviderFactory
+public class FakeSensorFactory : ISensorFactory
 {
     private readonly Lazy<ISensor> _instance;
 
-    public FakeMeasurementProviderFactory(IClock clock)
+    public FakeSensorFactory(IClock clock)
     {
         _instance = new Lazy<ISensor>(() => new FakeSensor(clock));
     }

@@ -6,7 +6,7 @@ using Rcm.Sensors.Abstractions;
 
 namespace Rcm.Sensors.Bme280;
 
-public class Bme280DeviceFactory : IMeasurementProviderFactory, IDisposable
+public class Bme280DeviceFactory : ISensorFactory, IDisposable
 {
     private readonly ILogger<Bme280I2cDevice> _deviceLogger;
     private readonly II2cAccessConfiguration _i2cAccessConfiguration;
