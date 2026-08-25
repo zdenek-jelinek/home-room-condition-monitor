@@ -13,11 +13,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Rcm.Device.Aggregates\Rcm.Device.Aggregates.csproj" />
-    <ProjectReference Include="..\Rcm.Device.Bme280\Rcm.Device.Bme280.csproj" />
-    <ProjectReference Include="..\Rcm.Device.DataCollection\Rcm.Device.DataCollection.csproj" />
-    <ProjectReference Include="..\Rcm.Device.I2c\Rcm.Device.I2c.csproj" />
-    <ProjectReference Include="..\Rcm.Device.Measurement.Stubs\Rcm.Device.Measurement.Stubs.csproj" />
+    <ProjectReference Include="..\Rcm.Device.Aggregates\Rcm.Aggregates.csproj" />
+    <ProjectReference Include="..\Rcm.Device.Bme280\Rcm.Bme280.csproj" />
+    <ProjectReference Include="..\Rcm.Device.DataCollection\Rcm.DataCollection.csproj" />
+    <ProjectReference Include="..\Rcm.Device.I2c\Rcm.I2c.csproj" />
+    <ProjectReference Include="..\Rcm.Device.Measurement.Stubs\Rcm.Measurement.Stubs.csproj" />
   </ItemGroup>
 
   <PropertyGroup>

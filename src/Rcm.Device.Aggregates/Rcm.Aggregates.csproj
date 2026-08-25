@@ -1,0 +1,8 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\Rcm.Device.Aggregates.Api\Rcm.Aggregates.Api.csproj" />
+    <ProjectReference Include="..\Rcm.Device.DataCollection.Api\Rcm.DataCollection.Api.csproj" />
+  </ItemGroup>
+
+</Project>

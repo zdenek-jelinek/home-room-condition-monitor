@@ -6,8 +6,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Rcm.Common\Rcm.Common.csproj" />
-    <ProjectReference Include="..\Rcm.Device.I2c\Rcm.Device.I2c.csproj" />
-    <ProjectReference Include="..\Rcm.Device.Measurement.Api\Rcm.Device.Measurement.Api.csproj" />
+    <ProjectReference Include="..\Rcm.Device.Measurement.Api\Rcm.Measurement.Api.csproj" />
   </ItemGroup>
 
 </Project>

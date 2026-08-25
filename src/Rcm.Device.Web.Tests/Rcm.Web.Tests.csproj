@@ -11,8 +11,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Rcm.Device.DataCollection.Api\Rcm.Device.DataCollection.Api.csproj" />
-    <ProjectReference Include="..\Rcm.Device.Web\Rcm.Device.Web.csproj" />
+    <ProjectReference Include="..\Rcm.Device.DataCollection.Api\Rcm.DataCollection.Api.csproj" />
+    <ProjectReference Include="..\Rcm.Device.Web\Rcm.Web.csproj" />
   </ItemGroup>
 
 </Project>
