@@ -4,7 +4,7 @@ using Rcm.Common;
 
 namespace Rcm.Sensors.Abstractions;
 
-public interface IMeasurementProvider
+public interface ISensor
 {
     Task<MeasurementEntry> MeasureAsync(CancellationToken token);
 }

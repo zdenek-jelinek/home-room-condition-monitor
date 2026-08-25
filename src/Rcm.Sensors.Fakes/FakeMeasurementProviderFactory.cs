@@ -6,12 +6,12 @@ namespace Rcm.Sensors.Fakes;
 
 public class FakeMeasurementProviderFactory : IMeasurementProviderFactory
 {
-    private readonly Lazy<IMeasurementProvider> _instance;
+    private readonly Lazy<ISensor> _instance;
 
     public FakeMeasurementProviderFactory(IClock clock)
     {
-        _instance = new Lazy<IMeasurementProvider>(() => new FakeMeasurementProvider(clock));
+        _instance = new Lazy<ISensor>(() => new FakeSensor(clock));
     }
 
-    public IMeasurementProvider Create() => _instance.Value;
+    public ISensor Create() => _instance.Value;
 }

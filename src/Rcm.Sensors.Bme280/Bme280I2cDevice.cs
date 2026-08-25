@@ -10,7 +10,7 @@ using Rcm.Sensors.Abstractions;
 
 namespace Rcm.Sensors.Bme280;
 
-public class Bme280I2cDevice : IMeasurementProvider, IDisposable
+public class Bme280I2cDevice : ISensor, IDisposable
 {
     private TimeSpan MeasurementDelayTolerance => TimeSpan.FromMilliseconds(20);
 

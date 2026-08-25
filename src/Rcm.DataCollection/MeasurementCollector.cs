@@ -20,7 +20,7 @@ public class MeasurementCollector : IMeasurementCollector
 
     private readonly ILogger<MeasurementCollector> _logger;
     private readonly IClock _clock;
-    private readonly IMeasurementProvider _measurementProvider;
+    private readonly ISensor _sensor;
     private readonly ICollectedDataWriter _collectedDataWriter;
 
     private readonly List<MeasurementEntry> _entries = new List<MeasurementEntry>(MeasurementsPerMinute);
@@ -30,12 +30,12 @@ public class MeasurementCollector : IMeasurementCollector
     public MeasurementCollector(
         ILogger<MeasurementCollector> logger,
         IClock clock,
-        IMeasurementProvider measurementProvider,
+        ISensor sensor,
         ICollectedDataWriter collectedDataWriter)
     {
         _logger = logger;
         _clock = clock;
-        _measurementProvider = measurementProvider;
+        _sensor = sensor;
         _collectedDataWriter = collectedDataWriter;
     }
 
@@ -49,7 +49,7 @@ public class MeasurementCollector : IMeasurementCollector
 
         try
         {
-            var measurement = await _measurementProvider.MeasureAsync(token);
+            var measurement = await _sensor.MeasureAsync(token);
             await AddMeasurementAsync(measurement, token);
         }
         finally

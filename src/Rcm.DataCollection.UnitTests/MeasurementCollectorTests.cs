@@ -20,7 +20,7 @@ public class MeasurementCollectorTests
         public void SubsequentMeasurementIsSkippedIfPreviousMeasurementIsStillInProgress()
         {
             // given
-            var blockingSpyMeasurementProvider = new BlockingSpyMeasurementProvider();
+            var blockingSpyMeasurementProvider = new BlockingSpySensor();
 
             var measurementCollector = new MeasurementCollector(
                 NullLogger<MeasurementCollector>.Instance,
@@ -45,7 +45,7 @@ public class MeasurementCollectorTests
         public async Task SubsequentMeasurementIsCarriedOutEvenIfPreviousMeasurementHasThrown()
         {
             // given
-            var throwingSpyMeasurementProvider = new ThrowingSpyMeasurementProvider();
+            var throwingSpyMeasurementProvider = new ThrowingSpySensor();
 
             var measurementCollector = new MeasurementCollector(
                 NullLogger<MeasurementCollector>.Instance,
@@ -78,7 +78,7 @@ public class MeasurementCollectorTests
             var measurementCollector = new MeasurementCollector(
                 NullLogger<MeasurementCollector>.Instance,
                 new Clock(),
-                new FakeMeasurementProvider(new[] { firstMeasurement, secondMeasurementWithinSameMinute, measurementInNextMinute }),
+                new FakeSensor(new[] { firstMeasurement, secondMeasurementWithinSameMinute, measurementInNextMinute }),
                 spyCollectedDataStorage);
 
             // when
@@ -122,13 +122,13 @@ public class MeasurementCollectorTests
             }
         }
 
-        public class FakeMeasurementProvider : IMeasurementProvider
+        public class FakeSensor : ISensor
         {
             private readonly IReadOnlyList<MeasurementEntry> _measurements;
 
             private int _currentMeasurementIndex;
 
-            public FakeMeasurementProvider(IReadOnlyList<MeasurementEntry> measurements)
+            public FakeSensor(IReadOnlyList<MeasurementEntry> measurements)
             {
                 _measurements = measurements;
             }
@@ -158,7 +158,7 @@ public class MeasurementCollectorTests
             }
         }
 
-        public class ThrowingSpyMeasurementProvider : IMeasurementProvider
+        public class ThrowingSpySensor : ISensor
         {
             private int _invocationCount;
             public int InvocationCount => _invocationCount;
@@ -170,7 +170,7 @@ public class MeasurementCollectorTests
             }
         }
 
-        public class BlockingSpyMeasurementProvider : IMeasurementProvider
+        public class BlockingSpySensor : ISensor
         {
             private readonly Task<MeasurementEntry> _task = new Task<MeasurementEntry>(() => new MeasurementEntry(DateTimeOffset.Now, 0m, 0m, 0m));
 
@@ -202,7 +202,7 @@ public class MeasurementCollectorTests
             var measurementCollector = new MeasurementCollector(
                 NullLogger<MeasurementCollector>.Instance,
                 clock,
-                new DummyMeasurementProvider(),
+                new DummySensor(),
                 new DummyCollectedDataWriter());
 
             // when
@@ -223,7 +223,7 @@ public class MeasurementCollectorTests
             var measurementCollector = new MeasurementCollector(
                 NullLogger<MeasurementCollector>.Instance,
                 clock,
-                new DummyMeasurementProvider(),
+                new DummySensor(),
                 new DummyCollectedDataWriter());
 
             // when
@@ -235,7 +235,7 @@ public class MeasurementCollectorTests
         }
     }
 
-    public class DummyMeasurementProvider : IMeasurementProvider
+    public class DummySensor : ISensor
     {
         public Task<MeasurementEntry> MeasureAsync(CancellationToken token) => throw new NotImplementedException();
     }

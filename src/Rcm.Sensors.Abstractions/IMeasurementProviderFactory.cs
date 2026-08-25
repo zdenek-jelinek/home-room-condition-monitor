@@ -2,5 +2,5 @@
 
 public interface IMeasurementProviderFactory
 {
-    IMeasurementProvider Create();
+    ISensor Create();
 }
