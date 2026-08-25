@@ -1,6 +1,6 @@
 ﻿using System;
 using Microsoft.Extensions.Logging;
-using Rcm.Common;
+using Rcm.Common.Temporal;
 using Rcm.I2c;
 using Rcm.Sensors.Abstractions;
 

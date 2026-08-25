@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Rcm.Common;
+namespace Rcm.Common.Temporal;
 
 public interface IClock
 {

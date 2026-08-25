@@ -5,8 +5,9 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging.Abstractions;
 using NUnit.Framework;
 using Rcm.Common;
+using Rcm.Common.Temporal;
 using Rcm.Sensors.Abstractions;
-using Rcm.Testing.Common;
+using Rcm.Testing.Common.Temporal;
 
 namespace Rcm.DataCollection.UnitTests;
 

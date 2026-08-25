@@ -1,5 +1,5 @@
 ﻿using System;
-using Rcm.Common;
+using Rcm.Common.Temporal;
 using Rcm.Sensors.Abstractions;
 
 namespace Rcm.Sensors.Fakes;

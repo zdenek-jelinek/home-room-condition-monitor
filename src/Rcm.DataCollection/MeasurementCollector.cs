@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Rcm.Common;
+using Rcm.Common.Temporal;
 using Rcm.DataCollection.Api;
 using Rcm.Sensors.Abstractions;
 

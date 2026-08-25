@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Rcm.Common;
+using Rcm.Common.Temporal;
 using Rcm.Sensors.Abstractions;
 
 namespace Rcm.Sensors.Fakes;
