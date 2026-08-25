@@ -244,15 +244,7 @@ public sealed class Bme280I2cDevice : ISensor, IDisposable
 
     public void Dispose()
     {
-        Dispose(true);
-    }
-
-    protected virtual void Dispose(bool disposing)
-    {
-        if (disposing)
-        {
-            _bus.Dispose();
-        }
+        _bus.Dispose();
     }
 
     private static class Oversampling
