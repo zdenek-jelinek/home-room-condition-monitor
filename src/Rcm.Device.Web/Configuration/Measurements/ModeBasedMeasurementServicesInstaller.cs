@@ -2,12 +2,12 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-using Rcm.Device.Bme280;
-using Rcm.Device.I2c;
-using Rcm.Device.Measurement.Api;
-using Rcm.Device.Measurement.Stubs;
+using Rcm.Bme280;
+using Rcm.I2c;
+using Rcm.Measurement.Api;
+using Rcm.Measurement.Stubs;
 
-namespace Rcm.Device.Web.Configuration.Measurements;
+namespace Rcm.Web.Configuration.Measurements;
 
 public class ModeBasedMeasurementServicesInstaller : IConfigurableInstaller
 {

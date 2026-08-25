@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Rcm.Common;
 
-namespace Rcm.Device.Measurement.Api;
+namespace Rcm.Measurement.Api;
 
 public interface IMeasurementProvider
 {

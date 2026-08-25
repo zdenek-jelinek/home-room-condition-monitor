@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 
-namespace Rcm.Device.DataCollection.Files.Navigation;
+namespace Rcm.DataCollection.Files.Navigation;
 
 public class CollectedDataFilesNavigator
 {

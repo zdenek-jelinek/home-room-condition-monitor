@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using Microsoft.AspNetCore.Mvc;
-using Rcm.Device.Aggregates.Api;
+using Rcm.Aggregates.Api;
 
-namespace Rcm.Device.Web.Controllers;
+namespace Rcm.Web.Controllers;
 
 [Route("api/measurements/aggregates")]
 public class MeasurementAggregatesController : Controller

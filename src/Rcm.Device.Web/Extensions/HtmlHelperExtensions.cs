@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
 
-namespace Rcm.Device.Web.Extensions;
+namespace Rcm.Web.Extensions;
 
 public static class HtmlHelperExtensions
 {

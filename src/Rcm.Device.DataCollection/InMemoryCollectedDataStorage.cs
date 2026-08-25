@@ -5,7 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Rcm.Common;
 
-namespace Rcm.Device.DataCollection;
+namespace Rcm.DataCollection;
 
 public class InMemoryCollectedDataStorage : ICollectedDataStorage
 {

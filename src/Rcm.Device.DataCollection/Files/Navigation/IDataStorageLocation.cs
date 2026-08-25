@@ -1,4 +1,4 @@
-﻿namespace Rcm.Device.DataCollection.Files.Navigation;
+﻿namespace Rcm.DataCollection.Files.Navigation;
 
 public interface IDataStorageLocation
 {

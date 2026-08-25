@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading;
 
-namespace Rcm.Device.Aggregates.Api;
+namespace Rcm.Aggregates.Api;
 
 public interface IMeasurementAggregatesAccessor
 {

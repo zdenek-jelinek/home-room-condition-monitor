@@ -1,6 +1,6 @@
 using NUnit.Framework;
 
-namespace Rcm.Device.Bme280.UnitTests;
+namespace Rcm.Bme280.UnitTests;
 
 [TestFixture]
 public class TemperatureCalculatorTests

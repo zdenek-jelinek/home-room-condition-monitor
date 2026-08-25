@@ -4,14 +4,14 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Rcm.Device.Web.Configuration;
-using Rcm.Device.Web.Configuration.Aggregates;
-using Rcm.Device.Web.Configuration.Common;
-using Rcm.Device.Web.Configuration.DataCollection;
-using Rcm.Device.Web.Configuration.Measurements;
-using Rcm.Device.Web.Extensions;
+using Rcm.Web.Configuration;
+using Rcm.Web.Configuration.Aggregates;
+using Rcm.Web.Configuration.Common;
+using Rcm.Web.Configuration.DataCollection;
+using Rcm.Web.Configuration.Measurements;
+using Rcm.Web.Extensions;
 
-namespace Rcm.Device.Web;
+namespace Rcm.Web;
 
 [SuppressMessage("Style", "IDE0058:Expression value is never used")]
 public class Startup

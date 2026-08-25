@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Rcm.Device.Web.Extensions;
+namespace Rcm.Web.Extensions;
 
 public static class HttpContextExtensions
 {

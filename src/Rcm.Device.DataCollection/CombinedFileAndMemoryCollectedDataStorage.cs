@@ -4,9 +4,9 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Rcm.Common;
-using Rcm.Device.DataCollection.Files;
+using Rcm.DataCollection.Files;
 
-namespace Rcm.Device.DataCollection;
+namespace Rcm.DataCollection;
 
 public class CombinedFileAndMemoryCollectedDataStorage : ICollectedDataStorage, IDisposable
 {

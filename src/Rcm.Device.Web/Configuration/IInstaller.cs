@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 
-namespace Rcm.Device.Web.Configuration;
+namespace Rcm.Web.Configuration;
 
 public interface IInstaller
 {

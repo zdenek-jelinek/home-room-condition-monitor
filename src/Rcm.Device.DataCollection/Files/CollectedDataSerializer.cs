@@ -2,7 +2,7 @@
 using Rcm.Common;
 using static System.Globalization.CultureInfo;
 
-namespace Rcm.Device.DataCollection.Files;
+namespace Rcm.DataCollection.Files;
 
 public class CollectedDataSerializer
 {

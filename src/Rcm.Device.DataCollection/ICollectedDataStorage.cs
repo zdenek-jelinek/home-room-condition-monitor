@@ -1,6 +1,6 @@
-﻿using Rcm.Device.DataCollection.Api;
+﻿using Rcm.DataCollection.Api;
 
-namespace Rcm.Device.DataCollection;
+namespace Rcm.DataCollection;
 
 public interface ICollectedDataStorage : ICollectedDataWriter, ICollectedDataAccessor
 {

@@ -7,7 +7,7 @@ using System.Text;
 using Microsoft.Extensions.Logging;
 using Microsoft.Win32.SafeHandles;
 
-namespace Rcm.Device.I2c;
+namespace Rcm.I2c;
 
 public class I2cBus : IDisposable
 {

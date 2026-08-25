@@ -1,10 +1,10 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Rcm.Device.DataCollection;
-using Rcm.Device.DataCollection.Api;
-using Rcm.Device.DataCollection.Files;
-using Rcm.Device.Web.Services;
+using Rcm.DataCollection;
+using Rcm.DataCollection.Api;
+using Rcm.DataCollection.Files;
+using Rcm.Web.Services;
 
-namespace Rcm.Device.Web.Configuration.DataCollection;
+namespace Rcm.Web.Configuration.DataCollection;
 
 public class DataCollectionServicesInstaller : IInstaller
 {

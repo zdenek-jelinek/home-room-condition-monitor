@@ -3,9 +3,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Rcm.Common;
 using Rcm.Common.IO;
-using Rcm.Device.DataCollection.Files.Navigation;
+using Rcm.DataCollection.Files.Navigation;
 
-namespace Rcm.Device.Web.Configuration.Common;
+namespace Rcm.Web.Configuration.Common;
 
 public class CommonServicesInstaller : IConfigurableInstaller
 {

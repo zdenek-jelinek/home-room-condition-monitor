@@ -6,9 +6,9 @@ using Microsoft.Extensions.Logging.Abstractions;
 using NUnit.Framework;
 using Rcm.Common;
 using Rcm.Common.TestDoubles;
-using Rcm.Device.Measurement.Api;
+using Rcm.Measurement.Api;
 
-namespace Rcm.Device.DataCollection.UnitTests;
+namespace Rcm.DataCollection.UnitTests;
 
 [TestFixture]
 public class MeasurementCollectorTests

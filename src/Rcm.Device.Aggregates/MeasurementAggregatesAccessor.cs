@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading;
+using Rcm.Aggregates.Api;
 using Rcm.Common;
-using Rcm.Device.Aggregates.Api;
-using Rcm.Device.DataCollection.Api;
+using Rcm.DataCollection.Api;
 
-namespace Rcm.Device.Aggregates;
+namespace Rcm.Aggregates;
 
 public class MeasurementAggregatesAccessor : IMeasurementAggregatesAccessor
 {

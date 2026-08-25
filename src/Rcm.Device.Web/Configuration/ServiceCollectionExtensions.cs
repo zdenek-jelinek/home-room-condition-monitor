@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Rcm.Device.Web.Configuration;
+namespace Rcm.Web.Configuration;
 
 public static class ServiceCollectionExtensions
 {

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Rcm.Device.Web.Controllers;
+namespace Rcm.Web.Controllers;
 
 public class MeasurementContract
 {

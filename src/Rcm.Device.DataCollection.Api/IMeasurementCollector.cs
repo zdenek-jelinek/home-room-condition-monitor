@@ -2,7 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Rcm.Device.DataCollection.Api;
+namespace Rcm.DataCollection.Api;
 
 public interface IMeasurementCollector
 {

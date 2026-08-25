@@ -4,7 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Rcm.Common;
 
-namespace Rcm.Device.DataCollection.Files;
+namespace Rcm.DataCollection.Files;
 
 public interface ICollectedDataFileAccess
 {

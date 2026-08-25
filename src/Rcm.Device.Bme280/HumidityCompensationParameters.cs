@@ -1,4 +1,4 @@
-﻿namespace Rcm.Device.Bme280;
+﻿namespace Rcm.Bme280;
 
 public class HumidityCompensationParameters
 {

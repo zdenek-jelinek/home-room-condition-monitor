@@ -1,8 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Rcm.Device.Aggregates;
-using Rcm.Device.Aggregates.Api;
+using Rcm.Aggregates;
+using Rcm.Aggregates.Api;
 
-namespace Rcm.Device.Web.Configuration.Aggregates;
+namespace Rcm.Web.Configuration.Aggregates;
 
 public class AggregatesServicesInstaller : IInstaller
 {

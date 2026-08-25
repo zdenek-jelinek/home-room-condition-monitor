@@ -1,8 +1,8 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
-using Rcm.Device.Bme280;
+using Rcm.Bme280;
 
-namespace Rcm.Device.Web.Configuration.Measurements;
+namespace Rcm.Web.Configuration.Measurements;
 
 public class I2cAccessConfiguration : II2cAccessConfiguration
 {

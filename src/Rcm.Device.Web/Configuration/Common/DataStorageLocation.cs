@@ -2,9 +2,9 @@
 using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Threading;
-using Rcm.Device.DataCollection.Files.Navigation;
+using Rcm.DataCollection.Files.Navigation;
 
-namespace Rcm.Device.Web.Configuration.Common;
+namespace Rcm.Web.Configuration.Common;
 
 internal class DataStorageLocation : IDataStorageLocation
 {

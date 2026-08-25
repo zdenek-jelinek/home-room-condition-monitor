@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 using NUnit.Framework;
 using Rcm.Common;
 using Rcm.Common.TestDoubles;
-using Rcm.Device.DataCollection.Files;
+using Rcm.DataCollection.Files;
 
-namespace Rcm.Device.DataCollection.UnitTests;
+namespace Rcm.DataCollection.UnitTests;
 
 [TestFixture]
 public class CombinedFileAndMemoryCollectedDataStorageTests

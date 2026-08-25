@@ -1,10 +1,10 @@
 ﻿using System;
 using Microsoft.Extensions.Logging;
 using Rcm.Common;
-using Rcm.Device.I2c;
-using Rcm.Device.Measurement.Api;
+using Rcm.I2c;
+using Rcm.Measurement.Api;
 
-namespace Rcm.Device.Bme280;
+namespace Rcm.Bme280;
 
 public class Bme280DeviceFactory : IMeasurementProviderFactory, IDisposable
 {

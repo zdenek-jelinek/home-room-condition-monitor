@@ -4,9 +4,9 @@ using System.Linq;
 using System.Threading;
 using Microsoft.AspNetCore.Mvc;
 using Rcm.Common;
-using Rcm.Device.DataCollection.Api;
+using Rcm.DataCollection.Api;
 
-namespace Rcm.Device.Web.Controllers;
+namespace Rcm.Web.Controllers;
 
 [Route("api/measurements")]
 public class MeasurementDataController : Controller

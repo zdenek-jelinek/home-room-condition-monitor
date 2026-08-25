@@ -3,9 +3,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Rcm.Device.DataCollection.Api;
+using Rcm.DataCollection.Api;
 
-namespace Rcm.Device.Web.Services;
+namespace Rcm.Web.Services;
 
 public class PeriodicDataCollectionService : IHostedService, IAsyncDisposable
 {

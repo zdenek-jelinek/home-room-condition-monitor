@@ -10,11 +10,11 @@ using Rcm.Common;
 using Rcm.Common.IO;
 using Rcm.Common.Tasks;
 using Rcm.Common.TestDoubles.IO;
-using Rcm.Device.DataCollection.Files;
-using Rcm.Device.DataCollection.Files.Navigation;
+using Rcm.DataCollection.Files;
+using Rcm.DataCollection.Files.Navigation;
 using static System.Globalization.CultureInfo;
 
-namespace Rcm.Device.DataCollection.UnitTests.Files;
+namespace Rcm.DataCollection.UnitTests.Files;
 
 [TestFixture]
 public class CollectedDataFileAccessTests

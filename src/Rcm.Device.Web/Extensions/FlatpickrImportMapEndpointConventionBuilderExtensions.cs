@@ -3,7 +3,7 @@ using System.Linq;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components;
 
-namespace Rcm.Device.Web.Extensions;
+namespace Rcm.Web.Extensions;
 
 public static class FlatpickrImportMapEndpointConventionBuilderExtensions
 {

@@ -5,10 +5,10 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging.Abstractions;
 using NUnit.Framework;
 using Rcm.Common.Tasks;
-using Rcm.Device.DataCollection.Api;
-using Rcm.Device.Web.Services;
+using Rcm.DataCollection.Api;
+using Rcm.Web.Services;
 
-namespace Rcm.Device.Web.Tests.Services;
+namespace Rcm.Web.Tests.Services;
 
 [TestFixture]
 public class PeriodicDataCollectionServiceIntegrationTests

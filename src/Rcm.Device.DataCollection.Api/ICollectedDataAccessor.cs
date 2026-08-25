@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using Rcm.Common;
 
-namespace Rcm.Device.DataCollection.Api;
+namespace Rcm.DataCollection.Api;
 
 public interface ICollectedDataAccessor
 {

@@ -1,4 +1,4 @@
-﻿namespace Rcm.Device.Measurement.Api;
+﻿namespace Rcm.Measurement.Api;
 
 public interface IMeasurementProviderFactory
 {

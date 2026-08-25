@@ -5,10 +5,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Rcm.Common;
-using Rcm.Device.DataCollection.Api;
-using Rcm.Device.Measurement.Api;
+using Rcm.DataCollection.Api;
+using Rcm.Measurement.Api;
 
-namespace Rcm.Device.DataCollection;
+namespace Rcm.DataCollection;
 
 public class MeasurementCollector : IMeasurementCollector
 {

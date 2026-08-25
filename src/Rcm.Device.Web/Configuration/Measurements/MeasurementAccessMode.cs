@@ -1,4 +1,4 @@
-﻿namespace Rcm.Device.Web.Configuration.Measurements;
+﻿namespace Rcm.Web.Configuration.Measurements;
 
 public enum MeasurementAccessMode
 {

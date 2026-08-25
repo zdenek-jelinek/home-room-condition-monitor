@@ -1,9 +1,9 @@
 ﻿using System;
 using NUnit.Framework;
 using Rcm.Common;
-using Rcm.Device.DataCollection.Files;
+using Rcm.DataCollection.Files;
 
-namespace Rcm.Device.DataCollection.UnitTests.Files;
+namespace Rcm.DataCollection.UnitTests.Files;
 
 [TestFixture]
 public class CollectedDataSerializerTests

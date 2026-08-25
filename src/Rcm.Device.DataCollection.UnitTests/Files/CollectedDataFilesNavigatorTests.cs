@@ -2,9 +2,9 @@
 using System.IO;
 using System.Linq;
 using NUnit.Framework;
-using Rcm.Device.DataCollection.Files.Navigation;
+using Rcm.DataCollection.Files.Navigation;
 
-namespace Rcm.Device.DataCollection.UnitTests.Files;
+namespace Rcm.DataCollection.UnitTests.Files;
 
 [TestFixture]
 public class CollectedDataFilesNavigatorTests

@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Rcm.Common;
 using Rcm.Common.IO;
-using Rcm.Device.DataCollection.Files.Navigation;
+using Rcm.DataCollection.Files.Navigation;
 
-namespace Rcm.Device.DataCollection.Files;
+namespace Rcm.DataCollection.Files;
 
 public class CollectedDataFileAccess : ICollectedDataFileAccess
 {

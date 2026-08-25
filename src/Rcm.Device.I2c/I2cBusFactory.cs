@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 
-namespace Rcm.Device.I2c;
+namespace Rcm.I2c;
 
 public class I2cBusFactory
 {
