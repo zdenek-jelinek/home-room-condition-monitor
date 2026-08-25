@@ -1,4 +1,3 @@
-using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -13,7 +12,6 @@ using Rcm.Web.Extensions;
 
 namespace Rcm.Web;
 
-[SuppressMessage("Style", "IDE0058:Expression value is never used")]
 public class Startup
 {
     private readonly IConfiguration _configuration;
