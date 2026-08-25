@@ -102,7 +102,7 @@ public sealed class Bme280I2cDevice : ISensor, IDisposable
         }
     }
 
-    private (int pressure, int temperature, int humidity) ReadMeasurementResults()
+    private (int Pressure, int Temperature, int Humidity) ReadMeasurementResults()
     {
         const byte firstMeasurementResultRegisterAddress = 0xF7;
         const byte resultRegistersSize = 0xFE - firstMeasurementResultRegisterAddress + 1;
