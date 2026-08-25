@@ -6,7 +6,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Rcm.Common\Rcm.Common.csproj" />
-    <ProjectReference Include="..\Rcm.Measurement.Api\Rcm.Sensors.Abstractions.csproj" />
+    <ProjectReference Include="..\Rcm.Sensors.Abstractions\Rcm.Sensors.Abstractions.csproj" />
   </ItemGroup>
 
 </Project>
