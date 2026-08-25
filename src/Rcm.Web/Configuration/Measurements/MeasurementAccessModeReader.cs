@@ -10,14 +10,14 @@ public class MeasurementAccessModeReader
     private static class MeasurementAccessModeNames
     {
         public const string I2c = "I2C";
-        public const string Stub = "STUB";
+        public const string Fake = "Fake";
 
         public static IEnumerable<string> All
         {
             get
             {
                 yield return I2c;
-                yield return Stub;
+                yield return Fake;
             }
         }
     }
@@ -36,9 +36,9 @@ public class MeasurementAccessModeReader
         {
             return MeasurementAccessMode.I2c;
         }
-        else if (mode.Equals(MeasurementAccessModeNames.Stub, StringComparison.InvariantCultureIgnoreCase))
+        else if (mode.Equals(MeasurementAccessModeNames.Fake, StringComparison.InvariantCultureIgnoreCase))
         {
-            return MeasurementAccessMode.Stub;
+            return MeasurementAccessMode.Fake;
         }
         else
         {

@@ -3,5 +3,5 @@
 public enum MeasurementAccessMode
 {
     I2c,
-    Stub
+    Fake
 }

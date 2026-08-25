@@ -27,7 +27,7 @@ In addition, the following properties are supported:
 
 | Property | Possible values | Required | Description |
 | --- | --- | --- | --- |
-| Measurements:Access:Mode | STUB, I2C | Required | Defines the data access mode for periodic condition measurements.<br>In STUB mode, measurements are generated randomly within sensible ranges.<br>In I2C mode, measurements are read from I2C bus. |
+| Measurements:Access:Mode | Fake, I2C | Required | Defines the data access mode for periodic condition measurements.<br>In Fake mode, measurements are generated randomly within sensible ranges.<br>In I2C mode, measurements are read from I2C bus. |
 | DataStorage:Path | path string | Required | Specifies a directory used to store measurements. If a relative path is supplied, it is evaluated based on the working directory of the executing binary. |
 
 
@@ -43,13 +43,15 @@ Note that the above requires I2C interface to be enabled on the device through `
 
 ## Running
 ### Development
-Executing  `dotnet run --project src/Rcm.Web --measurements:access:mode=STUB --dataStorage:path=../../../data --console` will run the data collection and web UI service with basic development configuration.  
+Executing  `dotnet run --project src/Rcm.Web --launch-profile Development` will run the data collection and web UI service with basic development configuration.
+Identical setup can be run from Visual Studio using the `Development` launch profile.
 
-The `--console` switch causes the application to run in console. If the switch is omitted, the application will asume it is running as a Linux systemd service.
+Unless overriden, the `Measurements:Access:Mode` defaults to `Fake` and `DataStorage:Path` defaults to `../../data` for `ASPNETCORE_ENVIRONMENT=Development`.
 
-Note that the `--console` switch is required to come last in order to avoid misinterpretation by ASP.NET Core configuration.
+In addition to ASP.NET Core configuration properties per the [configuration section](#configuration), the command line also accepts `--console` switch.
+This causes the application to run in console. If the switch is omitted, the application will asume it is running as a Linux systemd service.
 
-Except `--console`, the parameters may also be specified in appsettings.json files or environment variables. See [configuration section](#configuration) for more details.
+The `--console` switch must be specified last to avoid ambiguity with other configuration parameters.
 
 ### Device
 For actual device deployment, it is suggested to publish the application binary and run it as a systemd service on the target system.

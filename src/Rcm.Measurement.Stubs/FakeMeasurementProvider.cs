@@ -6,13 +6,13 @@ using Rcm.Sensors.Abstractions;
 
 namespace Rcm.Sensors.Fakes;
 
-public class StubMeasurementProvider : IMeasurementProvider
+public class FakeMeasurementProvider : IMeasurementProvider
 {
     private readonly IClock _clock;
 
     private readonly Random _random = new Random();
 
-    public StubMeasurementProvider(IClock clock)
+    public FakeMeasurementProvider(IClock clock)
     {
         _clock = clock;
     }

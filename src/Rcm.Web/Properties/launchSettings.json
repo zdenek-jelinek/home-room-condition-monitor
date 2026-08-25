@@ -1,7 +1,8 @@
 {
   "profiles": {
-    "Rcm.Web - Development": {
+    "Development": {
       "commandName": "Project",
+      "commandLineArgs": "--console",
       "launchBrowser": true,
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"

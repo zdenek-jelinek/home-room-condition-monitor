@@ -4,13 +4,13 @@ using Rcm.Sensors.Abstractions;
 
 namespace Rcm.Sensors.Fakes;
 
-public class StubMeasurementProviderFactory : IMeasurementProviderFactory
+public class FakeMeasurementProviderFactory : IMeasurementProviderFactory
 {
     private readonly Lazy<IMeasurementProvider> _instance;
 
-    public StubMeasurementProviderFactory(IClock clock)
+    public FakeMeasurementProviderFactory(IClock clock)
     {
-        _instance = new Lazy<IMeasurementProvider>(() => new StubMeasurementProvider(clock));
+        _instance = new Lazy<IMeasurementProvider>(() => new FakeMeasurementProvider(clock));
     }
 
     public IMeasurementProvider Create() => _instance.Value;

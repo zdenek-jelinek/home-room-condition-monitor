@@ -20,8 +20,8 @@ public class ModeBasedMeasurementServicesInstaller : IConfigurableInstaller
                 InstallI2cServices(services, configuration);
                 break;
 
-            case MeasurementAccessMode.Stub:
-                InstallStubServices(services);
+            case MeasurementAccessMode.Fake:
+                InstallFakeServices(services);
                 break;
 
             default:
@@ -37,9 +37,9 @@ public class ModeBasedMeasurementServicesInstaller : IConfigurableInstaller
         services.AddTransient(s => s.GetRequiredService<IMeasurementProviderFactory>().Create());
     }
 
-    private void InstallStubServices(IServiceCollection services)
+    private void InstallFakeServices(IServiceCollection services)
     {
-        services.AddSingleton<IMeasurementProviderFactory, StubMeasurementProviderFactory>();
+        services.AddSingleton<IMeasurementProviderFactory, FakeMeasurementProviderFactory>();
     }
 
     private void InstallI2cServices(IServiceCollection services, IConfiguration measurementI2cAccessConfiguration)
