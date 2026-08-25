@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging.Abstractions;
 using NUnit.Framework;
 using Rcm.Common;
-using Rcm.Common.TestDoubles;
 using Rcm.Measurement.Api;
+using Rcm.Testing;
 
 namespace Rcm.DataCollection.UnitTests;
 

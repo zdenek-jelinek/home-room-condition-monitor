@@ -9,9 +9,9 @@ using NUnit.Framework;
 using Rcm.Common;
 using Rcm.Common.IO;
 using Rcm.Common.Tasks;
-using Rcm.Common.TestDoubles.IO;
 using Rcm.DataCollection.Files;
 using Rcm.DataCollection.Files.Navigation;
+using Rcm.Testing.IO;
 using static System.Globalization.CultureInfo;
 
 namespace Rcm.DataCollection.UnitTests.Files;

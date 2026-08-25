@@ -1,6 +1,7 @@
 ﻿using System;
+using Rcm.Common;
 
-namespace Rcm.Common.TestDoubles;
+namespace Rcm.Testing;
 
 public class FixedClock : IClock
 {

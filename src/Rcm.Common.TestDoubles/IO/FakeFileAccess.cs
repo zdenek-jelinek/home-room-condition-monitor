@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading;
 using Rcm.Common.IO;
 
-namespace Rcm.Common.TestDoubles.IO;
+namespace Rcm.Testing.IO;
 
 public class FakeFileAccess : IFileAccess
 {

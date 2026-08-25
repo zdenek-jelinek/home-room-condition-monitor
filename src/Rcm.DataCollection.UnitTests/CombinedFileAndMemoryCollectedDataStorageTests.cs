@@ -5,8 +5,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using NUnit.Framework;
 using Rcm.Common;
-using Rcm.Common.TestDoubles;
 using Rcm.DataCollection.Files;
+using Rcm.Testing;
 
 namespace Rcm.DataCollection.UnitTests;
 
