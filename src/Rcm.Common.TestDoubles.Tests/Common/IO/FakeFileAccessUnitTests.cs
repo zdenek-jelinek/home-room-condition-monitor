@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using NUnit.Framework;
 using Rcm.Common.IO;
-using Rcm.Testing.IO;
+using Rcm.Testing.Common.IO;
 
-namespace Rcm.UnitTests.IO;
+namespace Rcm.UnitTests.Common.IO;
 
 [TestFixture]
 public class FakeFileAccessUnitTests

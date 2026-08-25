@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading;
 using Rcm.Common.IO;
 
-namespace Rcm.Testing.IO;
+namespace Rcm.Testing.Common.IO;
 
 public class FakeFileAccess : IFileAccess
 {
@@ -105,7 +105,7 @@ public class FakeFileAccess : IFileAccess
             throw new ArgumentNullException(nameof(path));
         }
 
-        if (String.IsNullOrWhiteSpace(path) || Path.GetInvalidPathChars().Any(path.Contains))
+        if (string.IsNullOrWhiteSpace(path) || Path.GetInvalidPathChars().Any(path.Contains))
         {
             throw new ArgumentException($"Path is not valid: \"{path}\"", nameof(path));
         }
@@ -192,8 +192,8 @@ public class FakeFileAccess : IFileAccess
         private static void ValidateAccess(long locks, FileAccess access)
         {
             if (HasExclusigeLock(locks)
-                || (access.HasFlag(FileAccess.Read) && HasReadLocks(locks))
-                || (access.HasFlag(FileAccess.Write) && HasWriteLocks(locks)))
+                || access.HasFlag(FileAccess.Read) && HasReadLocks(locks)
+                || access.HasFlag(FileAccess.Write) && HasWriteLocks(locks))
             {
                 throw new IOException($"Unable to acquire file lock for access {access}.");
             }
@@ -216,7 +216,7 @@ public class FakeFileAccess : IFileAccess
                 readLocks += 1;
             }
 
-            var writeLocks = (currentLocks >> 32) & 0x7FFF_FFFF;
+            var writeLocks = currentLocks >> 32 & 0x7FFF_FFFF;
             if (IsWriteLock(share))
             {
                 writeLocks += 1;
@@ -225,7 +225,7 @@ public class FakeFileAccess : IFileAccess
             ValidateReadLocks(readLocks);
             ValidateWriteLocks(writeLocks);
 
-            return (writeLocks << 32) | readLocks;
+            return writeLocks << 32 | readLocks;
         }
 
         public void Release(FileShare share)
@@ -252,7 +252,7 @@ public class FakeFileAccess : IFileAccess
                 readLocks -= 1;
             }
 
-            var writeLocks = (currentLocks >> 32) & 0x7FFFFFFF;
+            var writeLocks = currentLocks >> 32 & 0x7FFFFFFF;
             if (IsWriteLock(share))
             {
                 writeLocks -= 1;
@@ -261,14 +261,14 @@ public class FakeFileAccess : IFileAccess
             ValidateReadLocks(readLocks);
             ValidateWriteLocks(writeLocks);
 
-            return (writeLocks << 32) | readLocks;
+            return writeLocks << 32 | readLocks;
         }
 
         private static void ValidateReadLocks(long readLocks)
         {
-            if (readLocks > UInt32.MaxValue)
+            if (readLocks > uint.MaxValue)
             {
-                throw new InvalidOperationException($"Attempted to open more than {UInt32.MaxValue} read locks.");
+                throw new InvalidOperationException($"Attempted to open more than {uint.MaxValue} read locks.");
             }
             else if (readLocks < 0)
             {
@@ -278,9 +278,9 @@ public class FakeFileAccess : IFileAccess
 
         private static void ValidateWriteLocks(long writeLocks)
         {
-            if (writeLocks > Int32.MaxValue)
+            if (writeLocks > int.MaxValue)
             {
-                throw new InvalidOperationException($"Attempted to open more than {Int32.MaxValue} write locks.");
+                throw new InvalidOperationException($"Attempted to open more than {int.MaxValue} write locks.");
             }
             else if (writeLocks < 0)
             {
@@ -335,10 +335,10 @@ public class FakeFileAccess : IFileAccess
                     throw new ArgumentOutOfRangeException($"Position {value} is before the start of stream.");
                 }
 
-                if (value >= Int32.MaxValue)
+                if (value >= int.MaxValue)
                 {
                     throw new ArgumentOutOfRangeException(
-                        $"Position {value} is above maximum stream length of {Int32.MaxValue}");
+                        $"Position {value} is above maximum stream length of {int.MaxValue}");
                 }
 
                 if (value > Length)
@@ -396,11 +396,11 @@ public class FakeFileAccess : IFileAccess
                     $"Stream length must be non-negative, got {value}");
             }
 
-            if (value > Int32.MaxValue)
+            if (value > int.MaxValue)
             {
                 throw new ArgumentOutOfRangeException(
                     nameof(value),
-                    $"Specified stream length {value} is greater than the maximum of {Int32.MaxValue}");
+                    $"Specified stream length {value} is greater than the maximum of {int.MaxValue}");
             }
 
             _file.SetSize((int)value);

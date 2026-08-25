@@ -11,7 +11,7 @@ using Rcm.Common.IO;
 using Rcm.Common.Tasks;
 using Rcm.DataCollection.Files;
 using Rcm.DataCollection.Files.Navigation;
-using Rcm.Testing.IO;
+using Rcm.Testing.Common.IO;
 using static System.Globalization.CultureInfo;
 
 namespace Rcm.DataCollection.UnitTests.Files;

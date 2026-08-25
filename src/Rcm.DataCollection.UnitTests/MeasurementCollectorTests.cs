@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging.Abstractions;
 using NUnit.Framework;
 using Rcm.Common;
 using Rcm.Measurement.Api;
-using Rcm.Testing;
+using Rcm.Testing.Common;
 
 namespace Rcm.DataCollection.UnitTests;
 

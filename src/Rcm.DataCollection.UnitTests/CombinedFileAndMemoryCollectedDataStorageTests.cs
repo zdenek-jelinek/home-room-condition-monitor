@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using NUnit.Framework;
 using Rcm.Common;
 using Rcm.DataCollection.Files;
-using Rcm.Testing;
+using Rcm.Testing.Common;
 
 namespace Rcm.DataCollection.UnitTests;
 
