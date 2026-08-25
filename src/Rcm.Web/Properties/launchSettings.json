@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "Rcm.Web - Development": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "https://localhost:51958;http://localhost:51959"
+    }
+  }
+}
