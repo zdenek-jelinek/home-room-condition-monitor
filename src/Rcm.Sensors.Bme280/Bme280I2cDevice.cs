@@ -3,7 +3,6 @@ using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using Rcm.Common;
 using Rcm.Common.Temporal;
 using Rcm.I2c;
 using Rcm.Sensors.Abstractions;
@@ -30,7 +29,7 @@ public class Bme280I2cDevice : ISensor, IDisposable
         _compensationParameters = new Lazy<CompensationParameters>(ReadCompensationParameters);
     }
 
-    public async Task<MeasurementEntry> MeasureAsync(CancellationToken token)
+    public async Task<SensorMeasurement> ReadMeasurementAsync(CancellationToken token)
     {
         _logger.LogDebug("Initiating measurement");
         InitiateMeasurement();
@@ -120,7 +119,7 @@ public class Bme280I2cDevice : ISensor, IDisposable
         return (pressure, temperature, humidity);
     }
 
-    private MeasurementEntry CompensateResults(
+    private SensorMeasurement CompensateResults(
         int rawPressure,
         int rawTemperature,
         int rawHumidity,
@@ -137,11 +136,13 @@ public class Bme280I2cDevice : ISensor, IDisposable
 
         _logger.LogTrace("Compensated values as {Temperature}°C, {Pressure}hPa, {Humidity}%rH", resultingTemperature, pressure, humidity);
 
-        return new MeasurementEntry(
-            _clock.Now,
-            resultingTemperature,
-            humidity,
-            pressure);
+        return new()
+        {
+            Time = _clock.Now,
+            CelsiusTemperature = resultingTemperature,
+            RelativeHumidity = humidity,
+            HpaPressure = pressure
+        };
     }
 
     // The calculation logic in the following method is adapted from BME280 data sheet, chapter 4.2.3 Compensation Formulas

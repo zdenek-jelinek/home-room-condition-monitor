@@ -49,13 +49,18 @@ public class MeasurementCollector : IMeasurementCollector
 
         try
         {
-            var measurement = await _sensor.MeasureAsync(token);
-            await AddMeasurementAsync(measurement, token);
+            var measurement = await _sensor.ReadMeasurementAsync(token);
+            await AddMeasurementAsync(MapMeasurement(measurement), token);
         }
         finally
         {
             Interlocked.Exchange(ref _measurementInProgress, 0);
         }
+    }
+
+    private static MeasurementEntry MapMeasurement(SensorMeasurement measurement)
+    {
+        return new(measurement.Time, measurement.CelsiusTemperature, measurement.RelativeHumidity, measurement.HpaPressure);
     }
 
     private async Task AddMeasurementAsync(MeasurementEntry measurement, CancellationToken token)

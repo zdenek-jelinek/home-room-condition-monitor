@@ -69,9 +69,9 @@ public class MeasurementCollectorTests
             var secondMeasurementTimeWithinSameMinute = firstMeasurementTime.AddSeconds(30);
             var measurementTimeInNextMinute = firstMeasurementTime.AddMinutes(1);
 
-            var firstMeasurement = new MeasurementEntry(firstMeasurementTime, 30m, 45m, 950m);
-            var secondMeasurementWithinSameMinute = new MeasurementEntry(secondMeasurementTimeWithinSameMinute, 20m, 40m, 1050m);
-            var measurementInNextMinute = new MeasurementEntry(measurementTimeInNextMinute, 35m, 35m, 970m);
+            var firstMeasurement = new SensorMeasurement { Time = firstMeasurementTime, CelsiusTemperature = 30m, RelativeHumidity = 45m, HpaPressure = 950m };
+            var secondMeasurementWithinSameMinute = new SensorMeasurement { Time = secondMeasurementTimeWithinSameMinute, CelsiusTemperature = 20m, RelativeHumidity = 40m, HpaPressure = 1050m };
+            var measurementInNextMinute = new SensorMeasurement  { Time = measurementTimeInNextMinute, CelsiusTemperature = 35m, RelativeHumidity = 35m, HpaPressure = 970m };
 
             var spyCollectedDataStorage = new SpyCollectedDataWriter();
 
@@ -124,19 +124,19 @@ public class MeasurementCollectorTests
 
         public class FakeSensor : ISensor
         {
-            private readonly IReadOnlyList<MeasurementEntry> _measurements;
+            private readonly IReadOnlyList<SensorMeasurement> _measurements;
 
             private int _currentMeasurementIndex;
 
-            public FakeSensor(IReadOnlyList<MeasurementEntry> measurements)
+            public FakeSensor(IReadOnlyList<SensorMeasurement> measurements)
             {
                 _measurements = measurements;
             }
 
-            public Task<MeasurementEntry> MeasureAsync(CancellationToken token)
+            public Task<SensorMeasurement> ReadMeasurementAsync(CancellationToken token)
             {
                 var measurement = _measurements[_currentMeasurementIndex];
-                    
+
                 _currentMeasurementIndex += 1;
                 if (_currentMeasurementIndex >= _measurements.Count)
                 {
@@ -163,7 +163,7 @@ public class MeasurementCollectorTests
             private int _invocationCount;
             public int InvocationCount => _invocationCount;
 
-            public Task<MeasurementEntry> MeasureAsync(CancellationToken token)
+            public Task<SensorMeasurement> ReadMeasurementAsync(CancellationToken token)
             {
                 _ = Interlocked.Increment(ref _invocationCount);
                 throw new Exception();
@@ -172,12 +172,12 @@ public class MeasurementCollectorTests
 
         public class BlockingSpySensor : ISensor
         {
-            private readonly Task<MeasurementEntry> _task = new Task<MeasurementEntry>(() => new MeasurementEntry(DateTimeOffset.Now, 0m, 0m, 0m));
+            private readonly Task<SensorMeasurement> _task = new(() => new() { Time = DateTimeOffset.Now, CelsiusTemperature = 0m, RelativeHumidity = 0m, HpaPressure = 0m });
 
             private int _invocationCount;
             public int InvocationCount => _invocationCount;
 
-            public Task<MeasurementEntry> MeasureAsync(CancellationToken token)
+            public Task<SensorMeasurement> ReadMeasurementAsync(CancellationToken token)
             {
                 _ = Interlocked.Increment(ref _invocationCount);
                 return _task;
@@ -237,7 +237,7 @@ public class MeasurementCollectorTests
 
     public class DummySensor : ISensor
     {
-        public Task<MeasurementEntry> MeasureAsync(CancellationToken token) => throw new NotImplementedException();
+        public Task<SensorMeasurement> ReadMeasurementAsync(CancellationToken token) => throw new NotImplementedException();
     }
 
     public class DummyCollectedDataWriter : ICollectedDataWriter
