@@ -24,8 +24,8 @@
     <File Path="LICENSE" />
     <File Path="README.md" />
   </Folder>
-  <Project Path="src/Rcm.Common.TestDoubles.Tests/Rcm.UnitTests.csproj" />
-  <Project Path="src/Rcm.Common.TestDoubles/Rcm.Testing.csproj" />
+  <Project Path="src/Rcm.UnitTests/Rcm.UnitTests.csproj" />
+  <Project Path="src/Rcm.Testing/Rcm.Testing.csproj" />
   <Project Path="src/Rcm.Common/Rcm.Common.csproj" />
   <Project Path="src/Rcm.Web.Tests/Rcm.Web.Tests.csproj" />
   <Project Path="src/Rcm.Web/Rcm.Web.csproj" />

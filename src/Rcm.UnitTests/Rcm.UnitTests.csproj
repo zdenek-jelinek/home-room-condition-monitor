@@ -11,7 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Rcm.Common.TestDoubles\Rcm.Testing.csproj" />
+    <ProjectReference Include="..\Rcm.Testing\Rcm.Testing.csproj" />
   </ItemGroup>
 
 </Project>
