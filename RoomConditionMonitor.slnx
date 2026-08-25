@@ -2,12 +2,12 @@
   <Folder Name="/Aggregates/">
     <Project Path="src/Rcm.Aggregates.Api/Rcm.Aggregates.Api.csproj" />
     <Project Path="src/Rcm.Aggregates.UnitTests/Rcm.Aggregates.UnitTests.csproj" />
-    <Project Path="src/Rcm.Device.Aggregates/Rcm.Aggregates.csproj" />
+    <Project Path="src/Rcm.Aggregates/Rcm.Aggregates.csproj" />
   </Folder>
   <Folder Name="/DataCollection/">
     <Project Path="src/Rcm.DataCollection.Api/Rcm.DataCollection.Api.csproj" />
     <Project Path="src/Rcm.DataCollection.UnitTests/Rcm.DataCollection.UnitTests.csproj" />
-    <Project Path="src/Rcm.Device.DataCollection/Rcm.DataCollection.csproj" />
+    <Project Path="src/Rcm.DataCollection/Rcm.DataCollection.csproj" />
   </Folder>
   <Folder Name="/Measurements/">
     <Project Path="src/Rcm.Bme280.UnitTests/Rcm.Bme280.UnitTests.csproj" />

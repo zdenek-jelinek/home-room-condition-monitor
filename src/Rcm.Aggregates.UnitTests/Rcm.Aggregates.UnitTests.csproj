@@ -11,7 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Rcm.Device.Aggregates\Rcm.Aggregates.csproj" />
+    <ProjectReference Include="..\Rcm.Aggregates\Rcm.Aggregates.csproj" />
     <ProjectReference Include="..\Rcm.DataCollection.Api\Rcm.DataCollection.Api.csproj" />
   </ItemGroup>
 
