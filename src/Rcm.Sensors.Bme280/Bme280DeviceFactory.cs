@@ -6,7 +6,7 @@ using Rcm.Sensors.Abstractions;
 
 namespace Rcm.Sensors.Bme280;
 
-public class Bme280DeviceFactory : ISensorFactory, IDisposable
+public sealed class Bme280DeviceFactory : ISensorFactory, IDisposable
 {
     private readonly ILogger<Bme280I2cDevice> _deviceLogger;
     private readonly II2cAccessConfiguration _i2cAccessConfiguration;
@@ -24,8 +24,10 @@ public class Bme280DeviceFactory : ISensorFactory, IDisposable
         _device = new Lazy<Bme280I2cDevice>(CreateDevice);
     }
 
-    public ISensor Create() =>
-        _device.Value;
+    public ISensor Create()
+    {
+        return _device.Value;
+    }
 
     public void Dispose()
     {
@@ -35,10 +37,10 @@ public class Bme280DeviceFactory : ISensorFactory, IDisposable
         }
     }
 
-    private Bme280I2cDevice CreateDevice() =>
-        new Bme280I2cDevice(
-            _deviceLogger,
-            _clock,
-            _i2cBusFactory.Open(_i2cAccessConfiguration.I2cBusAddress),
-            _i2cAccessConfiguration.DeviceAddress);
+    private Bme280I2cDevice CreateDevice()
+    {
+        var i2CBus = _i2cBusFactory.Open(_i2cAccessConfiguration.I2cBusAddress);
+
+        return new(_deviceLogger, _clock, i2CBus, _i2cAccessConfiguration.DeviceAddress);
+    }
 }

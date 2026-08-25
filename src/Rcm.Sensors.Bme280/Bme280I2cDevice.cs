@@ -9,7 +9,7 @@ using Rcm.Sensors.Abstractions;
 
 namespace Rcm.Sensors.Bme280;
 
-public class Bme280I2cDevice : ISensor, IDisposable
+public sealed class Bme280I2cDevice : ISensor, IDisposable
 {
     private TimeSpan MeasurementDelayTolerance => TimeSpan.FromMilliseconds(20);
 
@@ -192,37 +192,39 @@ public class Bme280I2cDevice : ISensor, IDisposable
 
         unchecked
         {
-            var temperatureCompensation = new TemperatureCompensationParameters(
-                temperature1: (ushort)(lowCompensation[0] | (lowCompensation[1] << 8)),
-                temperature2: (short)(lowCompensation[2] | (lowCompensation[3] << 8)),
-                temperature3: (short)(lowCompensation[4] | (lowCompensation[5] << 8)));
-
-            var pressureCompensation = new PressureCompensationParameters(
-                pressure1: (ushort)(lowCompensation[6] | (lowCompensation[7] << 8)),
-                pressure2: (short)(lowCompensation[8] | (lowCompensation[9] << 8)),
-                pressure3: (short)(lowCompensation[10] | (lowCompensation[11] << 8)),
-                pressure4: (short)(lowCompensation[12] | (lowCompensation[13] << 8)),
-                pressure5: (short)(lowCompensation[14] | (lowCompensation[15] << 8)),
-                pressure6: (short)(lowCompensation[16] | (lowCompensation[17] << 8)),
-                pressure7: (short)(lowCompensation[18] | (lowCompensation[19] << 8)),
-                pressure8: (short)(lowCompensation[20] | (lowCompensation[21] << 8)),
-                pressure9: (short)(lowCompensation[22] | (lowCompensation[23] << 8)));
-
-            var humidityCompensation = new HumidityCompensationParameters(
-                humidity1: lowCompensation[25],
-                humidity2: (short)(highCompensation[0] | (highCompensation[1] << 8)),
-                humidity3: highCompensation[2],
-                humidity4: (short)((highCompensation[3] << 4) | (highCompensation[4] & 0b1111)),
-                humidity5: (short)(((highCompensation[4] & 0b11110000) >> 4) | (highCompensation[5] << 4)),
-                humidity6: (sbyte)highCompensation[6]);
-
-            var parameters = new CompensationParameters(
-                temperatureCompensation,
-                pressureCompensation,
-                humidityCompensation);
+            var parameters = new CompensationParameters
+            {
+                Temperature = new()
+                {
+                    Temperature1 = (ushort)(lowCompensation[0] | (lowCompensation[1] << 8)),
+                    Temperature2 = (short)(lowCompensation[2] | (lowCompensation[3] << 8)),
+                    Temperature3 = (short)(lowCompensation[4] | (lowCompensation[5] << 8))
+                },
+                Humidity = new()
+                {
+                    Humidity1 = lowCompensation[25],
+                    Humidity2 = (short)(highCompensation[0] | (highCompensation[1] << 8)),
+                    Humidity3 = highCompensation[2],
+                    Humidity4 = (short)((highCompensation[3] << 4) | (highCompensation[4] & 0b1111)),
+                    Humidity5 = (short)(((highCompensation[4] & 0b11110000) >> 4) | (highCompensation[5] << 4)),
+                    Humidity6 = (sbyte)highCompensation[6]
+                },
+                Pressure = new()
+                {
+                    Pressure1 = (ushort)(lowCompensation[6] | (lowCompensation[7] << 8)),
+                    Pressure2 = (short)(lowCompensation[8] | (lowCompensation[9] << 8)),
+                    Pressure3 = (short)(lowCompensation[10] | (lowCompensation[11] << 8)),
+                    Pressure4 = (short)(lowCompensation[12] | (lowCompensation[13] << 8)),
+                    Pressure5 = (short)(lowCompensation[14] | (lowCompensation[15] << 8)),
+                    Pressure6 = (short)(lowCompensation[16] | (lowCompensation[17] << 8)),
+                    Pressure7 = (short)(lowCompensation[18] | (lowCompensation[19] << 8)),
+                    Pressure8 = (short)(lowCompensation[20] | (lowCompensation[21] << 8)),
+                    Pressure9 = (short)(lowCompensation[22] | (lowCompensation[23] << 8))
+                }
+            };
 
             _logger.LogDebug("Finished loading compensation parameters");
-            _logger.LogTrace("{ParameterValues}", parameters.ToString("\n"));
+            _logger.LogTrace("{ParameterValues}", parameters.Format(separator: "\n"));
 
             return parameters;
         }
@@ -230,16 +232,14 @@ public class Bme280I2cDevice : ISensor, IDisposable
 
     private void Read(byte startAddress, Span<byte> buffer)
     {
-        Span<byte> startAddressBytes = stackalloc byte[] { startAddress };
-        _bus.Write(_address, startAddressBytes);
+        _bus.Write(_address, [startAddress]);
 
         _bus.Read(_address, buffer);
     }
 
     private void Write(byte address, byte data)
     {
-        Span<byte> payload = new[] { address, data };
-        _bus.Write(_address, payload);
+        _bus.Write(_address, [address, data]);
     }
 
     public void Dispose()
@@ -267,21 +267,16 @@ public class Bme280I2cDevice : ISensor, IDisposable
 
     private class CompensationParameters
     {
-        public TemperatureCompensationParameters Temperature { get; }
-        public PressureCompensationParameters Pressure { get; }
-        public HumidityCompensationParameters Humidity { get; }
+        public required TemperatureCompensationParameters Temperature { get; init; }
+        public required PressureCompensationParameters Pressure { get; init; }
+        public required HumidityCompensationParameters Humidity { get; init; }
 
-        public CompensationParameters(
-            TemperatureCompensationParameters temperature,
-            PressureCompensationParameters pressure,
-            HumidityCompensationParameters humidity)
+        public override string ToString()
         {
-            Temperature = temperature;
-            Pressure = pressure;
-            Humidity = humidity;
+            return Format(separator: ", ");
         }
 
-        public string ToString(string separator)
+        public string Format(string separator)
         {
             return $"T1: {Temperature.Temperature1:X4}{separator}"
                 + $"T2: {Temperature.Temperature2:X4}{separator}"
@@ -301,11 +296,6 @@ public class Bme280I2cDevice : ISensor, IDisposable
                 + $"H4: {Humidity.Humidity4:X4}{separator}"
                 + $"H5: {Humidity.Humidity5:X4}{separator}"
                 + $"H6: {Humidity.Humidity6:X2}";
-        }
-
-        public override string ToString()
-        {
-            return ToString(", ");
         }
     }
 }
