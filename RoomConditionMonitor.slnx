@@ -1,20 +1,20 @@
 <Solution>
   <Folder Name="/Aggregates/">
-    <Project Path="src/Rcm.Device.Aggregates.Api/Rcm.Aggregates.Api.csproj" />
-    <Project Path="src/Rcm.Device.Aggregates.UnitTests/Rcm.Aggregates.UnitTests.csproj" />
+    <Project Path="src/Rcm.Aggregates.Api/Rcm.Aggregates.Api.csproj" />
+    <Project Path="src/Rcm.Aggregates.UnitTests/Rcm.Aggregates.UnitTests.csproj" />
     <Project Path="src/Rcm.Device.Aggregates/Rcm.Aggregates.csproj" />
   </Folder>
   <Folder Name="/DataCollection/">
-    <Project Path="src/Rcm.Device.DataCollection.Api/Rcm.DataCollection.Api.csproj" />
-    <Project Path="src/Rcm.Device.DataCollection.UnitTests/Rcm.DataCollection.UnitTests.csproj" />
+    <Project Path="src/Rcm.DataCollection.Api/Rcm.DataCollection.Api.csproj" />
+    <Project Path="src/Rcm.DataCollection.UnitTests/Rcm.DataCollection.UnitTests.csproj" />
     <Project Path="src/Rcm.Device.DataCollection/Rcm.DataCollection.csproj" />
   </Folder>
   <Folder Name="/Measurements/">
-    <Project Path="src/Rcm.Device.Bme280.UnitTests/Rcm.Bme280.UnitTests.csproj" />
-    <Project Path="src/Rcm.Device.Bme280/Rcm.Bme280.csproj" />
-    <Project Path="src/Rcm.Device.I2c/Rcm.I2c.csproj" />
-    <Project Path="src/Rcm.Device.Measurement.Api/Rcm.Measurement.Api.csproj" />
-    <Project Path="src/Rcm.Device.Measurement.Stubs/Rcm.Measurement.Stubs.csproj" />
+    <Project Path="src/Rcm.Bme280.UnitTests/Rcm.Bme280.UnitTests.csproj" />
+    <Project Path="src/Rcm.Bme280/Rcm.Bme280.csproj" />
+    <Project Path="src/Rcm.I2c/Rcm.I2c.csproj" />
+    <Project Path="src/Rcm.Measurement.Api/Rcm.Measurement.Api.csproj" />
+    <Project Path="src/Rcm.Measurement.Stubs/Rcm.Measurement.Stubs.csproj" />
   </Folder>
   <Folder Name="/Solution Items/">
     <File Path=".gitignore" />
@@ -27,6 +27,6 @@
   <Project Path="src/Rcm.Common.TestDoubles.Tests/Rcm.Common.TestDoubles.Tests.csproj" />
   <Project Path="src/Rcm.Common.TestDoubles/Rcm.Common.TestDoubles.csproj" />
   <Project Path="src/Rcm.Common/Rcm.Common.csproj" />
-  <Project Path="src/Rcm.Device.Web.Tests/Rcm.Web.Tests.csproj" />
-  <Project Path="src/Rcm.Device.Web/Rcm.Web.csproj" />
+  <Project Path="src/Rcm.Web.Tests/Rcm.Web.Tests.csproj" />
+  <Project Path="src/Rcm.Web/Rcm.Web.csproj" />
 </Solution>

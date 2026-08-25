@@ -43,7 +43,7 @@ Note that the above requires I2C interface to be enabled on the device through `
 
 ## Running
 ### Development
-Executing  `dotnet run --project src/Device/Rcm.Device.Web --measurements:access:mode=STUB --dataStorage:path=../../../data --console` will run the data collection and web UI service with basic development configuration.  
+Executing  `dotnet run --project src/Rcm.Web --measurements:access:mode=STUB --dataStorage:path=../../../data --console` will run the data collection and web UI service with basic development configuration.  
 
 The `--console` switch causes the application to run in console. If the switch is omitted, the application will asume it is running as a Linux systemd service.
 
@@ -54,7 +54,7 @@ Except `--console`, the parameters may also be specified in appsettings.json fil
 ### Device
 For actual device deployment, it is suggested to publish the application binary and run it as a systemd service on the target system.
 
-For a self-contained release publish, run `dotnet publish src/Device/Rcm.Device.Web/Rcm.Device.Web.csproj --runtime linux-arm --configuration Release --self-contained`
+For a self-contained release publish, run `dotnet publish src/Rcm.Web/Rcm.Web.csproj --runtime linux-arm --configuration Release --self-contained`
 
 The following unit definition can be used as a baseline, it assumes the application was deployed to `/home/pi/apps/rcm/bin` and binds to port 80 (HTTP).
 ```
@@ -68,7 +68,7 @@ Type=notify
 Environment=DATASTORAGE__PATH=/home/pi/apps/rcm/data MEASUREMENTS__ACCESS__MODE=I2C MEASUREMENTS__ACCESS__BUSADDRESS=/dev/i2c-1 MEASUREMENTS__ACCESS__DEVICEADDRESS=0x76
 
 # Start the self-contained application with binding on port 80
-ExecStart=/home/pi/apps/rcm/bin/Rcm.Device.Web --urls="http://0.0.0.0:80"
+ExecStart=/home/pi/apps/rcm/bin/Rcm.Web --urls="http://0.0.0.0:80"
 
 # Restart on error after 60s timeout
 Restart=on-failure
