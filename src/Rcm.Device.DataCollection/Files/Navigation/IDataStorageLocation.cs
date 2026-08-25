@@ -1,10 +1,10 @@
-﻿namespace Rcm.Device.Common;
+﻿namespace Rcm.Device.DataCollection.Files.Navigation;
 
 public interface IDataStorageLocation
 {
     /// <summary>
     /// Provides full path to storage location and ensures this location exists.
-    /// Subsequent components are expected to create their individual directories to store the data.
+    /// Subsequent components are expected to create their individual directories to store data.
     /// </summary>
     /// <returns>Full path to storage location.</returns>
     string GetDirectoryPath();

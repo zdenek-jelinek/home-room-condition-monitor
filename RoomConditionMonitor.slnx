@@ -27,7 +27,6 @@
   <Project Path="src/Rcm.Common.TestDoubles.Tests/Rcm.Common.TestDoubles.Tests.csproj" />
   <Project Path="src/Rcm.Common.TestDoubles/Rcm.Common.TestDoubles.csproj" />
   <Project Path="src/Rcm.Common/Rcm.Common.csproj" />
-  <Project Path="src/Rcm.Device.Common/Rcm.Device.Common.csproj" />
   <Project Path="src/Rcm.Device.Web.Tests/Rcm.Device.Web.Tests.csproj" />
   <Project Path="src/Rcm.Device.Web/Rcm.Device.Web.csproj" />
 </Solution>

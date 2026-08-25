@@ -10,8 +10,8 @@ using Rcm.Common;
 using Rcm.Common.IO;
 using Rcm.Common.Tasks;
 using Rcm.Common.TestDoubles.IO;
-using Rcm.Device.Common;
 using Rcm.Device.DataCollection.Files;
+using Rcm.Device.DataCollection.Files.Navigation;
 using static System.Globalization.CultureInfo;
 
 namespace Rcm.Device.DataCollection.UnitTests.Files;

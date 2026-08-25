@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Rcm.Common;
 using Rcm.Common.IO;
-using Rcm.Device.Common;
+using Rcm.Device.DataCollection.Files.Navigation;
 
 namespace Rcm.Device.DataCollection.Files;
 

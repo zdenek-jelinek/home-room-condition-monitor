@@ -2,8 +2,7 @@
 using System.IO;
 using System.Linq;
 using NUnit.Framework;
-using Rcm.Device.Common;
-using Rcm.Device.DataCollection.Files;
+using Rcm.Device.DataCollection.Files.Navigation;
 
 namespace Rcm.Device.DataCollection.UnitTests.Files;
 
