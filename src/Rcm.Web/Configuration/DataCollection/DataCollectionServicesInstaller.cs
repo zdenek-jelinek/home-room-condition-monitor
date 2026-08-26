@@ -2,6 +2,7 @@
 using Rcm.DataCollection;
 using Rcm.DataCollection.Api;
 using Rcm.DataCollection.Files;
+using Rcm.Services.Measurements.Retrieval;
 using Rcm.Web.Services;
 
 namespace Rcm.Web.Configuration.DataCollection;
@@ -15,6 +16,7 @@ public class DataCollectionServicesInstaller : IInstaller
             .AddSingleton<ICollectedDataStorage, CombinedFileAndMemoryCollectedDataStorage>()
             .AddSingleton<ICollectedDataWriter>(s => s.GetRequiredService<ICollectedDataStorage>())
             .AddSingleton<ICollectedDataAccessor>(s => s.GetRequiredService<ICollectedDataStorage>())
+            .AddTransient<IMeasurementsAccessor, MeasurementsAccessor>()
             .AddTransient<ICollectedDataFileAccess, CollectedDataFileAccess>();
 
         services.AddHostedService<PeriodicDataCollectionService>();
