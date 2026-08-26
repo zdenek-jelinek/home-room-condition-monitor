@@ -1,7 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
     <!-- Ensure TSC runs before static assets are processed -->
     <PrepareForBuildDependsOn>CompileTypeScriptWithTSConfig;GetTypeScriptOutputForPublishing;$(PrepareForBuildDependsOn)</PrepareForBuildDependsOn>
   </PropertyGroup>
