@@ -1,12 +1,10 @@
 <Solution>
   <Folder Name="/DataCollection/">
     <Project Path="src/Rcm.DataCollection.Api/Rcm.DataCollection.Api.csproj" />
-    <Project Path="src/Rcm.DataCollection.UnitTests/Rcm.DataCollection.UnitTests.csproj" />
     <Project Path="src/Rcm.DataCollection/Rcm.DataCollection.csproj" />
   </Folder>
   <Folder Name="/Sensors/">
     <Project Path="src/Rcm.I2c/Rcm.I2c.csproj" />
-    <Project Path="src/Rcm.Sensors.Bme280.UnitTests/Rcm.Sensors.Bme280.UnitTests.csproj" />
     <Project Path="src/Rcm.Sensors.Bme280/Rcm.Sensors.Bme280.csproj" />
     <Project Path="src/Rcm.Sensors.Abstractions/Rcm.Sensors.Abstractions.csproj" />
     <Project Path="src/Rcm.Sensors.Fakes/Rcm.Sensors.Fakes.csproj" />
