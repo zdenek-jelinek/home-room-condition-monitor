@@ -67,7 +67,7 @@ public class CombinedFileAndMemoryCollectedDataStorage : ICollectedDataStorage, 
         {
             return Enumerable.Empty<MeasurementEntry>();
         }
-            
+
         start = start.ToOffset(now.Offset);
         end = end.ToOffset(now.Offset);
 

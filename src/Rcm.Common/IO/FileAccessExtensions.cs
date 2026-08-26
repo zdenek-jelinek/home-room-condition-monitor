@@ -36,16 +36,16 @@ public static class FileAccessExtensions
     public static string ReadAllText(this IFileAccess file, string path)
     {
         var stream = file.Open(path, FileMode.Open, FileAccess.Read, FileShare.Read);
-            
+
         using var reader = new StreamReader(stream);
-            
+
         return reader.ReadToEnd();
     }
 
     public static void WriteAllLines(this IFileAccess file, string path, IEnumerable<string> lines)
     {
         var stream = file.Open(path, FileMode.Create, FileAccess.Write, FileShare.Read);
-            
+
         using var writer = new StreamWriter(stream);
 
         foreach (var line in lines)

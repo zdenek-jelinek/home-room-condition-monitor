@@ -151,7 +151,7 @@ public class CollectedDataFileAccessTests
 
         // when
         var savingTask = Task.Run(() => collectedDataFileAccess.SaveAsync(dummyEntry, cancellationTokenSource.Token));
-            
+
         await blockingFileAccess.OpeningStarted;
         cancellationTokenSource.Cancel();
         blockingFileAccess.Release();

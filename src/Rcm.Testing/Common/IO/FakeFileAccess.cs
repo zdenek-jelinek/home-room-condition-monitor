@@ -100,12 +100,9 @@ public class FakeFileAccess : IFileAccess
 
     private static void ValidatePath(string path)
     {
-        if (path is null)
-        {
-            throw new ArgumentNullException(nameof(path));
-        }
+        ArgumentException.ThrowIfNullOrWhiteSpace(path);
 
-        if (string.IsNullOrWhiteSpace(path) || Path.GetInvalidPathChars().Any(path.Contains))
+        if (Path.GetInvalidPathChars().Any(path.Contains))
         {
             throw new ArgumentException($"Path is not valid: \"{path}\"", nameof(path));
         }
@@ -192,8 +189,8 @@ public class FakeFileAccess : IFileAccess
         private static void ValidateAccess(long locks, FileAccess access)
         {
             if (HasExclusiveLock(locks)
-                || access.HasFlag(FileAccess.Read) && HasReadLocks(locks)
-                || access.HasFlag(FileAccess.Write) && HasWriteLocks(locks))
+                || (access.HasFlag(FileAccess.Read) && HasReadLocks(locks))
+                || (access.HasFlag(FileAccess.Write) && HasWriteLocks(locks)))
             {
                 throw new IOException($"Unable to acquire file lock for access {access}.");
             }

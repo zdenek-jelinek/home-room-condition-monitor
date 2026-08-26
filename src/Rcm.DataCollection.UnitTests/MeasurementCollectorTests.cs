@@ -71,7 +71,7 @@ public class MeasurementCollectorTests
 
             var firstMeasurement = new SensorMeasurement { Time = firstMeasurementTime, CelsiusTemperature = 30m, RelativeHumidity = 45m, HpaPressure = 950m };
             var secondMeasurementWithinSameMinute = new SensorMeasurement { Time = secondMeasurementTimeWithinSameMinute, CelsiusTemperature = 20m, RelativeHumidity = 40m, HpaPressure = 1050m };
-            var measurementInNextMinute = new SensorMeasurement  { Time = measurementTimeInNextMinute, CelsiusTemperature = 35m, RelativeHumidity = 35m, HpaPressure = 970m };
+            var measurementInNextMinute = new SensorMeasurement { Time = measurementTimeInNextMinute, CelsiusTemperature = 35m, RelativeHumidity = 35m, HpaPressure = 970m };
 
             var spyCollectedDataStorage = new SpyCollectedDataWriter();
 

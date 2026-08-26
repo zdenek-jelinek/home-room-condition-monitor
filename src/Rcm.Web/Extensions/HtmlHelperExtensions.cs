@@ -10,7 +10,7 @@ public static class HtmlHelperExtensions
         {
             return "active";
         }
-            
+
         return "";
     }
 }

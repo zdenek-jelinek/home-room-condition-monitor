@@ -142,7 +142,7 @@ public class FakeFileAccessUnitTests
             string ReadFromFile()
             {
                 var buffer = new byte[contents.Length];
-                file.Read(buffer.AsSpan());
+                file.ReadExactly(buffer.AsSpan());
                 return Encoding.UTF8.GetString(buffer);
             }
 
@@ -467,7 +467,7 @@ public class FakeFileAccessUnitTests
 
             void ReadFromWriteOnlyFile()
             {
-                writeOnlyFile.Read(Array.Empty<byte>(), 0, 0);
+                writeOnlyFile.ReadExactly(Array.Empty<byte>(), 0, 0);
             }
 
             // then
