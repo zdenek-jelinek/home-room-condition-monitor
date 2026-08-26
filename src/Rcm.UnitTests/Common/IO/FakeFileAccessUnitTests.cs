@@ -41,7 +41,7 @@ public class FakeFileAccessUnitTests
             var path = "file.txt";
             var newLength = 10L;
 
-            var fileAccess = new FakeFileAccess((path, Array.Empty<byte>()));
+            var fileAccess = new FakeFileAccess((path, []));
 
             using var file = fileAccess.Open(path, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None);
 
@@ -59,7 +59,7 @@ public class FakeFileAccessUnitTests
             var path = "file.txt";
             var newLength = 0L;
 
-            var fileAccess = new FakeFileAccess((path, Encoding.UTF8.GetBytes("Hello world!")));
+            var fileAccess = new FakeFileAccess((path, [.. "Hello world!"u8]));
 
             using var file = fileAccess.Open(path, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None);
 
@@ -92,14 +92,14 @@ public class FakeFileAccessUnitTests
         {
             // given
             var path = "file.txt";
-            var contentsToWrite = "Hello world!";
+            var contentsToWrite = "Hello world!"u8;
 
-            var fileAccess = new FakeFileAccess((path, Array.Empty<byte>()));
+            var fileAccess = new FakeFileAccess((path, []));
 
             using var file = fileAccess.Open(path, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None);
 
             // when
-            file.Write(Encoding.UTF8.GetBytes(contentsToWrite));
+            file.Write(contentsToWrite);
 
             // then
             Assert.AreEqual(contentsToWrite.Length, file.Length);
@@ -159,12 +159,12 @@ public class FakeFileAccessUnitTests
             // given
             var path = "file.txt";
 
-            var fileAccess = new FakeFileAccess((path, Array.Empty<byte>()));
+            var fileAccess = new FakeFileAccess((path, []));
 
             // when
             using var file = fileAccess.Open(path, FileMode.OpenOrCreate, writeFileAccess, FileShare.None);
 
-            void WriteIntoFile() => file.Write(Encoding.UTF8.GetBytes("Hello world!"));
+            void WriteIntoFile() => file.Write("Hello world!"u8);
 
             // then
             Assert.IsTrue(file.CanWrite);
@@ -251,16 +251,16 @@ public class FakeFileAccessUnitTests
         {
             // given
             var seekOffset = -5L;
-            var written = "Hello world!";
+            var written = "Hello world!"u8;
 
             var path = "file.txt";
 
-            var fileAccess = new FakeFileAccess((path, Array.Empty<byte>()));
+            var fileAccess = new FakeFileAccess((path, []));
 
             using var file = fileAccess.Open(path, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None);
 
             // when
-            file.Write(Encoding.UTF8.GetBytes(written).AsSpan());
+            file.Write(written);
 
             file.Seek(seekOffset, SeekOrigin.Current);
 
@@ -275,9 +275,9 @@ public class FakeFileAccessUnitTests
             var seekOffset = -5L;
 
             var path = "file.txt";
-            var contents = "Hello world!";
+            var contents = "Hello world!"u8;
 
-            var fileAccess = new FakeFileAccess((path, Encoding.UTF8.GetBytes(contents)));
+            var fileAccess = new FakeFileAccess((path, [ ..contents]));
 
             using var file = fileAccess.Open(path, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None);
 
@@ -295,7 +295,7 @@ public class FakeFileAccessUnitTests
             // given
             var path = "empty.txt";
 
-            var fileAccess = new FakeFileAccess((path, Array.Empty<byte>()));
+            var fileAccess = new FakeFileAccess((path, []));
 
             using var file = fileAccess.Open(path, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None);
 
@@ -313,7 +313,7 @@ public class FakeFileAccessUnitTests
             // given
             var path = "empty.txt";
 
-            var fileAccess = new FakeFileAccess((path, Array.Empty<byte>()));
+            var fileAccess = new FakeFileAccess((path, []));
 
             using var file = fileAccess.Open(path, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None);
 
@@ -353,7 +353,7 @@ public class FakeFileAccessUnitTests
             // given
             var dummyPath = "dummy.txt";
 
-            var fileAccess = new FakeFileAccess((dummyPath, Encoding.UTF8.GetBytes("Hello world!")));
+            var fileAccess = new FakeFileAccess((dummyPath, [.. "Hello world!"u8]));
 
             // when
             var file = fileAccess.Open(dummyPath, createOrTruncateFileMode, FileAccess.ReadWrite, FileShare.None);
@@ -447,7 +447,7 @@ public class FakeFileAccessUnitTests
 
             void WriteToReadOnlyFile()
             {
-                readOnlyFile.Write(Array.Empty<byte>(), 0, 0);
+                readOnlyFile.Write("Hello World!"u8);
             }
 
             // then
@@ -467,7 +467,8 @@ public class FakeFileAccessUnitTests
 
             void ReadFromWriteOnlyFile()
             {
-                writeOnlyFile.ReadExactly(Array.Empty<byte>(), 0, 0);
+                var buffer = new byte[8];
+                writeOnlyFile.ReadExactly(buffer.AsSpan());
             }
 
             // then
@@ -480,7 +481,7 @@ public class FakeFileAccessUnitTests
         {
             // given
             var preexistingFile = "dummy.txt";
-            var fileAccess = new FakeFileAccess((preexistingFile, Array.Empty<byte>()));
+            var fileAccess = new FakeFileAccess((preexistingFile, []));
 
             // when
             void OpenPreexistingFileWithCreateNewMode()
@@ -784,7 +785,7 @@ public class FakeFileAccessUnitTests
             // given
             var (createdPath, checkedPath) = paths;
 
-            var fileAccess = new FakeFileAccess((createdPath, Array.Empty<byte>()));
+            var fileAccess = new FakeFileAccess((createdPath, []));
 
             // when
             var exists = fileAccess.Exists(checkedPath);
