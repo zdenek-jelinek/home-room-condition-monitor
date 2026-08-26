@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Rcm.Aggregates.Api;
+namespace Rcm.Services.Aggregates;
 
 public class AggregateEntry
 {

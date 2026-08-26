@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading;
-using Rcm.Aggregates.Api;
 using Rcm.Common;
 using Rcm.DataCollection.Api;
 
-namespace Rcm.Aggregates;
+namespace Rcm.Services.Aggregates;
 
 public class MeasurementAggregatesAccessor : IMeasurementAggregatesAccessor
 {
@@ -140,9 +139,9 @@ public class MeasurementAggregatesAccessor : IMeasurementAggregatesAccessor
                 }
             }
 
-            public Api.Aggregates ExtractResult()
+            public Aggregates ExtractResult()
             {
-                return new Api.Aggregates(
+                return new Aggregates(
                     new AggregateEntry(_minTime, _minTimeValue),
                     new AggregateEntry(_minValueTime, _minValue),
                     new AggregateEntry(_maxValueTime, _maxValue),

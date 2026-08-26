@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Rcm.Aggregates;
-using Rcm.Aggregates.Api;
+using Rcm.Services.Aggregates;
 
 namespace Rcm.Web.Configuration.Aggregates;
 

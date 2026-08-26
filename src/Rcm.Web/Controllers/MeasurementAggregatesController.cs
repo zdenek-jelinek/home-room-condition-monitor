@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using Microsoft.AspNetCore.Mvc;
-using Rcm.Aggregates.Api;
+using Rcm.Services.Aggregates;
 
 namespace Rcm.Web.Controllers;
 
@@ -51,7 +51,7 @@ public class MeasurementAggregatesController : Controller
         return Ok(result);
     }
 
-    private static AggregatesContract MapAggregates(Aggregates.Api.Aggregates aggregates)
+    private static AggregatesContract MapAggregates(Aggregates aggregates)
     {
         return new AggregatesContract(
             MapAggregateEntry(aggregates.First),
