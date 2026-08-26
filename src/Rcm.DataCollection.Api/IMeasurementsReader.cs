@@ -5,7 +5,7 @@ using Rcm.Common;
 
 namespace Rcm.DataCollection.Api;
 
-public interface ICollectedDataAccessor
+public interface IMeasurementsReader
 {
     IEnumerable<MeasurementEntry> GetCollectedData(DateTimeOffset start, DateTimeOffset end, CancellationToken token);
 }

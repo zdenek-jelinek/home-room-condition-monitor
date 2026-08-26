@@ -9,7 +9,7 @@ using Rcm.DataCollection.Files;
 
 namespace Rcm.DataCollection;
 
-public class CombinedFileAndMemoryCollectedDataStorage : ICollectedDataStorage, IDisposable
+public class CombinedFileAndMemoryMeasurementsStorage : IMeasurementsStorage, IDisposable
 {
     private const int MeasurementsPerDay = 24 * 60;
 
@@ -22,7 +22,7 @@ public class CombinedFileAndMemoryCollectedDataStorage : ICollectedDataStorage, 
 
     private bool _disposed;
 
-    public CombinedFileAndMemoryCollectedDataStorage(
+    public CombinedFileAndMemoryMeasurementsStorage(
         IClock clock,
         ICollectedDataFileAccess fileAccess)
     {

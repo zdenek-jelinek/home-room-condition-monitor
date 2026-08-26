@@ -7,10 +7,10 @@ using Rcm.DataCollection.Api;
 
 namespace Rcm.Services.Measurements.Retrieval;
 
-public class MeasurementsAccessor(ICollectedDataAccessor collectedDataAccessor) : IMeasurementsAccessor
+public class MeasurementsAccessor(IMeasurementsReader measurementsReader) : IMeasurementsAccessor
 {
     public IReadOnlyList<MeasurementEntry> GetMeasurements(DateTimeOffset start, DateTimeOffset end, CancellationToken cancellationToken)
     {
-        return collectedDataAccessor.GetCollectedData(start, end, cancellationToken).ToArray();
+        return measurementsReader.GetCollectedData(start, end, cancellationToken).ToArray();
     }
 }

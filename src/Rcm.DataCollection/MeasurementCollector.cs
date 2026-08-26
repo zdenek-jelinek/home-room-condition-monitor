@@ -21,7 +21,7 @@ public class MeasurementCollector : IMeasurementCollector
     private readonly ILogger<MeasurementCollector> _logger;
     private readonly IClock _clock;
     private readonly ISensor _sensor;
-    private readonly ICollectedDataWriter _collectedDataWriter;
+    private readonly IMeasurementsWriter _measurementsWriter;
 
     private readonly List<MeasurementEntry> _entries = new List<MeasurementEntry>(MeasurementsPerMinute);
 
@@ -31,12 +31,12 @@ public class MeasurementCollector : IMeasurementCollector
         ILogger<MeasurementCollector> logger,
         IClock clock,
         ISensor sensor,
-        ICollectedDataWriter collectedDataWriter)
+        IMeasurementsWriter measurementsWriter)
     {
         _logger = logger;
         _clock = clock;
         _sensor = sensor;
-        _collectedDataWriter = collectedDataWriter;
+        _measurementsWriter = measurementsWriter;
     }
 
     public async Task MeasureAsync(CancellationToken token)
@@ -87,7 +87,7 @@ public class MeasurementCollector : IMeasurementCollector
 
         var averageValue = GetAverageValue(entries);
 
-        return _collectedDataWriter.StoreAsync(averageValue, token);
+        return _measurementsWriter.StoreAsync(averageValue, token);
     }
 
     private MeasurementEntry GetAverageValue(IReadOnlyCollection<MeasurementEntry> entries)

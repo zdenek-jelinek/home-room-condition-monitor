@@ -8,16 +8,16 @@ namespace Rcm.Services.Aggregates;
 
 public class MeasurementAggregatesAccessor : IMeasurementAggregatesAccessor
 {
-    private readonly ICollectedDataAccessor _collectedDataAccessor;
+    private readonly IMeasurementsReader _measurementsReader;
 
-    public MeasurementAggregatesAccessor(ICollectedDataAccessor collectedDataAccessor)
+    public MeasurementAggregatesAccessor(IMeasurementsReader measurementsReader)
     {
-        _collectedDataAccessor = collectedDataAccessor;
+        _measurementsReader = measurementsReader;
     }
 
     public IEnumerable<MeasurementAggregates> GetMeasurementAggregates(MeasurementAggregatesQuery query, CancellationToken cancellationToken)
     {
-        var measurements = _collectedDataAccessor.GetCollectedData(query.StartTime, query.EndTime, cancellationToken);
+        var measurements = _measurementsReader.GetCollectedData(query.StartTime, query.EndTime, cancellationToken);
 
         var partitionSize = (query.EndTime - query.StartTime).Ticks / (double)query.PartitionCount;
 

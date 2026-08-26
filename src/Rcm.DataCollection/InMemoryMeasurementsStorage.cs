@@ -7,7 +7,7 @@ using Rcm.Common;
 
 namespace Rcm.DataCollection;
 
-public class InMemoryCollectedDataStorage : ICollectedDataStorage
+public class InMemoryMeasurementsStorage : IMeasurementsStorage
 {
     private readonly ICollection<MeasurementEntry> _entries = new List<MeasurementEntry>();
 

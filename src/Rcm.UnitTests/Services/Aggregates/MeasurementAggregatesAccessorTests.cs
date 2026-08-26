@@ -314,14 +314,14 @@ public class MeasurementAggregatesAccessorTests
 
     private static IReadOnlyList<MeasurementAggregates> GetMeasurementAggregates(IEnumerable<MeasurementEntry> measurements, MeasurementAggregatesQuery query)
     {
-        var aggregatesAccessor = new MeasurementAggregatesAccessor(new StubCollectedDataAccessor { Data = measurements.ToArray() });
+        var aggregatesAccessor = new MeasurementAggregatesAccessor(new StubMeasurementsReader { Data = measurements.ToArray() });
 
         return aggregatesAccessor
             .GetMeasurementAggregates(query, CancellationToken.None)
             .ToArray();
     }
 
-    private class StubCollectedDataAccessor : ICollectedDataAccessor
+    private class StubMeasurementsReader : IMeasurementsReader
     {
         public ICollection<MeasurementEntry>? Data { get; set; }
 

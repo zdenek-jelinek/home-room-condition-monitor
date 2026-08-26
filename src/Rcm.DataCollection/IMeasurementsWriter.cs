@@ -4,7 +4,7 @@ using Rcm.Common;
 
 namespace Rcm.DataCollection;
 
-public interface ICollectedDataWriter
+public interface IMeasurementsWriter
 {
     Task StoreAsync(MeasurementEntry value, CancellationToken token);
 }

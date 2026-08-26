@@ -2,6 +2,4 @@
 
 namespace Rcm.DataCollection;
 
-public interface ICollectedDataStorage : ICollectedDataWriter, ICollectedDataAccessor
-{
-}
+public interface IMeasurementsStorage : IMeasurementsWriter, IMeasurementsReader;

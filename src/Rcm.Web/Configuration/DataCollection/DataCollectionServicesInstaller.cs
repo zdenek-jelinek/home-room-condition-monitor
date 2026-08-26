@@ -13,9 +13,9 @@ public class DataCollectionServicesInstaller : IInstaller
     {
         services
             .AddTransient<IMeasurementCollector, MeasurementCollector>()
-            .AddSingleton<ICollectedDataStorage, CombinedFileAndMemoryCollectedDataStorage>()
-            .AddSingleton<ICollectedDataWriter>(s => s.GetRequiredService<ICollectedDataStorage>())
-            .AddSingleton<ICollectedDataAccessor>(s => s.GetRequiredService<ICollectedDataStorage>())
+            .AddSingleton<IMeasurementsStorage, CombinedFileAndMemoryMeasurementsStorage>()
+            .AddSingleton<IMeasurementsWriter>(s => s.GetRequiredService<IMeasurementsStorage>())
+            .AddSingleton<IMeasurementsReader>(s => s.GetRequiredService<IMeasurementsStorage>())
             .AddTransient<IMeasurementsAccessor, MeasurementsAccessor>()
             .AddTransient<ICollectedDataFileAccess, CollectedDataFileAccess>();
 

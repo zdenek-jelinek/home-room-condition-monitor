@@ -11,7 +11,7 @@ using Rcm.Testing.Common.Temporal;
 namespace Rcm.DataCollection.UnitTests;
 
 [TestFixture]
-public class CombinedFileAndMemoryCollectedDataStorageTests
+public class CombinedFileAndMemoryMeasurementsStorageTests
 {
     [Test]
     public async Task StoresAllMeasurementsToFile()
@@ -447,7 +447,7 @@ public class CombinedFileAndMemoryCollectedDataStorageTests
         _ = Assert.Catch(RetrieveDataForInvalidTimeRange);
     }
 
-    private static CombinedFileAndMemoryCollectedDataStorage MakeCombinedDataStorage(DateTimeOffset? now = null, ICollectedDataFileAccess? fileAccess = null)
+    private static CombinedFileAndMemoryMeasurementsStorage MakeCombinedDataStorage(DateTimeOffset? now = null, ICollectedDataFileAccess? fileAccess = null)
     {
         return new(
             new FixedClock { Now = now ?? DateTimeOffset.UnixEpoch },

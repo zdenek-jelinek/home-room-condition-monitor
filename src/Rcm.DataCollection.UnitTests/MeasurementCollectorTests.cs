@@ -26,7 +26,7 @@ public class MeasurementCollectorTests
                 NullLogger<MeasurementCollector>.Instance,
                 new Clock(),
                 blockingSpyMeasurementProvider,
-                new DummyCollectedDataWriter());
+                new DummyMeasurementsWriter());
 
             // when
             var firstMeasurementTask = measurementCollector.MeasureAsync(default);
@@ -51,7 +51,7 @@ public class MeasurementCollectorTests
                 NullLogger<MeasurementCollector>.Instance,
                 new Clock(),
                 throwingSpyMeasurementProvider,
-                new DummyCollectedDataWriter());
+                new DummyMeasurementsWriter());
 
             // when
             await IgnoreExceptions(() => measurementCollector.MeasureAsync(default));
@@ -73,7 +73,7 @@ public class MeasurementCollectorTests
             var secondMeasurementWithinSameMinute = new SensorMeasurement { Time = secondMeasurementTimeWithinSameMinute, CelsiusTemperature = 20m, RelativeHumidity = 40m, HpaPressure = 1050m };
             var measurementInNextMinute = new SensorMeasurement { Time = measurementTimeInNextMinute, CelsiusTemperature = 35m, RelativeHumidity = 35m, HpaPressure = 970m };
 
-            var spyCollectedDataStorage = new SpyCollectedDataWriter();
+            var spyCollectedDataStorage = new SpyMeasurementsWriter();
 
             var measurementCollector = new MeasurementCollector(
                 NullLogger<MeasurementCollector>.Instance,
@@ -147,7 +147,7 @@ public class MeasurementCollectorTests
             }
         }
 
-        public class SpyCollectedDataWriter : ICollectedDataWriter
+        public class SpyMeasurementsWriter : IMeasurementsWriter
         {
             public MeasurementEntry? StoredEntry { get; private set; }
 
@@ -202,7 +202,7 @@ public class MeasurementCollectorTests
                 NullLogger<MeasurementCollector>.Instance,
                 new FixedClock { Now = nonZeroSecondsTime },
                 new DummySensor(),
-                new DummyCollectedDataWriter());
+                new DummyMeasurementsWriter());
 
             // when
             var (nextMeasurementDelay, measurementPeriod) = measurementCollector.MeasurementTimings;
@@ -222,7 +222,7 @@ public class MeasurementCollectorTests
                 NullLogger<MeasurementCollector>.Instance,
                 new FixedClock { Now = zeroSecondsTime },
                 new DummySensor(),
-                new DummyCollectedDataWriter());
+                new DummyMeasurementsWriter());
 
             // when
             var (nextMeasurementDelay, measurementPeriod) = measurementCollector.MeasurementTimings;
@@ -238,7 +238,7 @@ public class MeasurementCollectorTests
         public Task<SensorMeasurement> ReadMeasurementAsync(CancellationToken token) => throw new NotImplementedException();
     }
 
-    public class DummyCollectedDataWriter : ICollectedDataWriter
+    public class DummyMeasurementsWriter : IMeasurementsWriter
     {
         public Task StoreAsync(MeasurementEntry value, CancellationToken token) => Task.CompletedTask;
     }
