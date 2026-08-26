@@ -13,7 +13,7 @@ namespace Rcm.Aggregates.UnitTests;
 public class MeasurementAggregatesAccessorTests
 {
     [Test]
-    public void CalculatesAggregatesFromMeasurementsWithinCorresponsingTimeRange()
+    public void CalculatesAggregatesFromMeasurementsWithinCorrespondingTimeRange()
     {
         // given
         var offset = TimeSpan.FromHours(1);

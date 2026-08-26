@@ -176,7 +176,7 @@ public class CollectedDataFileAccessTests
 
         var collectedDataFileAccess = CreateCollectedDataFileAccess(blockingFileAccess);
 
-        CreateDummyMeasurementFiles(blockingFileAccess.UnderlyingFileAcces, dummyStart, dummyEnd);
+        CreateDummyMeasurementFiles(blockingFileAccess.UnderlyingFileAccess, dummyStart, dummyEnd);
 
         // when
         var readIterator = collectedDataFileAccess.Read(dummyStart, dummyEnd, cancellationTokenSource.Token);
@@ -280,18 +280,18 @@ public class CollectedDataFileAccessTests
         private readonly SemaphoreSlim _openingSemaphore = new SemaphoreSlim(0);
         private readonly SemaphoreSlim _blockingSemaphore = new SemaphoreSlim(0);
 
-        public IFileAccess UnderlyingFileAcces { get; set; } = new FakeFileAccess();
+        public IFileAccess UnderlyingFileAccess { get; set; } = new FakeFileAccess();
 
         public Task OpeningStarted => _openingSemaphore.WaitAsync();
 
-        public bool Exists(string path) => UnderlyingFileAcces.Exists(path);
+        public bool Exists(string path) => UnderlyingFileAccess.Exists(path);
 
         public Stream Open(string path, FileMode mode, FileAccess access, FileShare share)
         {
             _openingSemaphore.Release();
             _blockingSemaphore.Wait();
 
-            return UnderlyingFileAcces.Open(path, mode, access, share);
+            return UnderlyingFileAccess.Open(path, mode, access, share);
         }
 
         public void Release()

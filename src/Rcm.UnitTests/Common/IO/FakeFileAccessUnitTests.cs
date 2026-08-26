@@ -128,7 +128,7 @@ public class FakeFileAccessUnitTests
         [Test]
         [TestCase(FileAccess.Read)]
         [TestCase(FileAccess.ReadWrite)]
-        public void FileOpenedWithReadAccessCanBeRead(FileAccess readFileAcces)
+        public void FileOpenedWithReadAccessCanBeRead(FileAccess readFileAccess)
         {
             // given
             var contents = "Hello world!";
@@ -137,7 +137,7 @@ public class FakeFileAccessUnitTests
             var fileAccess = new FakeFileAccess((path, Encoding.UTF8.GetBytes(contents)));
 
             // when
-            using var file = fileAccess.Open(path, FileMode.OpenOrCreate, readFileAcces, FileShare.None);
+            using var file = fileAccess.Open(path, FileMode.OpenOrCreate, readFileAccess, FileShare.None);
 
             string ReadFromFile()
             {
@@ -154,7 +154,7 @@ public class FakeFileAccessUnitTests
         [Test]
         [TestCase(FileAccess.Write)]
         [TestCase(FileAccess.ReadWrite)]
-        public void FileOpenedWithWriteAccessCanBeWritten(FileAccess writeFileAcces)
+        public void FileOpenedWithWriteAccessCanBeWritten(FileAccess writeFileAccess)
         {
             // given
             var path = "file.txt";
@@ -162,7 +162,7 @@ public class FakeFileAccessUnitTests
             var fileAccess = new FakeFileAccess((path, Array.Empty<byte>()));
 
             // when
-            using var file = fileAccess.Open(path, FileMode.OpenOrCreate, writeFileAcces, FileShare.None);
+            using var file = fileAccess.Open(path, FileMode.OpenOrCreate, writeFileAccess, FileShare.None);
 
             void WriteIntoFile() => file.Write(Encoding.UTF8.GetBytes("Hello world!"));
 
@@ -521,13 +521,13 @@ public class FakeFileAccessUnitTests
             var fileAccess = new FakeFileAccess();
 
             // when
-            void OpenFileWithUsupportedSharing()
+            void OpenFileWithUnsupportedSharing()
             {
                 fileAccess.Open(dummyPath, FileMode.OpenOrCreate, FileAccess.Read, unsupportedFileShare);
             }
 
             // then
-            Assert.Catch<NotSupportedException>(OpenFileWithUsupportedSharing);
+            Assert.Catch<NotSupportedException>(OpenFileWithUnsupportedSharing);
         }
 
         [Test]

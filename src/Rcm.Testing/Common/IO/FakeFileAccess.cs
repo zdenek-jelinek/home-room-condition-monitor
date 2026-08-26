@@ -191,7 +191,7 @@ public class FakeFileAccess : IFileAccess
 
         private static void ValidateAccess(long locks, FileAccess access)
         {
-            if (HasExclusigeLock(locks)
+            if (HasExclusiveLock(locks)
                 || access.HasFlag(FileAccess.Read) && HasReadLocks(locks)
                 || access.HasFlag(FileAccess.Write) && HasWriteLocks(locks))
             {
@@ -199,7 +199,7 @@ public class FakeFileAccess : IFileAccess
             }
         }
 
-        private static bool HasExclusigeLock(long locks) => locks < 0L;
+        private static bool HasExclusiveLock(long locks) => locks < 0L;
         private static bool HasReadLocks(long locks) => (locks & 0xFFFF_FFFF) != 0L;
         private static bool HasWriteLocks(long locks) => (locks & 0x7FFF_FFFF_0000_0000) != 0L;
 

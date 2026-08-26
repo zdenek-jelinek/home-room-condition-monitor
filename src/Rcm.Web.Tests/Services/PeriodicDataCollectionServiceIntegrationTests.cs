@@ -27,11 +27,11 @@ public class PeriodicDataCollectionServiceIntegrationTests
             MeasurementTimings = (firstMeasurementDelay, measurementPeriod)
         };
 
-        await using var periodicDataCollecitonService = CreatePeriodicDataCollectionService(blockingMeasurementCollector);
+        await using var periodicDataCollectionService = CreatePeriodicDataCollectionService(blockingMeasurementCollector);
 
         // when
         var stopwatch = Stopwatch.StartNew();
-        await periodicDataCollecitonService.StartAsync(CancellationToken.None);
+        await periodicDataCollectionService.StartAsync(CancellationToken.None);
 
         await blockingMeasurementCollector.MeasurementStarted;
         var measuredFirstMeasurementDelay = stopwatch.ElapsedMilliseconds;
@@ -58,10 +58,10 @@ public class PeriodicDataCollectionServiceIntegrationTests
             MeasurementTimings = (TimeSpan.Zero, measurementPeriod)
         };
 
-        await using var periodicDataCollecitonService = CreatePeriodicDataCollectionService(blockingMeasurementCollector);
+        await using var periodicDataCollectionService = CreatePeriodicDataCollectionService(blockingMeasurementCollector);
 
         // when
-        await periodicDataCollecitonService.StartAsync(CancellationToken.None);
+        await periodicDataCollectionService.StartAsync(CancellationToken.None);
 
         await blockingMeasurementCollector.MeasurementStarted;
 
@@ -72,7 +72,7 @@ public class PeriodicDataCollectionServiceIntegrationTests
     }
 
     [Test]
-    public async Task StoppingWithoutPendingMeasurementStopsImmediatelly()
+    public async Task StoppingWithoutPendingMeasurementStopsImmediately()
     {
         // given
         using var measurementCollectorWithLargeDelay = new BlockingMeasurementCollector
@@ -80,12 +80,12 @@ public class PeriodicDataCollectionServiceIntegrationTests
             MeasurementTimings = (TimeSpan.FromHours(4), TimeSpan.FromHours(1))
         };
 
-        await using var periodicDataCollecitonService = CreatePeriodicDataCollectionService(measurementCollectorWithLargeDelay);
+        await using var periodicDataCollectionService = CreatePeriodicDataCollectionService(measurementCollectorWithLargeDelay);
 
-        await periodicDataCollecitonService.StartAsync(CancellationToken.None);
+        await periodicDataCollectionService.StartAsync(CancellationToken.None);
 
         // when
-        var stoppingCompleted = await periodicDataCollecitonService
+        var stoppingCompleted = await periodicDataCollectionService
             .StopAsync(CancellationToken.None)
             .TryWait(TimeSpan.FromSeconds(1));
 
@@ -98,21 +98,21 @@ public class PeriodicDataCollectionServiceIntegrationTests
     public async Task StoppingCancelsPendingSynchronousMeasurement(bool blockedAsynchronously)
     {
         // given
-        using var blockingmeasurementCollector = new BlockingMeasurementCollector
+        using var blockingMeasurementCollector = new BlockingMeasurementCollector
         {
             BlocksAsynchronously = blockedAsynchronously,
             IsCancellable = true,
             MeasurementTimings = (TimeSpan.Zero, TimeSpan.FromHours(1))
         };
 
-        await using var periodicDataCollecitonService = CreatePeriodicDataCollectionService(blockingmeasurementCollector);
+        await using var periodicDataCollectionService = CreatePeriodicDataCollectionService(blockingMeasurementCollector);
 
-        await periodicDataCollecitonService.StartAsync(CancellationToken.None);
+        await periodicDataCollectionService.StartAsync(CancellationToken.None);
 
         // when
-        await blockingmeasurementCollector.MeasurementStarted;
+        await blockingMeasurementCollector.MeasurementStarted;
 
-        var stoppingCompleted = await periodicDataCollecitonService
+        var stoppingCompleted = await periodicDataCollectionService
             .StopAsync(CancellationToken.None)
             .TryWait(TimeSpan.FromSeconds(1));
 
@@ -122,34 +122,34 @@ public class PeriodicDataCollectionServiceIntegrationTests
 
     [Test]
     [Theory]
-    public async Task StoppingCanBeCancelledImmediatellyIfMeasurementIsBlocked(bool blockedAsynchronously)
+    public async Task StoppingCanBeCancelledImmediatelyIfMeasurementIsBlocked(bool blockedAsynchronously)
     {
         // given
         using var cancellationTokenSource = new CancellationTokenSource();
 
-        using var blockingmeasurementCollector = new BlockingMeasurementCollector
+        using var blockingMeasurementCollector = new BlockingMeasurementCollector
         {
             BlocksAsynchronously = blockedAsynchronously,
             IsCancellable = false,
             MeasurementTimings = (TimeSpan.Zero, TimeSpan.FromHours(1))
         };
 
-        await using var periodicDataCollecitonService = CreatePeriodicDataCollectionService(blockingmeasurementCollector);
+        await using var periodicDataCollectionService = CreatePeriodicDataCollectionService(blockingMeasurementCollector);
 
-        await periodicDataCollecitonService.StartAsync(CancellationToken.None);
+        await periodicDataCollectionService.StartAsync(CancellationToken.None);
 
         // when
-        await blockingmeasurementCollector.MeasurementStarted;
+        await blockingMeasurementCollector.MeasurementStarted;
 
-        var stoppingTask = periodicDataCollecitonService.StopAsync(cancellationTokenSource.Token);
-        var stoppedImmediatelly = stoppingTask.IsCompleted;
+        var stoppingTask = periodicDataCollectionService.StopAsync(cancellationTokenSource.Token);
+        var stoppedImmediately = stoppingTask.IsCompleted;
 
         cancellationTokenSource.Cancel();
 
         var stoppedAfterCancellation = await stoppingTask.TryWait(TimeSpan.FromSeconds(1));
 
         // then
-        Assert.IsFalse(stoppedImmediatelly, nameof(stoppedImmediatelly));
+        Assert.IsFalse(stoppedImmediately, nameof(stoppedImmediately));
         Assert.IsTrue(stoppedAfterCancellation, nameof(stoppedAfterCancellation));
         Assert.AreEqual(TaskStatus.RanToCompletion, stoppingTask.Status);
     }
