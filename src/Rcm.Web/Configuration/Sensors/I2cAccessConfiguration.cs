@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using Rcm.Sensors.Bme280;
 
-namespace Rcm.Web.Configuration.Measurements;
+namespace Rcm.Web.Configuration.Sensors;
 
 public class I2cAccessConfiguration : II2cAccessConfiguration
 {

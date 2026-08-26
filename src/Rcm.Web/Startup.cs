@@ -7,7 +7,7 @@ using Rcm.Web.Configuration;
 using Rcm.Web.Configuration.Aggregates;
 using Rcm.Web.Configuration.Common;
 using Rcm.Web.Configuration.DataCollection;
-using Rcm.Web.Configuration.Measurements;
+using Rcm.Web.Configuration.Sensors;
 using Rcm.Web.Extensions;
 
 namespace Rcm.Web;

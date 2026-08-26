@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.Configuration;
 
-namespace Rcm.Web.Configuration.Measurements;
+namespace Rcm.Web.Configuration.Sensors;
 
 public class MeasurementAccessModeReader
 {
