@@ -27,8 +27,8 @@ public class PeriodicMeasurementCollectionService : IHostedService, IAsyncDispos
 
     public Task StartAsync(CancellationToken cancellationToken)
     {
-        var (nextMeasurementDelay, measurementPeriod) = _measurementCollector.MeasurementTimings;
-        _timer = new Timer(_ => RunMeasurement(), null, nextMeasurementDelay, measurementPeriod);
+        var timings = _measurementCollector.DetermineMeasurementTimings();
+        _timer = new Timer(_ => RunMeasurement(), state: null, dueTime: timings.InitialDelay, period: timings.Period);
 
         _logger.LogInformation("Periodic measurement started");
 

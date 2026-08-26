@@ -23,7 +23,7 @@ public class PeriodicMeasurementCollectionServiceTests
 
         using var blockingMeasurementCollector = new BlockingMeasurementCollector
         {
-            MeasurementTimings = (firstMeasurementDelay, measurementPeriod)
+            MeasurementTimings = new() { InitialDelay = firstMeasurementDelay, Period = measurementPeriod }
         };
 
         await using var periodicDataCollectionService = CreatePeriodicDataCollectionService(blockingMeasurementCollector);
@@ -54,7 +54,7 @@ public class PeriodicMeasurementCollectionServiceTests
 
         using var blockingMeasurementCollector = new BlockingMeasurementCollector
         {
-            MeasurementTimings = (TimeSpan.Zero, measurementPeriod)
+            MeasurementTimings = new() { InitialDelay = TimeSpan.Zero, Period = measurementPeriod }
         };
 
         await using var periodicDataCollectionService = CreatePeriodicDataCollectionService(blockingMeasurementCollector);
@@ -76,7 +76,7 @@ public class PeriodicMeasurementCollectionServiceTests
         // given
         using var measurementCollectorWithLargeDelay = new BlockingMeasurementCollector
         {
-            MeasurementTimings = (TimeSpan.FromHours(4), TimeSpan.FromHours(1))
+            MeasurementTimings = new() { InitialDelay = TimeSpan.FromDays(10), Period = TimeSpan.FromDays(10) }
         };
 
         await using var periodicDataCollectionService = CreatePeriodicDataCollectionService(measurementCollectorWithLargeDelay);
@@ -100,8 +100,7 @@ public class PeriodicMeasurementCollectionServiceTests
         using var blockingMeasurementCollector = new BlockingMeasurementCollector
         {
             BlocksAsynchronously = blockedAsynchronously,
-            IsCancellable = true,
-            MeasurementTimings = (TimeSpan.Zero, TimeSpan.FromHours(1))
+            IsCancellable = true
         };
 
         await using var periodicDataCollectionService = CreatePeriodicDataCollectionService(blockingMeasurementCollector);
@@ -129,8 +128,7 @@ public class PeriodicMeasurementCollectionServiceTests
         using var blockingMeasurementCollector = new BlockingMeasurementCollector
         {
             BlocksAsynchronously = blockedAsynchronously,
-            IsCancellable = false,
-            MeasurementTimings = (TimeSpan.Zero, TimeSpan.FromHours(1))
+            IsCancellable = false
         };
 
         await using var periodicDataCollectionService = CreatePeriodicDataCollectionService(blockingMeasurementCollector);
@@ -169,9 +167,14 @@ public class PeriodicMeasurementCollectionServiceTests
         public bool IsCancellable { get; set; }
         public bool BlocksAsynchronously { get; set; }
 
-        public (TimeSpan nextMeasurementDelay, TimeSpan measurementPeriod) MeasurementTimings { get; set; }
-
         public Task MeasurementStarted => _startedSemaphore.WaitAsync();
+
+        public MeasurementCollectionTimings MeasurementTimings { get; set; } = new() { InitialDelay = TimeSpan.Zero, Period = TimeSpan.FromDays(10) };
+
+        public MeasurementCollectionTimings DetermineMeasurementTimings()
+        {
+            return MeasurementTimings;
+        }
 
         public async Task MeasureAsync(CancellationToken token)
         {

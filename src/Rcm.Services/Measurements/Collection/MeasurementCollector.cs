@@ -39,6 +39,19 @@ public class MeasurementCollector : IMeasurementCollector
         _measurementsWriter = measurementsWriter;
     }
 
+    public MeasurementCollectionTimings DetermineMeasurementTimings()
+    {
+        var now = _clock.Now;
+
+        var nextMeasurementDelay = now.Second == 0 ? 0 : 60 - now.Second;
+
+        return new()
+        {
+            InitialDelay = TimeSpan.FromSeconds(nextMeasurementDelay),
+            Period = MeasurementPeriod
+        };
+    }
+
     public async Task MeasureAsync(CancellationToken token)
     {
         if (Interlocked.CompareExchange(ref _measurementInProgress, 1, 0) == 1)
@@ -119,19 +132,5 @@ public class MeasurementCollector : IMeasurementCollector
             celsiusTemperature: averageTemperature,
             relativeHumidity: averageHumidity,
             hpaPressure: averagePressure);
-    }
-
-    public (TimeSpan nextMeasurementDelay, TimeSpan measurementPeriod) MeasurementTimings
-    {
-        get
-        {
-            var now = _clock.Now;
-
-            var nextMeasurementDelay = now.Second == 0 ? 0 : 60 - now.Second;
-
-            return (
-                nextMeasurementDelay: TimeSpan.FromSeconds(nextMeasurementDelay),
-                measurementPeriod: MeasurementPeriod);
-        }
     }
 }

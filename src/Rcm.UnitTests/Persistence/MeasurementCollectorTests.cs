@@ -207,11 +207,11 @@ public class MeasurementCollectorTests
                 new DummyMeasurementsWriter());
 
             // when
-            var (nextMeasurementDelay, measurementPeriod) = measurementCollector.MeasurementTimings;
+            var timings = measurementCollector.DetermineMeasurementTimings();
 
             // then
-            Assert.AreEqual(TimeSpan.FromSeconds(60 - nonZeroSecondsTime.Second), nextMeasurementDelay);
-            Assert.AreEqual(TimeSpan.FromSeconds(6), measurementPeriod);
+            Assert.AreEqual(TimeSpan.FromSeconds(60 - nonZeroSecondsTime.Second), timings.InitialDelay);
+            Assert.AreEqual(TimeSpan.FromSeconds(6), timings.Period);
         }
 
         [Test]
@@ -227,21 +227,27 @@ public class MeasurementCollectorTests
                 new DummyMeasurementsWriter());
 
             // when
-            var (nextMeasurementDelay, measurementPeriod) = measurementCollector.MeasurementTimings;
+            var timings = measurementCollector.DetermineMeasurementTimings();
 
             // then
-            Assert.AreEqual(TimeSpan.Zero, nextMeasurementDelay);
-            Assert.AreEqual(TimeSpan.FromSeconds(6), measurementPeriod);
+            Assert.AreEqual(TimeSpan.Zero, timings.InitialDelay);
+            Assert.AreEqual(TimeSpan.FromSeconds(6), timings.Period);
         }
     }
 
     public class DummySensor : ISensor
     {
-        public Task<SensorMeasurement> ReadMeasurementAsync(CancellationToken token) => throw new NotImplementedException();
+        public Task<SensorMeasurement> ReadMeasurementAsync(CancellationToken token)
+        {
+            throw new NotSupportedException($"The '{nameof(ReadMeasurementAsync)}' method is intentionally not implemented.");
+        }
     }
 
     public class DummyMeasurementsWriter : IMeasurementsWriter
     {
-        public Task StoreAsync(MeasurementEntry value, CancellationToken token) => Task.CompletedTask;
+        public Task StoreAsync(MeasurementEntry value, CancellationToken token)
+        {
+            return Task.CompletedTask;
+        }
     }
 }
