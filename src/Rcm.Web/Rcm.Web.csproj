@@ -21,6 +21,10 @@
     <ProjectReference Include="..\Rcm.Services\Rcm.Services.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Services\" />
+  </ItemGroup>
+
   <PropertyGroup>
     <!--
       The files may not exist at build evaluation time due to npm install not having run yet.

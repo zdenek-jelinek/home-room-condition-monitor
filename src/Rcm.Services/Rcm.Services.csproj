@@ -1,5 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <ItemGroup>
     <ProjectReference Include="..\Rcm.DataCollection.Api\Rcm.DataCollection.Api.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" />
+  </ItemGroup>
+
 </Project>

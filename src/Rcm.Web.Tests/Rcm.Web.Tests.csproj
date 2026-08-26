@@ -15,4 +15,8 @@
     <ProjectReference Include="..\Rcm.Web\Rcm.Web.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Services\" />
+  </ItemGroup>
+
 </Project>
