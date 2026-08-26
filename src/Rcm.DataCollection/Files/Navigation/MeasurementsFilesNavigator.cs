@@ -4,11 +4,11 @@ using System.IO;
 
 namespace Rcm.DataCollection.Files.Navigation;
 
-public class CollectedDataFilesNavigator
+public class MeasurementsFilesNavigator
 {
     private readonly IDataStorageLocation _dataStorageLocation;
 
-    public CollectedDataFilesNavigator(IDataStorageLocation dataStorageLocation)
+    public MeasurementsFilesNavigator(IDataStorageLocation dataStorageLocation)
     {
         _dataStorageLocation = dataStorageLocation;
     }

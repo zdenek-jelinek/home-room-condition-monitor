@@ -4,7 +4,7 @@ using static System.Globalization.CultureInfo;
 
 namespace Rcm.DataCollection.Files;
 
-public class CollectedDataSerializer
+public class MeasurementsSerializer
 {
     public string Serialize(MeasurementEntry entry)
     {

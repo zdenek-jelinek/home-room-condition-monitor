@@ -17,7 +17,7 @@ public class DataCollectionServicesInstaller : IInstaller
             .AddSingleton<IMeasurementsWriter>(s => s.GetRequiredService<IMeasurementsStorage>())
             .AddSingleton<IMeasurementsReader>(s => s.GetRequiredService<IMeasurementsStorage>())
             .AddTransient<IMeasurementsAccessor, MeasurementsAccessor>()
-            .AddTransient<ICollectedDataFileAccess, CollectedDataFileAccess>();
+            .AddTransient<IMeasurementsFileAccess, MeasurementsFileAccess>();
 
         services.AddHostedService<PeriodicDataCollectionService>();
     }

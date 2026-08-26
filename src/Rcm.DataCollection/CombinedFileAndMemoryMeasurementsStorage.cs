@@ -14,7 +14,7 @@ public class CombinedFileAndMemoryMeasurementsStorage : IMeasurementsStorage, ID
     private const int MeasurementsPerDay = 24 * 60;
 
     private readonly IClock _clock;
-    private readonly ICollectedDataFileAccess _fileAccess;
+    private readonly IMeasurementsFileAccess _fileAccess;
 
     private readonly ReaderWriterLockSlim _lock = new ReaderWriterLockSlim();
 
@@ -24,7 +24,7 @@ public class CombinedFileAndMemoryMeasurementsStorage : IMeasurementsStorage, ID
 
     public CombinedFileAndMemoryMeasurementsStorage(
         IClock clock,
-        ICollectedDataFileAccess fileAccess)
+        IMeasurementsFileAccess fileAccess)
     {
         _clock = clock;
         _fileAccess = fileAccess;

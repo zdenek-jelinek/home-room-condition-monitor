@@ -7,7 +7,7 @@ using Rcm.DataCollection.Files.Navigation;
 namespace Rcm.DataCollection.UnitTests.Files;
 
 [TestFixture]
-public class CollectedDataFilesNavigatorTests
+public class MeasurementsFilesNavigatorTests
 {
     [Test]
     public void EntryFilePathIsDataStoragePathCombinedWithMeasurementsAndEntryDateWithMstExtension()
@@ -15,7 +15,7 @@ public class CollectedDataFilesNavigatorTests
         // given
         var dataStorageLocation = new StubDataStorageLocation("dataStorage");
 
-        var navigator = new CollectedDataFilesNavigator(dataStorageLocation);
+        var navigator = new MeasurementsFilesNavigator(dataStorageLocation);
 
         var entryTime = new DateTimeOffset(2018, 12, 30, 19, 30, 15, TimeSpan.FromHours(1));
 
@@ -34,7 +34,7 @@ public class CollectedDataFilesNavigatorTests
         // given
         var dataStorageLocation = new StubDataStorageLocation("dataStorage");
 
-        var navigator = new CollectedDataFilesNavigator(dataStorageLocation);
+        var navigator = new MeasurementsFilesNavigator(dataStorageLocation);
 
         var startTime = new DateTimeOffset(2018, 12, 20, 19, 0, 0, TimeSpan.FromHours(1));
         var endTime = new DateTimeOffset(2018, 12, 22, 15, 0, 0, TimeSpan.FromHours(1));

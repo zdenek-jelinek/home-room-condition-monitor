@@ -6,7 +6,7 @@ using Rcm.Common;
 
 namespace Rcm.DataCollection.Files;
 
-public interface ICollectedDataFileAccess
+public interface IMeasurementsFileAccess
 {
     Task SaveAsync(MeasurementEntry entry, CancellationToken token);
     IEnumerable<MeasurementEntry> Read(DateTimeOffset start, DateTimeOffset end, CancellationToken token);

@@ -17,7 +17,7 @@ using static System.Globalization.CultureInfo;
 namespace Rcm.DataCollection.UnitTests.Files;
 
 [TestFixture]
-public class CollectedDataFileAccessTests
+public class MeasurementsFileAccessTests
 {
     private const string DataPath = "data";
     private static readonly string StoragePath = Path.Combine(DataPath, "measurements");
@@ -193,12 +193,12 @@ public class CollectedDataFileAccessTests
         Assert.AreEqual(TaskStatus.Canceled, readingTask.Status);
     }
 
-    private static CollectedDataFileAccess CreateCollectedDataFileAccess(
+    private static MeasurementsFileAccess CreateCollectedDataFileAccess(
         IFileAccess fileAccess,
         IDataStorageLocation? dataStorageLocation = null)
     {
-        return new CollectedDataFileAccess(
-            NullLogger<CollectedDataFileAccess>.Instance,
+        return new MeasurementsFileAccess(
+            NullLogger<MeasurementsFileAccess>.Instance,
             dataStorageLocation ?? new DataStorageLocation(DataPath),
             fileAccess);
     }

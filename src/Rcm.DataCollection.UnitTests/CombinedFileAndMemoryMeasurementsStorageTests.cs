@@ -23,7 +23,7 @@ public class CombinedFileAndMemoryMeasurementsStorageTests
             relativeHumidity: 45m,
             hpaPressure: 980m);
 
-        var spyCollectedDataFileAccess = new SpyCollectedDataFileAccess();
+        var spyCollectedDataFileAccess = new SpyMeasurementsFileAccess();
 
         using var combinedStorage = MakeCombinedDataStorage(fileAccess: spyCollectedDataFileAccess);
 
@@ -52,7 +52,7 @@ public class CombinedFileAndMemoryMeasurementsStorageTests
         var pastEntry = new MeasurementEntry(startTimeBeforeToday.AddMinutes(10), celsiusTemperature: 15m, relativeHumidity: 40m, hpaPressure: 980m);
         var todaysEntry = new MeasurementEntry(now.AddMinutes(-20), celsiusTemperature: 25m, relativeHumidity: 45m, hpaPressure: 1050m);
 
-        var spyCollectedDataFileAccess = new SpyCollectedDataFileAccess { Entries = [pastEntry] };
+        var spyCollectedDataFileAccess = new SpyMeasurementsFileAccess { Entries = [pastEntry] };
 
         using var combinedStorage = MakeCombinedDataStorage(now, spyCollectedDataFileAccess);
 
@@ -82,7 +82,7 @@ public class CombinedFileAndMemoryMeasurementsStorageTests
         var startTimeBeforeToday = now.AddDays(-2);
         var endTimeBeforeToday = now.AddDays(-1);
 
-        var spyCollectedDataFileAccess = new SpyCollectedDataFileAccess();
+        var spyCollectedDataFileAccess = new SpyMeasurementsFileAccess();
 
         using var combinedStorage = MakeCombinedDataStorage(now, spyCollectedDataFileAccess);
 
@@ -111,7 +111,7 @@ public class CombinedFileAndMemoryMeasurementsStorageTests
         var startTimeBeforeMidnight = todayMidnight.AddMinutes(-30).ToOffset(TimeSpan.FromHours(offset));
         var endTimeBeforeMidnight = startTimeBeforeMidnight.AddMinutes(10);
 
-        var spyCollectedDataFileAccess = new SpyCollectedDataFileAccess();
+        var spyCollectedDataFileAccess = new SpyMeasurementsFileAccess();
 
         using var combinedStorage = MakeCombinedDataStorage(now, spyCollectedDataFileAccess);
 
@@ -137,7 +137,7 @@ public class CombinedFileAndMemoryMeasurementsStorageTests
         var startTimeOnToday = now.AddMinutes(-30);
         var endTimeOnToday = now.AddMinutes(-10);
 
-        var spyCollectedDataFileAccess = new SpyCollectedDataFileAccess();
+        var spyCollectedDataFileAccess = new SpyMeasurementsFileAccess();
 
         using var combinedStorage = MakeCombinedDataStorage(now, spyCollectedDataFileAccess);
 
@@ -170,7 +170,7 @@ public class CombinedFileAndMemoryMeasurementsStorageTests
         var olderEntry = new MeasurementEntry(startTimeBeforeToday.AddMinutes(10), 15m, 40m, 980m);
         var todaysEntry = new MeasurementEntry(now.AddMinutes(-20), 25m, 45m, 1050m);
 
-        var spyCollectedDataFileAccess = new SpyCollectedDataFileAccess { Entries = [olderEntry] };
+        var spyCollectedDataFileAccess = new SpyMeasurementsFileAccess { Entries = [olderEntry] };
 
         using var combinedStorage = MakeCombinedDataStorage(now, spyCollectedDataFileAccess);
 
@@ -202,7 +202,7 @@ public class CombinedFileAndMemoryMeasurementsStorageTests
 
         var entryStoredInFile = new MeasurementEntry(now, 20m, 40m, 970m);
 
-        var spyCollectedDataFileAccess = new SpyCollectedDataFileAccess { Entries = [entryStoredInFile] };
+        var spyCollectedDataFileAccess = new SpyMeasurementsFileAccess { Entries = [entryStoredInFile] };
 
         using var combinedStorage = MakeCombinedDataStorage(now, spyCollectedDataFileAccess);
 
@@ -226,7 +226,7 @@ public class CombinedFileAndMemoryMeasurementsStorageTests
 
         var entryPreviouslyStoredInFile = new MeasurementEntry(now.AddHours(-2), 20m, 40m, 970m);
 
-        var spyCollectedDataFileAccess = new SpyCollectedDataFileAccess { Entries = [entryPreviouslyStoredInFile] };
+        var spyCollectedDataFileAccess = new SpyMeasurementsFileAccess { Entries = [entryPreviouslyStoredInFile] };
 
         using var combinedStorage = MakeCombinedDataStorage(now, spyCollectedDataFileAccess);
 
@@ -258,7 +258,7 @@ public class CombinedFileAndMemoryMeasurementsStorageTests
         var entryOnEnd = new MeasurementEntry(endTimeOnToday, 30m, 42m, 1030m);
         var entryAfterEnd = new MeasurementEntry(endTimeOnToday.AddMinutes(5), 28m, 50m, 995m);
 
-        var spyCollectedDataFileAccess = new SpyCollectedDataFileAccess();
+        var spyCollectedDataFileAccess = new SpyMeasurementsFileAccess();
 
         using var combinedStorage = MakeCombinedDataStorage(now, spyCollectedDataFileAccess);
 
@@ -291,7 +291,7 @@ public class CombinedFileAndMemoryMeasurementsStorageTests
 
         var entryPreviouslyStoredInFile = new MeasurementEntry(todayMidnight.AddMinutes(10), 20m, 40m, 970m);
 
-        var spyCollectedDataFileAccess = new SpyCollectedDataFileAccess { Entries = [entryPreviouslyStoredInFile] };
+        var spyCollectedDataFileAccess = new SpyMeasurementsFileAccess { Entries = [entryPreviouslyStoredInFile] };
 
         using var combinedStorage = MakeCombinedDataStorage(now, spyCollectedDataFileAccess);
 
@@ -317,7 +317,7 @@ public class CombinedFileAndMemoryMeasurementsStorageTests
 
         var entryPreviouslyStoredInFile = new MeasurementEntry(hourBeforeMidnight.AddMinutes(-10), 20m, 40m, 970m);
 
-        var spyCollectedDataFileAccess = new SpyCollectedDataFileAccess { Entries = [entryPreviouslyStoredInFile] };
+        var spyCollectedDataFileAccess = new SpyMeasurementsFileAccess { Entries = [entryPreviouslyStoredInFile] };
 
         using var combinedStorage = MakeCombinedDataStorage(hourBeforeMidnight, spyCollectedDataFileAccess);
 
@@ -342,7 +342,7 @@ public class CombinedFileAndMemoryMeasurementsStorageTests
         var startTimeBeforeTodayInDifferentZone = timeEquivalentToUtcMidnightInMinusFive.Add(startSkew);
         var endTimeBeforeTodayInDifferentZone = startTimeBeforeTodayInDifferentZone.Add(rangeSize);
 
-        var spyCollectedDataFileAccess = new SpyCollectedDataFileAccess();
+        var spyCollectedDataFileAccess = new SpyMeasurementsFileAccess();
 
         using var combinedStorage = MakeCombinedDataStorage(midnightInUtc, spyCollectedDataFileAccess);
 
@@ -365,7 +365,7 @@ public class CombinedFileAndMemoryMeasurementsStorageTests
         var futureStartTime = now.AddDays(2);
         var futureEndTime = now.AddDays(3);
 
-        var spyCollectedDataFileAccess = new SpyCollectedDataFileAccess();
+        var spyCollectedDataFileAccess = new SpyMeasurementsFileAccess();
 
         using var combinedStorage = MakeCombinedDataStorage(now, spyCollectedDataFileAccess);
 
@@ -392,7 +392,7 @@ public class CombinedFileAndMemoryMeasurementsStorageTests
 
         var entryAtCurrentTime = new MeasurementEntry(oneHourBeforeMidnight, 20m, 40m, 970m);
 
-        var spyCollectedDataFileAccess = new SpyCollectedDataFileAccess { Entries = [entryAtCurrentTime] };
+        var spyCollectedDataFileAccess = new SpyMeasurementsFileAccess { Entries = [entryAtCurrentTime] };
 
         using var combinedStorage = MakeCombinedDataStorage(oneHourBeforeMidnight, spyCollectedDataFileAccess);
 
@@ -418,7 +418,7 @@ public class CombinedFileAndMemoryMeasurementsStorageTests
 
         var entryOnYesterday = new MeasurementEntry(startTimeOnYesterday.AddMinutes(30), 10m, 45m, 980m);
 
-        var stubCollectedDataFileAccess = new StubCollectedDataFileAccess { Entries = [entryOnYesterday] };
+        var stubCollectedDataFileAccess = new StubMeasurementsFileAccess { Entries = [entryOnYesterday] };
 
         using var combinedStorage = MakeCombinedDataStorage(now, stubCollectedDataFileAccess);
 
@@ -447,14 +447,14 @@ public class CombinedFileAndMemoryMeasurementsStorageTests
         _ = Assert.Catch(RetrieveDataForInvalidTimeRange);
     }
 
-    private static CombinedFileAndMemoryMeasurementsStorage MakeCombinedDataStorage(DateTimeOffset? now = null, ICollectedDataFileAccess? fileAccess = null)
+    private static CombinedFileAndMemoryMeasurementsStorage MakeCombinedDataStorage(DateTimeOffset? now = null, IMeasurementsFileAccess? fileAccess = null)
     {
         return new(
             new FixedClock { Now = now ?? DateTimeOffset.UnixEpoch },
-            fileAccess ?? new DummyCollectedDataFileAccess());
+            fileAccess ?? new DummyMeasurementsFileAccess());
     }
 
-    public class SpyCollectedDataFileAccess : ICollectedDataFileAccess
+    public class SpyMeasurementsFileAccess : IMeasurementsFileAccess
     {
         public MeasurementEntry? SavedEntry { get; private set; }
         public (DateTimeOffset start, DateTimeOffset end)? ReadRange { get; private set; }
@@ -482,7 +482,7 @@ public class CombinedFileAndMemoryMeasurementsStorageTests
         }
     }
 
-    public class DummyCollectedDataFileAccess : ICollectedDataFileAccess
+    public class DummyMeasurementsFileAccess : IMeasurementsFileAccess
     {
         public IEnumerable<MeasurementEntry> Read(DateTimeOffset start, DateTimeOffset end, CancellationToken token)
         {
@@ -495,7 +495,7 @@ public class CombinedFileAndMemoryMeasurementsStorageTests
         }
     }
 
-    private class StubCollectedDataFileAccess : ICollectedDataFileAccess
+    private class StubMeasurementsFileAccess : IMeasurementsFileAccess
     {
         public IEnumerable<MeasurementEntry> Entries { get; init; } = [];
 

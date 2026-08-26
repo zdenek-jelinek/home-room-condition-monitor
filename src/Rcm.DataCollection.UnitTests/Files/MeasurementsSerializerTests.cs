@@ -6,7 +6,7 @@ using Rcm.DataCollection.Files;
 namespace Rcm.DataCollection.UnitTests.Files;
 
 [TestFixture]
-public class CollectedDataSerializerTests
+public class MeasurementsSerializerTests
 {
     private const string CultureThatUsesCommaAsDecimalSeparator = "cs-CZ";
 
@@ -21,7 +21,7 @@ public class CollectedDataSerializerTests
         var pressure = 980m;
         var entry = new MeasurementEntry(time, temperature, humidity, pressure);
 
-        var serializer = new CollectedDataSerializer();
+        var serializer = new MeasurementsSerializer();
 
         // when
         var record = serializer.Serialize(entry);
@@ -42,7 +42,7 @@ public class CollectedDataSerializerTests
         var pressure = 980.93m;
         var entry = new MeasurementEntry(time, temperature, humidity, pressure);
 
-        var serializer = new CollectedDataSerializer();
+        var serializer = new MeasurementsSerializer();
 
         // when
         var record = serializer.Serialize(entry);
@@ -58,7 +58,7 @@ public class CollectedDataSerializerTests
         var time = new DateTimeOffset(2018, 12, 30, 20, 50, 0, TimeSpan.FromHours(2));
         var record = "20:50+02:00 35 48 1010";
 
-        var serializer = new CollectedDataSerializer();
+        var serializer = new MeasurementsSerializer();
 
         // when
         var entry = serializer.Deserialize(time.Date, record);
@@ -78,7 +78,7 @@ public class CollectedDataSerializerTests
         var time = new DateTimeOffset(2018, 12, 30, 20, 50, 0, TimeSpan.FromHours(2));
         var record = "20:50+02:00 35.0 48.2 1010.8";
 
-        var serializer = new CollectedDataSerializer();
+        var serializer = new MeasurementsSerializer();
 
         // when
         var entry = serializer.Deserialize(time.Date, record);
@@ -108,7 +108,7 @@ public class CollectedDataSerializerTests
         // given
         var dummyDate = new DateTime(2018, 12, 31, 0, 0, 0);
 
-        var serializer = new CollectedDataSerializer();
+        var serializer = new MeasurementsSerializer();
 
         // when
         void DeserializingInvalidRecord() => serializer.Deserialize(dummyDate, invalidRecord);

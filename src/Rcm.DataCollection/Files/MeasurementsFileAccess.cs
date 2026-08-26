@@ -10,23 +10,23 @@ using Rcm.DataCollection.Files.Navigation;
 
 namespace Rcm.DataCollection.Files;
 
-public class CollectedDataFileAccess : ICollectedDataFileAccess
+public class MeasurementsFileAccess : IMeasurementsFileAccess
 {
-    private readonly ILogger<CollectedDataFileAccess> _logger;
+    private readonly ILogger<MeasurementsFileAccess> _logger;
     private readonly IFileAccess _file;
 
-    private readonly CollectedDataFilesNavigator _filesNavigator;
-    private readonly CollectedDataSerializer _serializer;
+    private readonly MeasurementsFilesNavigator _filesNavigator;
+    private readonly MeasurementsSerializer _serializer;
 
-    public CollectedDataFileAccess(
-        ILogger<CollectedDataFileAccess> logger,
+    public MeasurementsFileAccess(
+        ILogger<MeasurementsFileAccess> logger,
         IDataStorageLocation dataStorageLocation,
         IFileAccess file)
     {
         _logger = logger;
         _file = file;
-        _filesNavigator = new CollectedDataFilesNavigator(dataStorageLocation);
-        _serializer = new CollectedDataSerializer();
+        _filesNavigator = new MeasurementsFilesNavigator(dataStorageLocation);
+        _serializer = new MeasurementsSerializer();
     }
 
     public IEnumerable<MeasurementEntry> Read(DateTimeOffset start, DateTimeOffset end, CancellationToken token)
