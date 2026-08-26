@@ -3,7 +3,7 @@ using NUnit.Framework;
 using Rcm.Common;
 using Rcm.DataCollection.Files;
 
-namespace Rcm.DataCollection.UnitTests.Files;
+namespace Rcm.UnitTests.Persistence.Files;
 
 [TestFixture]
 public class MeasurementsSerializerTests

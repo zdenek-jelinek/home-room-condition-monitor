@@ -14,7 +14,7 @@ using Rcm.Testing.Common.IO;
 using Rcm.Testing.Threading.Tasks;
 using static System.Globalization.CultureInfo;
 
-namespace Rcm.DataCollection.UnitTests.Files;
+namespace Rcm.UnitTests.Persistence.Files;
 
 [TestFixture]
 public class MeasurementsFileAccessTests

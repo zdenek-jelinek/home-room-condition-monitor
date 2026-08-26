@@ -5,10 +5,11 @@ using System.Threading;
 using System.Threading.Tasks;
 using NUnit.Framework;
 using Rcm.Common;
+using Rcm.DataCollection;
 using Rcm.DataCollection.Files;
 using Rcm.Testing.Common.Temporal;
 
-namespace Rcm.DataCollection.UnitTests;
+namespace Rcm.UnitTests.Persistence;
 
 [TestFixture]
 public class CombinedFileAndMemoryMeasurementsStorageTests

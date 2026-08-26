@@ -6,10 +6,11 @@ using Microsoft.Extensions.Logging.Abstractions;
 using NUnit.Framework;
 using Rcm.Common;
 using Rcm.Common.Temporal;
+using Rcm.DataCollection;
 using Rcm.Sensors.Abstractions;
 using Rcm.Testing.Common.Temporal;
 
-namespace Rcm.DataCollection.UnitTests;
+namespace Rcm.UnitTests.Persistence;
 
 [TestFixture]
 public class MeasurementCollectorTests

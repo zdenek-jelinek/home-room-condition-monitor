@@ -4,7 +4,7 @@ using System.Linq;
 using NUnit.Framework;
 using Rcm.DataCollection.Files.Navigation;
 
-namespace Rcm.DataCollection.UnitTests.Files;
+namespace Rcm.UnitTests.Persistence.Files;
 
 [TestFixture]
 public class MeasurementsFilesNavigatorTests
