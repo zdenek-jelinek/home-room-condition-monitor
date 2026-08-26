@@ -1,9 +1,4 @@
 <Solution>
-  <Folder Name="/Aggregates/">
-    <Project Path="src/Rcm.Aggregates.Api/Rcm.Aggregates.Api.csproj" />
-    <Project Path="src/Rcm.Aggregates.UnitTests/Rcm.Aggregates.UnitTests.csproj" />
-    <Project Path="src/Rcm.Aggregates/Rcm.Aggregates.csproj" />
-  </Folder>
   <Folder Name="/DataCollection/">
     <Project Path="src/Rcm.DataCollection.Api/Rcm.DataCollection.Api.csproj" />
     <Project Path="src/Rcm.DataCollection.UnitTests/Rcm.DataCollection.UnitTests.csproj" />
@@ -26,6 +21,7 @@
     <File Path="README.md" />
   </Folder>
   <Project Path="src/Rcm.UnitTests/Rcm.UnitTests.csproj" />
+  <Project Path="src/Rcm.Services/Rcm.Services.csproj" />
   <Project Path="src/Rcm.Testing/Rcm.Testing.csproj" />
   <Project Path="src/Rcm.Common/Rcm.Common.csproj" />
   <Project Path="src/Rcm.Web.Tests/Rcm.Web.Tests.csproj" />
