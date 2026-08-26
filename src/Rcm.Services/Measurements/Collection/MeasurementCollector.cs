@@ -9,7 +9,7 @@ using Rcm.Common.Temporal;
 using Rcm.DataCollection.Api;
 using Rcm.Sensors.Abstractions;
 
-namespace Rcm.DataCollection;
+namespace Rcm.Services.Measurements.Collection;
 
 public class MeasurementCollector : IMeasurementCollector
 {

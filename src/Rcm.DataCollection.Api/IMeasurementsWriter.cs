@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Rcm.Common;
 
-namespace Rcm.DataCollection;
+namespace Rcm.DataCollection.Api;
 
 public interface IMeasurementsWriter
 {
