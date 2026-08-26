@@ -17,6 +17,7 @@
     <Project Path="src/Rcm.Sensors.Fakes/Rcm.Sensors.Fakes.csproj" />
   </Folder>
   <Folder Name="/Solution Items/">
+    <File Path=".editorconfig" />
     <File Path=".gitignore" />
     <File Path="azure-pipelines.yml" />
     <File Path="Directory.Build.props" />
