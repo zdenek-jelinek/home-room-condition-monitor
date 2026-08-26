@@ -5,7 +5,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Rcm.DataCollection.Api;
 
-namespace Rcm.Web.Services;
+namespace Rcm.Services.Measurements.Collection;
 
 public class PeriodicMeasurementCollectionService : IHostedService, IAsyncDisposable
 {
