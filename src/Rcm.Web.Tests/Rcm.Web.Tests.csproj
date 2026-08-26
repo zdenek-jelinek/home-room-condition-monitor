@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Rcm.Testing\Rcm.Testing.csproj" />
     <ProjectReference Include="..\Rcm.Web\Rcm.Web.csproj" />
   </ItemGroup>
 

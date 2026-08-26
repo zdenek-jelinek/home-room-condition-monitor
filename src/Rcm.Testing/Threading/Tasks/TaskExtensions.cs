@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace Rcm.Common.Tasks;
+namespace Rcm.Testing.Threading.Tasks;
 
 public static class TaskExtensions
 {
