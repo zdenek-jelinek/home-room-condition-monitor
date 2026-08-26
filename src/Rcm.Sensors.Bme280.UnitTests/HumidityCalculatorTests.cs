@@ -12,7 +12,15 @@ public class HumidityCalculatorTests
         // given
         var rawHumidity = 0x6E32;
         var fineTemperature = 0x19E8C;
-        var compensationParameters = new HumidityCompensationParameters(0x4B, 0x169, 0, 0x140, 0x32, 0x1E);
+        var compensationParameters = new HumidityCompensationParameters
+        {
+            Humidity1 = 0x4B,
+            Humidity2 = 0x169,
+            Humidity3 = 0,
+            Humidity4 = 0x140,
+            Humidity5 = 0x32,
+            Humidity6 = 0x1E
+        };
 
         var calculator = new HumidityCalculator(compensationParameters);
 

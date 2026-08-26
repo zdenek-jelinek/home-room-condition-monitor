@@ -9,7 +9,12 @@ public class TemperatureCalculatorTests
     public void CorrectlyCalculatesCompensatedTemperature()
     {
         // given
-        var parameters = new TemperatureCompensationParameters(0x6D86, 0x670C, 0x32);
+        var parameters = new TemperatureCompensationParameters
+        {
+            Temperature1 = 0x6D86,
+            Temperature2 = 0x670C,
+            Temperature3 = 0x32
+        };
 
         var calculator = new TemperatureCalculator(parameters);
 
