@@ -2,6 +2,8 @@
 
   <PropertyGroup>
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
+    <!-- Ensure TSC runs before static assets are processed -->
+    <PrepareForBuildDependsOn>CompileTypeScriptWithTSConfig;GetTypeScriptOutputForPublishing;$(PrepareForBuildDependsOn)</PrepareForBuildDependsOn>
   </PropertyGroup>
 
   <ItemGroup>
@@ -46,7 +48,7 @@
       <_NpmPackageFile Include="$(NpmPackageFiles)" />
     </ItemGroup>
 
-    <Copy SourceFiles="@(_NpmPackageFile)" DestinationFiles="@(_NpmPackageFile -&gt; 'wwwroot\lib$([System.String]::new(%(Identity)).TrimStart('node_modules'))')" SkipUnchangedFiles="true" />
+    <Copy SourceFiles="@(_NpmPackageFile)" DestinationFiles="@(_NpmPackageFile -> 'wwwroot\lib$([System.String]::new(%(Identity)).TrimStart('node_modules'))')" SkipUnchangedFiles="true" />
 
   </Target>
 
