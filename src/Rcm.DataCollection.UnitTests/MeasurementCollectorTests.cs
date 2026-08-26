@@ -197,11 +197,10 @@ public class MeasurementCollectorTests
         {
             // given
             var nonZeroSecondsTime = new DateTimeOffset(2018, 12, 27, 13, 28, 10, TimeSpan.Zero);
-            var clock = new FixedClock(nonZeroSecondsTime);
 
             var measurementCollector = new MeasurementCollector(
                 NullLogger<MeasurementCollector>.Instance,
-                clock,
+                new FixedClock { Now = nonZeroSecondsTime },
                 new DummySensor(),
                 new DummyCollectedDataWriter());
 
@@ -218,11 +217,10 @@ public class MeasurementCollectorTests
         {
             // given
             var zeroSecondsTime = new DateTimeOffset(2018, 12, 27, 13, 28, 0, TimeSpan.Zero);
-            var clock = new FixedClock(zeroSecondsTime);
 
             var measurementCollector = new MeasurementCollector(
                 NullLogger<MeasurementCollector>.Instance,
-                clock,
+                new FixedClock { Now = zeroSecondsTime },
                 new DummySensor(),
                 new DummyCollectedDataWriter());
 

@@ -5,10 +5,5 @@ namespace Rcm.Testing.Common.Temporal;
 
 public class FixedClock : IClock
 {
-    public DateTimeOffset Now { get; }
-
-    public FixedClock(DateTimeOffset time)
-    {
-        Now = time;
-    }
+    public required DateTimeOffset Now { get; set; }
 }
