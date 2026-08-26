@@ -7,7 +7,7 @@ using Rcm.Web.Services;
 
 namespace Rcm.Web.Configuration.DataCollection;
 
-public class DataCollectionServicesInstaller : IInstaller
+public class MeasurementsServicesInstaller : IInstaller
 {
     public void Install(IServiceCollection services)
     {
@@ -19,6 +19,6 @@ public class DataCollectionServicesInstaller : IInstaller
             .AddTransient<IMeasurementsAccessor, MeasurementsAccessor>()
             .AddTransient<IMeasurementsFileAccess, MeasurementsFileAccess>();
 
-        services.AddHostedService<PeriodicDataCollectionService>();
+        services.AddHostedService<PeriodicMeasurementCollectionService>();
     }
 }

@@ -31,7 +31,7 @@ public class Startup
         services
             .Install<CommonServicesInstaller>(_configuration)
             .Install<ModeBasedMeasurementServicesInstaller>(measurementsConfiguration.GetSection("access"))
-            .Install<DataCollectionServicesInstaller>()
+            .Install<MeasurementsServicesInstaller>()
             .Install<AggregatesServicesInstaller>();
     }
 

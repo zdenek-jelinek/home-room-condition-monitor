@@ -11,7 +11,7 @@ using Rcm.Web.Services;
 namespace Rcm.Web.Tests.Services;
 
 [TestFixture]
-public class PeriodicDataCollectionServiceIntegrationTests
+public class PeriodicMeasurementCollectionServiceIntegrationTests
 {
     private static TimeSpan Tolerance => TimeSpan.FromMilliseconds(32);
 
@@ -154,11 +154,11 @@ public class PeriodicDataCollectionServiceIntegrationTests
         Assert.AreEqual(TaskStatus.RanToCompletion, stoppingTask.Status);
     }
 
-    private static PeriodicDataCollectionService CreatePeriodicDataCollectionService(
+    private static PeriodicMeasurementCollectionService CreatePeriodicDataCollectionService(
         IMeasurementCollector measurementCollector)
     {
-        return new PeriodicDataCollectionService(
-            NullLogger<PeriodicDataCollectionService>.Instance,
+        return new PeriodicMeasurementCollectionService(
+            NullLogger<PeriodicMeasurementCollectionService>.Instance,
             measurementCollector);
     }
 

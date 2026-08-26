@@ -7,9 +7,9 @@ using Rcm.DataCollection.Api;
 
 namespace Rcm.Web.Services;
 
-public class PeriodicDataCollectionService : IHostedService, IAsyncDisposable
+public class PeriodicMeasurementCollectionService : IHostedService, IAsyncDisposable
 {
-    private readonly ILogger<PeriodicDataCollectionService> _logger;
+    private readonly ILogger<PeriodicMeasurementCollectionService> _logger;
     private readonly IMeasurementCollector _measurementCollector;
 
     private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
@@ -18,8 +18,8 @@ public class PeriodicDataCollectionService : IHostedService, IAsyncDisposable
     private Task? _pendingMeasurement;
     private Timer? _timer;
 
-    public PeriodicDataCollectionService(
-        ILogger<PeriodicDataCollectionService> logger,
+    public PeriodicMeasurementCollectionService(
+        ILogger<PeriodicMeasurementCollectionService> logger,
         IMeasurementCollector measurementCollector)
     {
         _logger = logger;
