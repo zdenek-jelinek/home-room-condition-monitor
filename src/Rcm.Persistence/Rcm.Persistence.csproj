@@ -5,7 +5,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Rcm.DataCollection.Api\Rcm.Persistence.Abstractions.csproj" />
+    <ProjectReference Include="..\Rcm.Persistence.Abstractions\Rcm.Persistence.Abstractions.csproj" />
     <ProjectReference Include="..\Rcm.Sensors.Abstractions\Rcm.Sensors.Abstractions.csproj" />
   </ItemGroup>
 
