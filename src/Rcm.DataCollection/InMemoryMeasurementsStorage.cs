@@ -5,7 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Rcm.Common;
 
-namespace Rcm.DataCollection;
+namespace Rcm.Persistence;
 
 public class InMemoryMeasurementsStorage : IMeasurementsStorage
 {

@@ -1,4 +1,4 @@
-﻿namespace Rcm.DataCollection.Files.Navigation;
+﻿namespace Rcm.Persistence.Files.Navigation;
 
 public interface IDataStorageLocation
 {

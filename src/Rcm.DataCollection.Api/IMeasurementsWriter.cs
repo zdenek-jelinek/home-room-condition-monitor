@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Rcm.Common;
 
-namespace Rcm.DataCollection.Api;
+namespace Rcm.Persistence.Abstractions;
 
 public interface IMeasurementsWriter
 {

@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Rcm.DataCollection;
-using Rcm.DataCollection.Api;
-using Rcm.DataCollection.Files;
+using Rcm.Persistence;
+using Rcm.Persistence.Abstractions;
+using Rcm.Persistence.Files;
 using Rcm.Services.Measurements.Collection;
 using Rcm.Services.Measurements.Retrieval;
 

@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Threading;
-using Rcm.DataCollection.Files.Navigation;
+using Rcm.Persistence.Files.Navigation;
 
 namespace Rcm.Web.Configuration.Common;
 

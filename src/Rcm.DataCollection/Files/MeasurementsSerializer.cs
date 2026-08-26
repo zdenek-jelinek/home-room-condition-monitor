@@ -2,7 +2,7 @@
 using Rcm.Common;
 using static System.Globalization.CultureInfo;
 
-namespace Rcm.DataCollection.Files;
+namespace Rcm.Persistence.Files;
 
 public class MeasurementsSerializer
 {

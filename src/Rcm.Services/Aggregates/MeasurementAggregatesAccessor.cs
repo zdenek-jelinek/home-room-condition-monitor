@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading;
 using Rcm.Common;
-using Rcm.DataCollection.Api;
+using Rcm.Persistence.Abstractions;
 
 namespace Rcm.Services.Aggregates;
 

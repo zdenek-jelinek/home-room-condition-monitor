@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using Rcm.Common;
 
-namespace Rcm.DataCollection.Api;
+namespace Rcm.Persistence.Abstractions;
 
 public interface IMeasurementsReader
 {

@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Rcm.Common;
 using Rcm.Common.IO;
-using Rcm.DataCollection.Files.Navigation;
+using Rcm.Persistence.Files.Navigation;
 
-namespace Rcm.DataCollection.Files;
+namespace Rcm.Persistence.Files;
 
 public class MeasurementsFileAccess : IMeasurementsFileAccess
 {

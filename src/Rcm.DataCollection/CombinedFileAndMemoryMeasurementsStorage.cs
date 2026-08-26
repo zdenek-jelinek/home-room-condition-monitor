@@ -5,9 +5,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using Rcm.Common;
 using Rcm.Common.Temporal;
-using Rcm.DataCollection.Files;
+using Rcm.Persistence.Files;
 
-namespace Rcm.DataCollection;
+namespace Rcm.Persistence;
 
 public class CombinedFileAndMemoryMeasurementsStorage : IMeasurementsStorage, IDisposable
 {

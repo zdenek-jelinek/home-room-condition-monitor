@@ -2,7 +2,7 @@
 using System.IO;
 using System.Linq;
 using NUnit.Framework;
-using Rcm.DataCollection.Files.Navigation;
+using Rcm.Persistence.Files.Navigation;
 
 namespace Rcm.UnitTests.Persistence.Files;
 

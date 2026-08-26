@@ -3,7 +3,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Rcm.DataCollection.Api;
 
 namespace Rcm.Services.Measurements.Collection;
 

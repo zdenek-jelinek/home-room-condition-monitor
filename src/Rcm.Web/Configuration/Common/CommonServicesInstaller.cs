@@ -3,7 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Rcm.Common.IO;
 using Rcm.Common.Temporal;
-using Rcm.DataCollection.Files.Navigation;
+using Rcm.Persistence.Files.Navigation;
 
 namespace Rcm.Web.Configuration.Common;
 

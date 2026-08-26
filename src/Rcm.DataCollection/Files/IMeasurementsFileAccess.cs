@@ -4,7 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Rcm.Common;
 
-namespace Rcm.DataCollection.Files;
+namespace Rcm.Persistence.Files;
 
 public interface IMeasurementsFileAccess
 {

@@ -1,5 +1,5 @@
-﻿using Rcm.DataCollection.Api;
+﻿using Rcm.Persistence.Abstractions;
 
-namespace Rcm.DataCollection;
+namespace Rcm.Persistence;
 
 public interface IMeasurementsStorage : IMeasurementsWriter, IMeasurementsReader;

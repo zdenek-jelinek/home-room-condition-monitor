@@ -4,7 +4,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging.Abstractions;
 using NUnit.Framework;
-using Rcm.DataCollection.Api;
 using Rcm.Services.Measurements.Collection;
 using Rcm.Testing.Threading.Tasks;
 

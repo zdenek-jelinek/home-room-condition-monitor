@@ -1,7 +1,7 @@
 ﻿using System;
 using NUnit.Framework;
 using Rcm.Common;
-using Rcm.DataCollection.Files;
+using Rcm.Persistence.Files;
 
 namespace Rcm.UnitTests.Persistence.Files;
 

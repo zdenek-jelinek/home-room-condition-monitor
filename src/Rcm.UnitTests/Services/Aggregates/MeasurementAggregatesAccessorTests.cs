@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading;
 using NUnit.Framework;
 using Rcm.Common;
-using Rcm.DataCollection.Api;
+using Rcm.Persistence.Abstractions;
 using Rcm.Services.Aggregates;
 
 namespace Rcm.UnitTests.Services.Aggregates;
