@@ -15,20 +15,16 @@ public class MeasurementAggregatesAccessor : IMeasurementAggregatesAccessor
         _collectedDataAccessor = collectedDataAccessor;
     }
 
-    public IEnumerable<MeasurementAggregates> GetMeasurementAggregates(
-        DateTimeOffset startTime,
-        DateTimeOffset endTime,
-        int aggregatesCount,
-        CancellationToken token)
+    public IEnumerable<MeasurementAggregates> GetMeasurementAggregates(MeasurementAggregatesQuery query, CancellationToken cancellationToken)
     {
-        var measurements = _collectedDataAccessor.GetCollectedData(startTime, endTime, token);
+        var measurements = _collectedDataAccessor.GetCollectedData(query.StartTime, query.EndTime, cancellationToken);
 
-        var partitionSize = (endTime - startTime).Ticks / (double)aggregatesCount;
+        var partitionSize = (query.EndTime - query.StartTime).Ticks / (double)query.PartitionCount;
 
         var previousMeasurement = (MeasurementEntry?)null;
 
         var currentPartitionEndOffset = partitionSize;
-        var currentPartitionEndTime = startTime.AddTicks((long)Math.Round(currentPartitionEndOffset));
+        var currentPartitionEndTime = query.StartTime.AddTicks((long)Math.Round(currentPartitionEndOffset));
 
         var currentAggregate = new AggregateAccumulator();
 
@@ -44,12 +40,12 @@ public class MeasurementAggregatesAccessor : IMeasurementAggregatesAccessor
             {
                 if (!currentAggregate.IsEmpty)
                 {
-                    yield return currentAggregate.ExtractResult()!;
+                    yield return currentAggregate.ExtractResult();
                     currentAggregate = new AggregateAccumulator();
                 }
 
                 currentPartitionEndOffset += partitionSize;
-                currentPartitionEndTime = startTime.AddTicks((long)Math.Round(currentPartitionEndOffset));
+                currentPartitionEndTime = query.StartTime.AddTicks((long)Math.Round(currentPartitionEndOffset));
             }
 
             currentAggregate.Add(measurement);
@@ -59,7 +55,7 @@ public class MeasurementAggregatesAccessor : IMeasurementAggregatesAccessor
 
         if (!currentAggregate.IsEmpty)
         {
-            yield return currentAggregate.ExtractResult()!;
+            yield return currentAggregate.ExtractResult();
         }
     }
 
@@ -67,9 +63,9 @@ public class MeasurementAggregatesAccessor : IMeasurementAggregatesAccessor
     {
         public bool IsEmpty { get; private set; } = true;
 
-        private readonly SubAccumulator _temperatureAccumulator = new SubAccumulator(e => e.CelsiusTemperature);
-        private readonly SubAccumulator _pressureAccumulator = new SubAccumulator(e => e.HpaPressure);
-        private readonly SubAccumulator _humidityAccumulator = new SubAccumulator(e => e.RelativeHumidity);
+        private readonly SubAccumulator _temperatureAccumulator = new(e => e.CelsiusTemperature);
+        private readonly SubAccumulator _pressureAccumulator = new(e => e.HpaPressure);
+        private readonly SubAccumulator _humidityAccumulator = new(e => e.RelativeHumidity);
 
         public void Add(MeasurementEntry entry)
         {
@@ -93,10 +89,8 @@ public class MeasurementAggregatesAccessor : IMeasurementAggregatesAccessor
                 _humidityAccumulator.ExtractResult());
         }
 
-        private class SubAccumulator
+        private class SubAccumulator(Func<MeasurementEntry, decimal> selector)
         {
-            private readonly Func<MeasurementEntry, decimal> _selector;
-
             private DateTimeOffset _minTime = DateTimeOffset.MaxValue;
             private decimal _minTimeValue;
             private decimal _minValue = Decimal.MaxValue;
@@ -106,14 +100,9 @@ public class MeasurementAggregatesAccessor : IMeasurementAggregatesAccessor
             private DateTimeOffset _maxTime = DateTimeOffset.MinValue;
             private decimal _maxTimeValue;
 
-            public SubAccumulator(Func<MeasurementEntry, decimal> selector)
-            {
-                _selector = selector;
-            }
-
             public void Add(MeasurementEntry entry)
             {
-                var value = _selector.Invoke(entry);
+                var value = selector.Invoke(entry);
                 if (entry.Time < _minTime)
                 {
                     _minTime = entry.Time;

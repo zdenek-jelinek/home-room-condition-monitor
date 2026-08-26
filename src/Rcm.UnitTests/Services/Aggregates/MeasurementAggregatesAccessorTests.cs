@@ -61,12 +61,8 @@ public class MeasurementAggregatesAccessorTests
             lastMeasurementInSecondPartition
         };
 
-        var aggregatesAccessor = new MeasurementAggregatesAccessor(new StubCollectedDataAccessor { Data = measurements });
-
         // when
-        var aggregates = aggregatesAccessor
-            .GetMeasurementAggregates(startTime, endTime, partitionCount, default)
-            .ToList();
+        var aggregates = GetMeasurementAggregates(measurements, MakeQuery(startTime, endTime, partitionCount));
 
         // then
         Assert.AreEqual(partitionCount, aggregates.Count);
@@ -153,10 +149,8 @@ public class MeasurementAggregatesAccessorTests
             new MeasurementEntry(dummyStartTime.AddHours(19), 19m, 31m, 995)
         };
 
-        var aggregatesAccessor = new MeasurementAggregatesAccessor(new StubCollectedDataAccessor { Data = measurements });
-
         // when
-        var aggregates = aggregatesAccessor.GetMeasurementAggregates(dummyStartTime, dummyEndTime, count, default);
+        var aggregates = GetMeasurementAggregates(measurements, MakeQuery(dummyStartTime, dummyEndTime, count));
 
         // then
         var aggregate = aggregates.Single();
@@ -207,14 +201,10 @@ public class MeasurementAggregatesAccessorTests
         var measurementOnBorderOfPartitions = new MeasurementEntry(secondPartitionStart, 20m, 30m, 950m);
         var measurementInSecondPartition = new MeasurementEntry(endTime, 30m, 40m, 1000m);
 
-        var aggregatesAccessor = new MeasurementAggregatesAccessor(
-            new StubCollectedDataAccessor
-            {
-                Data = new[] { measurementInFirstPartition, measurementOnBorderOfPartitions, measurementInSecondPartition }
-            });
-
         // when
-        var aggregates = aggregatesAccessor.GetMeasurementAggregates(startTime, endTime, partitionCount, default);
+        var aggregates = GetMeasurementAggregates(
+            measurements: [measurementInFirstPartition, measurementOnBorderOfPartitions, measurementInSecondPartition],
+            query: MakeQuery(startTime, endTime, partitionCount));
 
         // then
         var minTemperature = new AggregateEntry(measurementInFirstPartition.Time, measurementInFirstPartition.CelsiusTemperature);
@@ -224,27 +214,21 @@ public class MeasurementAggregatesAccessorTests
         var minHumidity = new AggregateEntry(measurementInFirstPartition.Time, measurementInFirstPartition.RelativeHumidity);
         var maxHumidity = new AggregateEntry(measurementOnBorderOfPartitions.Time, measurementOnBorderOfPartitions.RelativeHumidity);
         var firstPartitionAggregates = new MeasurementAggregates(
-            new Rcm.Services.Aggregates.Aggregates(minTemperature, minTemperature, maxTemperature, maxTemperature),
-            new Rcm.Services.Aggregates.Aggregates(minPressure, minPressure, maxPressure, maxPressure),
-            new Rcm.Services.Aggregates.Aggregates(minHumidity, minHumidity, maxHumidity, maxHumidity));
+            new(minTemperature, minTemperature, maxTemperature, maxTemperature),
+            new(minPressure, minPressure, maxPressure, maxPressure),
+            new(minHumidity, minHumidity, maxHumidity, maxHumidity));
 
         var secondPartitionTemperature = new AggregateEntry(measurementInSecondPartition.Time, measurementInSecondPartition.CelsiusTemperature);
         var secondPartitionPressure = new AggregateEntry(measurementInSecondPartition.Time, measurementInSecondPartition.HpaPressure);
         var secondPartitionHumidity = new AggregateEntry(measurementInSecondPartition.Time, measurementInSecondPartition.RelativeHumidity);
         var secondPartitionAggregates = new MeasurementAggregates(
-            new Rcm.Services.Aggregates.Aggregates(secondPartitionTemperature, secondPartitionTemperature, secondPartitionTemperature, secondPartitionTemperature),
-            new Rcm.Services.Aggregates.Aggregates(secondPartitionPressure, secondPartitionPressure, secondPartitionPressure, secondPartitionPressure),
-            new Rcm.Services.Aggregates.Aggregates(secondPartitionHumidity, secondPartitionHumidity, secondPartitionHumidity, secondPartitionHumidity));
+            new(secondPartitionTemperature, secondPartitionTemperature, secondPartitionTemperature, secondPartitionTemperature),
+            new(secondPartitionPressure, secondPartitionPressure, secondPartitionPressure, secondPartitionPressure),
+            new(secondPartitionHumidity, secondPartitionHumidity, secondPartitionHumidity, secondPartitionHumidity));
 
         Assert.That(
             aggregates,
-            Is.EquivalentTo(
-                    new[]
-                    {
-                        firstPartitionAggregates,
-                        secondPartitionAggregates
-                    })
-                .Using(new MeasurementAggregatesEqualityComparer()));
+            Is.EquivalentTo(new[] { firstPartitionAggregates, secondPartitionAggregates }).Using(new MeasurementAggregatesEqualityComparer()));
     }
 
     [Test]
@@ -257,18 +241,14 @@ public class MeasurementAggregatesAccessorTests
         var partitionCount = 2;
         var secondPartitionStart = new DateTimeOffset((startTime.Ticks + endTime.Ticks) / partitionCount, offset);
 
-        var measurementsInFirstPartition = new MeasurementEntry[0];
+        var measurementsInFirstPartition = Array.Empty<MeasurementEntry>();
         var actualMeasurementTime = secondPartitionStart.AddMinutes(5);
         var measurementsInSecondPartition = new[] { new MeasurementEntry(actualMeasurementTime, 25m, 37m, 975m) };
 
-        var aggregatesAccessor = new MeasurementAggregatesAccessor(
-            new StubCollectedDataAccessor
-            {
-                Data = measurementsInFirstPartition.Concat(measurementsInSecondPartition).ToList()
-            });
+        var query = MakeQuery(startTime, endTime, partitionCount);
 
         // when
-        var aggregates = aggregatesAccessor.GetMeasurementAggregates(startTime, endTime, partitionCount, default);
+        var aggregates = GetMeasurementAggregates([.. measurementsInFirstPartition, .. measurementsInSecondPartition], query);
 
         // then
         var temperature = new AggregateEntry(actualMeasurementTime, 25m);
@@ -281,9 +261,9 @@ public class MeasurementAggregatesAccessorTests
                     new[]
                     {
                         new MeasurementAggregates(
-                            new Rcm.Services.Aggregates.Aggregates(temperature, temperature, temperature, temperature),
-                            new Rcm.Services.Aggregates.Aggregates(pressure, pressure, pressure, pressure),
-                            new Rcm.Services.Aggregates.Aggregates(humidity, humidity, humidity, humidity))
+                            new(temperature, temperature, temperature, temperature),
+                            new(pressure, pressure, pressure, pressure),
+                            new(humidity, humidity, humidity, humidity))
                     })
                 .Using(new MeasurementAggregatesEqualityComparer()));
     }
@@ -291,17 +271,8 @@ public class MeasurementAggregatesAccessorTests
     [Test]
     public void NoAggregatesAreReturnedIfThereAreNoMeasurements()
     {
-        // given
-        var dummyStartTime = new DateTimeOffset(2019, 2, 7, 21, 48, 15, TimeSpan.FromHours(1));
-        var dummyEndTime = dummyStartTime.AddHours(12);
-
-        var dummyCount = 3;
-        var emptyMeasurements = new MeasurementEntry[0];
-
-        var aggregatesAccessor = new MeasurementAggregatesAccessor(new StubCollectedDataAccessor { Data = emptyMeasurements });
-
         // when
-        var aggregates = aggregatesAccessor.GetMeasurementAggregates(dummyStartTime, dummyEndTime, dummyCount, default);
+        var aggregates = GetMeasurementAggregates(measurements: [], MakeDummyQuery());
 
         // then
         CollectionAssert.IsEmpty(aggregates);
@@ -311,81 +282,107 @@ public class MeasurementAggregatesAccessorTests
     public void ThrowsOnEvaluationForNonMonotonousMeasurementTimes()
     {
         // given
-        var dummyStartTime = new DateTimeOffset(2019, 2, 7, 12, 0, 0, TimeSpan.FromHours(1));
-        var dummyEndTime = dummyStartTime.AddDays(1);
-        var dummyCount = 3;
+        var query = MakeDummyQuery();
 
         var nonMonotonousMeasurements = new[]
         {
-            new MeasurementEntry(dummyStartTime.AddMinutes(10), 10m, 20m, 900m),
-            new MeasurementEntry(dummyStartTime, 10m, 20m, 900m),
+            new MeasurementEntry(query.StartTime.AddMinutes(10), 10m, 20m, 900m),
+            new MeasurementEntry(query.StartTime, 10m, 20m, 900m),
         };
 
-        var aggregatesAccessor = new MeasurementAggregatesAccessor(new StubCollectedDataAccessor { Data = nonMonotonousMeasurements });
-
         // when
-        void GetAggregatesForNonMonotonousMeasurementTimes() =>
-            aggregatesAccessor
-                .GetMeasurementAggregates(dummyStartTime, dummyEndTime, dummyCount, default)
-                .ToList();
+        void GetAggregatesForNonMonotonousMeasurementTimes()
+        {
+            _ = GetMeasurementAggregates(nonMonotonousMeasurements, query);
+        }
 
         // then
         _ = Assert.Catch(GetAggregatesForNonMonotonousMeasurementTimes);
+    }
+
+    private static MeasurementAggregatesQuery MakeDummyQuery()
+    {
+        var dummyStartTime = new DateTimeOffset(2019, 2, 7, 12, 0, 0, TimeSpan.FromHours(1));
+
+        return MakeQuery(dummyStartTime, dummyStartTime.AddDays(1), 3);
+    }
+
+    private static MeasurementAggregatesQuery MakeQuery(DateTimeOffset startTime, DateTimeOffset endTime, int partitionCount)
+    {
+        return new() { StartTime = startTime, EndTime = endTime, PartitionCount = partitionCount };
+    }
+
+    private static IReadOnlyList<MeasurementAggregates> GetMeasurementAggregates(IEnumerable<MeasurementEntry> measurements, MeasurementAggregatesQuery query)
+    {
+        var aggregatesAccessor = new MeasurementAggregatesAccessor(new StubCollectedDataAccessor { Data = measurements.ToArray() });
+
+        return aggregatesAccessor
+            .GetMeasurementAggregates(query, CancellationToken.None)
+            .ToArray();
     }
 
     private class StubCollectedDataAccessor : ICollectedDataAccessor
     {
         public ICollection<MeasurementEntry>? Data { get; set; }
 
-        public IEnumerable<MeasurementEntry> GetCollectedData(
-            DateTimeOffset start,
-            DateTimeOffset end,
-            CancellationToken token)
+        public IEnumerable<MeasurementEntry> GetCollectedData(DateTimeOffset start, DateTimeOffset end, CancellationToken token)
         {
-            return Data?.Select(x => x) ?? Enumerable.Empty<MeasurementEntry>();
+            return Data?.Select(x => x) ?? [];
         }
     }
 
     private class MeasurementAggregatesEqualityComparer : IEqualityComparer<MeasurementAggregates>
     {
-        private readonly IEqualityComparer<Rcm.Services.Aggregates.Aggregates> _aggregatesComparer = new AggregatesEqualityComparer();
+        private readonly AggregatesEqualityComparer _aggregatesComparer = new();
 
-        public bool Equals(MeasurementAggregates? x, MeasurementAggregates? y) =>
-            _aggregatesComparer.Equals(x?.Temperature, y?.Temperature)
-            && _aggregatesComparer.Equals(x?.Pressure, y?.Pressure)
-            && _aggregatesComparer.Equals(x?.Humidity, y?.Humidity);
+        public bool Equals(MeasurementAggregates? x, MeasurementAggregates? y)
+        {
+            return _aggregatesComparer.Equals(x?.Temperature, y?.Temperature)
+                && _aggregatesComparer.Equals(x?.Pressure, y?.Pressure)
+                && _aggregatesComparer.Equals(x?.Humidity, y?.Humidity);
+        }
 
-        public int GetHashCode(MeasurementAggregates obj) =>
-            HashCode.Combine(
+        public int GetHashCode(MeasurementAggregates obj)
+        {
+            return HashCode.Combine(
                 _aggregatesComparer.GetHashCode(obj.Temperature),
                 _aggregatesComparer.GetHashCode(obj.Pressure),
                 _aggregatesComparer.GetHashCode(obj.Humidity));
+        }
     }
 
     private class AggregatesEqualityComparer : IEqualityComparer<Rcm.Services.Aggregates.Aggregates>
     {
-        private readonly IEqualityComparer<AggregateEntry> _entryComparer = new AggregateEntryEqualityComparer();
+        private readonly AggregateEntryEqualityComparer _entryComparer = new();
 
-        public bool Equals(Rcm.Services.Aggregates.Aggregates? x, Rcm.Services.Aggregates.Aggregates? y) =>
-            _entryComparer.Equals(x?.First, y?.First)
-            && _entryComparer.Equals(x?.Min, y?.Min)
-            && _entryComparer.Equals(x?.Max, y?.Max)
-            && _entryComparer.Equals(x?.Last, y?.Last);
+        public bool Equals(Rcm.Services.Aggregates.Aggregates? x, Rcm.Services.Aggregates.Aggregates? y)
+        {
+            return _entryComparer.Equals(x?.First, y?.First)
+                && _entryComparer.Equals(x?.Min, y?.Min)
+                && _entryComparer.Equals(x?.Max, y?.Max)
+                && _entryComparer.Equals(x?.Last, y?.Last);
+        }
 
-        public int GetHashCode(Rcm.Services.Aggregates.Aggregates obj) =>
-            HashCode.Combine(
+        public int GetHashCode(Rcm.Services.Aggregates.Aggregates obj)
+        {
+            return HashCode.Combine(
                 _entryComparer.GetHashCode(obj.First),
                 _entryComparer.GetHashCode(obj.Min),
                 _entryComparer.GetHashCode(obj.Max),
                 _entryComparer.GetHashCode(obj.Last));
+        }
     }
 
     private class AggregateEntryEqualityComparer : IEqualityComparer<AggregateEntry>
     {
-        public bool Equals(AggregateEntry? x, AggregateEntry? y) =>
-            x?.Time == y?.Time && x?.Value == y?.Value;
+        public bool Equals(AggregateEntry? x, AggregateEntry? y)
+        {
+            return x?.Time == y?.Time && x?.Value == y?.Value;
+        }
 
-        public int GetHashCode(AggregateEntry obj) =>
-            HashCode.Combine(obj.Time, obj.Value);
+        public int GetHashCode(AggregateEntry obj)
+        {
+            return HashCode.Combine(obj.Time, obj.Value);
+        }
     }
 }

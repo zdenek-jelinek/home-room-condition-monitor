@@ -22,7 +22,7 @@ public class MeasurementAggregatesController : Controller
         [FromQuery(Name = "start")] DateTimeOffset? startTime,
         [FromQuery(Name = "end")] DateTimeOffset? endTime,
         [FromQuery(Name = "count")] int? count,
-        CancellationToken token)
+        CancellationToken cancellationToken)
     {
         if (!startTime.HasValue || !endTime.HasValue || !count.HasValue)
         {
@@ -39,8 +39,9 @@ public class MeasurementAggregatesController : Controller
             return BadRequest($"count must be positive integer, actual is {count}");
         }
 
-        var aggregatedMeasurements = _measurementAggregatesAccessor
-            .GetMeasurementAggregates(startTime.Value, endTime.Value, count.Value, token);
+        var query = new MeasurementAggregatesQuery { StartTime = startTime.Value, EndTime = endTime.Value, PartitionCount = count.Value };
+
+        var aggregatedMeasurements = _measurementAggregatesAccessor.GetMeasurementAggregates(query, cancellationToken);
 
         var result = aggregatedMeasurements
             .Select(m => new MeasurementAggregatesContract(
