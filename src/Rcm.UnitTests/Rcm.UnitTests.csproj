@@ -11,6 +11,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Rcm.DataCollection\Rcm.DataCollection.csproj" />
+    <ProjectReference Include="..\Rcm.Sensors.Bme280\Rcm.Sensors.Bme280.csproj" />
     <ProjectReference Include="..\Rcm.Services\Rcm.Services.csproj" />
     <ProjectReference Include="..\Rcm.Testing\Rcm.Testing.csproj" />
   </ItemGroup>
