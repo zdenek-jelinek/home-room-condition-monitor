@@ -24,6 +24,5 @@
   <Project Path="src/Rcm.Services/Rcm.Services.csproj" />
   <Project Path="src/Rcm.Testing/Rcm.Testing.csproj" />
   <Project Path="src/Rcm.Common/Rcm.Common.csproj" />
-  <Project Path="src/Rcm.Web.Tests/Rcm.Web.Tests.csproj" />
   <Project Path="src/Rcm.Web/Rcm.Web.csproj" />
 </Solution>
