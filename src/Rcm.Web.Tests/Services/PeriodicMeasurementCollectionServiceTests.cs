@@ -11,7 +11,7 @@ using Rcm.Web.Services;
 namespace Rcm.Web.Tests.Services;
 
 [TestFixture]
-public class PeriodicMeasurementCollectionServiceIntegrationTests
+public class PeriodicMeasurementCollectionServiceTests
 {
     private static TimeSpan Tolerance => TimeSpan.FromMilliseconds(32);
 
