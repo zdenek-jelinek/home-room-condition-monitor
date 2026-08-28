@@ -82,10 +82,10 @@ public class I2cBus : IDisposable
         int read;
         unsafe
         {
-        fixed (byte* ptr = buffer)
-        {
-            read = Read(_i2cBusHandle, Unsafe.AsRef<byte>(ptr), buffer.Length);
-        }
+            fixed (byte* ptr = buffer)
+            {
+                read = Read(_i2cBusHandle, Unsafe.AsRef<byte>(ptr), buffer.Length);
+            }
         }
 
         if (read == -1)
@@ -120,10 +120,10 @@ public class I2cBus : IDisposable
 
         unsafe
         {
-        fixed (byte* ptr = data)
-        {
-            written = Write(_i2cBusHandle, Unsafe.AsRef<byte>(ptr), data.Length);
-        }
+            fixed (byte* ptr = data)
+            {
+                written = Write(_i2cBusHandle, Unsafe.AsRef<byte>(ptr), data.Length);
+            }
         }
 
         if (written == -1)
@@ -169,9 +169,9 @@ public class I2cBus : IDisposable
     {
         var str = new StringBuilder(2 * length);
 
-        foreach (var @byte in buffer.Slice(0, length))
+        foreach (var @byte in buffer[..length])
         {
-            str.AppendFormat("{0:X2}", @byte);
+            str.Append($"{@byte:X2}");
         }
 
         return str.ToString();

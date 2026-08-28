@@ -29,6 +29,6 @@ public class HumidityCalculatorTests
         var humidity = calculator.CalculateHumidity(rawHumidity, fineTemperature);
 
         // Then
-        Assert.AreEqual(42.38, Math.Round(humidity, 2));
+        Assert.AreEqual(42.38m, Math.Round(humidity, 2));
     }
 }

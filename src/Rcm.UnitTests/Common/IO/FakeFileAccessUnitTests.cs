@@ -41,7 +41,7 @@ public class FakeFileAccessUnitTests
             var path = "file.txt";
             var newLength = 10L;
 
-            var fileAccess = new FakeFileAccess((path, []));
+            var fileAccess = new FakeFileAccess([(path, [])]);
 
             using var file = fileAccess.Open(path, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None);
 
@@ -59,7 +59,7 @@ public class FakeFileAccessUnitTests
             var path = "file.txt";
             var newLength = 0L;
 
-            var fileAccess = new FakeFileAccess((path, [.. "Hello world!"u8]));
+            var fileAccess = new FakeFileAccess([(path, [.. "Hello world!"u8])]);
 
             using var file = fileAccess.Open(path, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None);
 
@@ -94,7 +94,7 @@ public class FakeFileAccessUnitTests
             var path = "file.txt";
             var contentsToWrite = "Hello world!"u8;
 
-            var fileAccess = new FakeFileAccess((path, []));
+            var fileAccess = new FakeFileAccess([(path, [])]);
 
             using var file = fileAccess.Open(path, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None);
 
@@ -112,7 +112,7 @@ public class FakeFileAccessUnitTests
             var contents = "Hello world!";
             var path = "file.txt";
 
-            var fileAccess = new FakeFileAccess((path, Encoding.UTF8.GetBytes(contents)));
+            var fileAccess = new FakeFileAccess([(path, Encoding.UTF8.GetBytes(contents))]);
 
             using var file = fileAccess.Open(path, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None);
 
@@ -134,7 +134,7 @@ public class FakeFileAccessUnitTests
             var contents = "Hello world!";
             var path = "file.txt";
 
-            var fileAccess = new FakeFileAccess((path, Encoding.UTF8.GetBytes(contents)));
+            var fileAccess = new FakeFileAccess([(path, Encoding.UTF8.GetBytes(contents))]);
 
             // When
             using var file = fileAccess.Open(path, FileMode.OpenOrCreate, readFileAccess, FileShare.None);
@@ -159,7 +159,7 @@ public class FakeFileAccessUnitTests
             // Given
             var path = "file.txt";
 
-            var fileAccess = new FakeFileAccess((path, []));
+            var fileAccess = new FakeFileAccess([(path, [])]);
 
             // When
             using var file = fileAccess.Open(path, FileMode.OpenOrCreate, writeFileAccess, FileShare.None);
@@ -178,7 +178,7 @@ public class FakeFileAccessUnitTests
             var contents = "Hello world!";
             var path = "file.txt";
 
-            var fileAccess = new FakeFileAccess((path, Encoding.UTF8.GetBytes(contents)));
+            var fileAccess = new FakeFileAccess([(path, Encoding.UTF8.GetBytes(contents))]);
 
             using var file = fileAccess.Open(path, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None);
 
@@ -198,7 +198,7 @@ public class FakeFileAccessUnitTests
             var contents = "Hello world!";
             var path = "file.txt";
 
-            var fileAccess = new FakeFileAccess((path, Encoding.UTF8.GetBytes(contents)));
+            var fileAccess = new FakeFileAccess([(path, Encoding.UTF8.GetBytes(contents))]);
 
             using var file = fileAccess.Open(path, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None);
 
@@ -215,7 +215,7 @@ public class FakeFileAccessUnitTests
             var contents = "Hello world!";
             var path = "file.txt";
 
-            var fileAccess = new FakeFileAccess((path, Encoding.UTF8.GetBytes(contents)));
+            var fileAccess = new FakeFileAccess([(path, Encoding.UTF8.GetBytes(contents))]);
 
             using var file = fileAccess.Open(path, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None);
 
@@ -235,7 +235,7 @@ public class FakeFileAccessUnitTests
 
             var path = "file.txt";
 
-            var fileAccess = new FakeFileAccess((path, Encoding.UTF8.GetBytes(contents)));
+            var fileAccess = new FakeFileAccess([(path, Encoding.UTF8.GetBytes(contents))]);
 
             using var file = fileAccess.Open(path, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None);
 
@@ -255,7 +255,7 @@ public class FakeFileAccessUnitTests
 
             var path = "file.txt";
 
-            var fileAccess = new FakeFileAccess((path, []));
+            var fileAccess = new FakeFileAccess([(path, [])]);
 
             using var file = fileAccess.Open(path, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None);
 
@@ -277,7 +277,7 @@ public class FakeFileAccessUnitTests
             var path = "file.txt";
             var contents = "Hello world!"u8;
 
-            var fileAccess = new FakeFileAccess((path, [ ..contents]));
+            var fileAccess = new FakeFileAccess([(path, [ ..contents])]);
 
             using var file = fileAccess.Open(path, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None);
 
@@ -295,7 +295,7 @@ public class FakeFileAccessUnitTests
             // Given
             var path = "empty.txt";
 
-            var fileAccess = new FakeFileAccess((path, []));
+            var fileAccess = new FakeFileAccess([(path, [])]);
 
             using var file = fileAccess.Open(path, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None);
 
@@ -313,7 +313,7 @@ public class FakeFileAccessUnitTests
             // Given
             var path = "empty.txt";
 
-            var fileAccess = new FakeFileAccess((path, []));
+            var fileAccess = new FakeFileAccess([(path, [])]);
 
             using var file = fileAccess.Open(path, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None);
 
@@ -331,7 +331,7 @@ public class FakeFileAccessUnitTests
             var dummyPath = "dummy.txt";
             var content = "Hello world!";
 
-            var fileAccess = new FakeFileAccess((dummyPath, Encoding.UTF8.GetBytes(content)));
+            var fileAccess = new FakeFileAccess([(dummyPath, Encoding.UTF8.GetBytes(content))]);
 
             // When
             var file = fileAccess.Open(dummyPath, FileMode.Append, FileAccess.ReadWrite, FileShare.None);
@@ -353,7 +353,7 @@ public class FakeFileAccessUnitTests
             // Given
             var dummyPath = "dummy.txt";
 
-            var fileAccess = new FakeFileAccess((dummyPath, [.. "Hello world!"u8]));
+            var fileAccess = new FakeFileAccess([(dummyPath, [.. "Hello world!"u8])]);
 
             // When
             var file = fileAccess.Open(dummyPath, createOrTruncateFileMode, FileAccess.ReadWrite, FileShare.None);
@@ -481,7 +481,7 @@ public class FakeFileAccessUnitTests
         {
             // Given
             var preexistingFile = "dummy.txt";
-            var fileAccess = new FakeFileAccess((preexistingFile, []));
+            var fileAccess = new FakeFileAccess([(preexistingFile, [])]);
 
             // When
             void OpenPreexistingFileWithCreateNewMode()
@@ -682,10 +682,7 @@ public class FakeFileAccessUnitTests
 
         // Convert to int to work around NUnit recognizing test cases via ToString()
         // which conflicts with some of the invalid characters being non-printable
-        private static IEnumerable<int> InvalidPathCharacters
-        {
-            get => Path.GetInvalidPathChars().Select(c => (int)c);
-        }
+        private static IEnumerable<int> InvalidPathCharacters => Path.GetInvalidPathChars().Select(c => (int)c);
 
         [Test]
         [TestCaseSource(nameof(InvalidPathCharacters))]
@@ -785,7 +782,7 @@ public class FakeFileAccessUnitTests
             // Given
             var (createdPath, checkedPath) = paths;
 
-            var fileAccess = new FakeFileAccess((createdPath, []));
+            var fileAccess = new FakeFileAccess([(createdPath, [])]);
 
             // When
             var exists = fileAccess.Exists(checkedPath);

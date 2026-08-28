@@ -91,16 +91,16 @@ public class MeasurementsFileAccess : IMeasurementsFileAccess
 
         _logger.LogTrace("Storing record {Record} to '{FullDestinationPath}'", entry, Path.GetFullPath(path));
 
-        using var file = _file.AppendText(path);
+        await using var file = _file.AppendText(path);
 
         token.ThrowIfCancellationRequested();
 
         // Do not interrupt write/flush with cancellation so that the file does not get corrupted
-        await file.WriteLineAsync(record);
-        await file.FlushAsync();
+        await file.WriteLineAsync(record.AsMemory(), CancellationToken.None);
+        await file.FlushAsync(CancellationToken.None);
     }
 
-    private void EnsureDirectoryExists(string path)
+    private static void EnsureDirectoryExists(string path)
     {
         var directory = Path.GetDirectoryName(path);
         if (!String.IsNullOrEmpty(directory) && !Directory.Exists(directory))

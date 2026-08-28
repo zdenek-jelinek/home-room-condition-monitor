@@ -11,7 +11,7 @@ namespace Rcm.Sensors.Bme280;
 
 public sealed class Bme280I2cDevice : ISensor, IDisposable
 {
-    private TimeSpan MeasurementDelayTolerance => TimeSpan.FromMilliseconds(20);
+    private static TimeSpan MeasurementDelayTolerance => TimeSpan.FromMilliseconds(20);
 
     private readonly byte _address;
     private readonly I2cBus _bus;
@@ -82,12 +82,12 @@ public sealed class Bme280I2cDevice : ISensor, IDisposable
 
     private bool IsMeasurementInProgress()
     {
-        const byte MeasurementDone = 1 << 3;
+        const byte measurementDone = 1 << 3;
 
         Span<byte> config = stackalloc byte[1];
         Read(0xF3, config);
 
-        return (config[0] & MeasurementDone) == MeasurementDone;
+        return (config[0] & measurementDone) == measurementDone;
     }
 
     private void ReportMeasurementDuration(TimeSpan duration)
@@ -146,18 +146,18 @@ public sealed class Bme280I2cDevice : ISensor, IDisposable
     }
 
     // The calculation logic in the following method is adapted from BME280 data sheet, chapter 4.2.3 Compensation Formulas
-    private decimal CompensatePressure(
+    private static decimal CompensatePressure(
         int rawPressure,
         int fineTemperature,
         PressureCompensationParameters compensation)
     {
         var v1 = fineTemperature - 128000L;
-        var v1_sq = v1 * v1;
-        var v2 = v1_sq * compensation.Pressure6
+        var v1Squared = v1 * v1;
+        var v2 = v1Squared * compensation.Pressure6
             + ((v1 * compensation.Pressure5) << 17)
             + (compensation.Pressure4 << 35);
 
-        v1 = ((v1_sq * compensation.Pressure3) >> 8) + ((v1 * compensation.Pressure2) << 12);
+        v1 = ((v1Squared * compensation.Pressure3) >> 8) + ((v1 * compensation.Pressure2) << 12);
         v1 = (((1L << 47) + v1) * compensation.Pressure1) >> 33;
 
         if (v1 == 0)

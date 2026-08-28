@@ -26,8 +26,8 @@ public class MeasurementCollectorTests
             new DummyMeasurementsWriter());
 
         // When
-        var firstMeasurementTask = measurementCollector.MeasureAsync(default);
-        var secondMeasurementTask = measurementCollector.MeasureAsync(default);
+        var firstMeasurementTask = measurementCollector.MeasureAsync(CancellationToken.None);
+        var secondMeasurementTask = measurementCollector.MeasureAsync(CancellationToken.None);
 
         // Then
         Assert.AreEqual(1, blockingSpyMeasurementProvider.InvocationCount);
@@ -50,8 +50,8 @@ public class MeasurementCollectorTests
             new DummyMeasurementsWriter());
 
         // When
-        await IgnoreExceptions(() => measurementCollector.MeasureAsync(default));
-        await IgnoreExceptions(() => measurementCollector.MeasureAsync(default));
+        await IgnoreExceptions(() => measurementCollector.MeasureAsync(CancellationToken.None));
+        await IgnoreExceptions(() => measurementCollector.MeasureAsync(CancellationToken.None));
 
         // Then
         Assert.AreEqual(2, throwingSpyMeasurementProvider.InvocationCount);
@@ -73,13 +73,13 @@ public class MeasurementCollectorTests
 
         var measurementCollector = new MeasurementCollector(
             NullLogger<MeasurementCollector>.Instance,
-            new FakeSensor(new[] { firstMeasurement, secondMeasurementWithinSameMinute, measurementInNextMinute }),
+            new FakeSensor([firstMeasurement, secondMeasurementWithinSameMinute, measurementInNextMinute]),
             spyCollectedDataStorage);
 
         // When
-        await measurementCollector.MeasureAsync(default);
-        await measurementCollector.MeasureAsync(default);
-        await measurementCollector.MeasureAsync(default);
+        await measurementCollector.MeasureAsync(CancellationToken.None);
+        await measurementCollector.MeasureAsync(CancellationToken.None);
+        await measurementCollector.MeasureAsync(CancellationToken.None);
 
         // Then
         Assert.IsNotNull(spyCollectedDataStorage.StoredEntry);
@@ -105,7 +105,7 @@ public class MeasurementCollectorTests
             spyCollectedDataStorage.StoredEntry.RelativeHumidity);
     }
 
-    private async Task IgnoreExceptions(Func<Task> f)
+    private static async Task IgnoreExceptions(Func<Task> f)
     {
         try
         {

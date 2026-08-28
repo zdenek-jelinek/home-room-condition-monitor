@@ -455,7 +455,7 @@ public class CombinedFileAndMemoryMeasurementsStorageTests
             fileAccess ?? new DummyMeasurementsFileAccess());
     }
 
-    public class SpyMeasurementsFileAccess : IMeasurementsFileAccess
+    private class SpyMeasurementsFileAccess : IMeasurementsFileAccess
     {
         public MeasurementEntry? SavedEntry { get; private set; }
         public (DateTimeOffset start, DateTimeOffset end)? ReadRange { get; private set; }
@@ -483,7 +483,7 @@ public class CombinedFileAndMemoryMeasurementsStorageTests
         }
     }
 
-    public class DummyMeasurementsFileAccess : IMeasurementsFileAccess
+    private class DummyMeasurementsFileAccess : IMeasurementsFileAccess
     {
         public IEnumerable<MeasurementEntry> Read(DateTimeOffset start, DateTimeOffset end, CancellationToken token)
         {

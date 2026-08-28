@@ -9,11 +9,15 @@ namespace Rcm.Testing.Common.IO;
 
 public class FakeFileAccess : IFileAccess
 {
-    private readonly IDictionary<string, FakeFile> _files;
+    private readonly Dictionary<string, FakeFile> _files;
 
-    public FakeFileAccess(params (string name, byte[] data)[] files)
+    public FakeFileAccess() : this(files: [])
     {
-        _files = files.ToDictionary(f => Path.GetFullPath(f.name), f => new FakeFile(f.data));
+    }
+
+    public FakeFileAccess(IEnumerable<(string Name, byte[] Data)> files)
+    {
+        _files = files.ToDictionary(f => Path.GetFullPath(f.Name), f => new FakeFile(f.Data));
     }
 
     public bool Exists(string path) => _files.ContainsKey(Path.GetFullPath(path));
@@ -26,9 +30,9 @@ public class FakeFileAccess : IFileAccess
 
         if (!_files.TryGetValue(path, out var file))
         {
-            if (mode == FileMode.Open || mode == FileMode.Truncate)
+            if (mode is FileMode.Open or FileMode.Truncate)
             {
-                throw new FileNotFoundException($"File not found.", path);
+                throw new FileNotFoundException("File not found.", path);
             }
 
             file = new FakeFile();
@@ -39,7 +43,7 @@ public class FakeFileAccess : IFileAccess
             throw new IOException($"Specified file already exists. Path: {path}");
         }
 
-        if (mode == FileMode.Create || mode == FileMode.Truncate)
+        if (mode is FileMode.Create or FileMode.Truncate)
         {
             file.SetSize(0);
         }
@@ -47,7 +51,7 @@ public class FakeFileAccess : IFileAccess
         return FakeFileStream.Open(file, access, share, mode == FileMode.Append);
     }
 
-    private void ValidateArguments(string path, FileMode mode, FileAccess access, FileShare share)
+    private static void ValidateArguments(string path, FileMode mode, FileAccess access, FileShare share)
     {
         ValidatePath(path);
         ValidateMode(mode);
@@ -119,7 +123,7 @@ public class FakeFileAccess : IFileAccess
 
         public int Length => _data.Length;
 
-        public FakeFile() : this(Array.Empty<byte>())
+        public FakeFile() : this(data: [])
         {
         }
 
@@ -269,7 +273,7 @@ public class FakeFileAccess : IFileAccess
             }
             else if (readLocks < 0)
             {
-                throw new InvalidOperationException($"Attempted to close more read locks than opened.");
+                throw new InvalidOperationException("Attempted to close more read locks than opened.");
             }
         }
 
@@ -281,7 +285,7 @@ public class FakeFileAccess : IFileAccess
             }
             else if (writeLocks < 0)
             {
-                throw new InvalidOperationException($"Attempted to close more write locks than opened.");
+                throw new InvalidOperationException("Attempted to close more write locks than opened.");
             }
         }
 

@@ -43,8 +43,8 @@ public class MeasurementsFileAccessTests
             994.36m);
 
         // When
-        await collectedDataFileAccess.SaveAsync(firstEntry, default);
-        await collectedDataFileAccess.SaveAsync(secondEntry, default);
+        await collectedDataFileAccess.SaveAsync(firstEntry, CancellationToken.None);
+        await collectedDataFileAccess.SaveAsync(secondEntry, CancellationToken.None);
 
         // Then
         var firstEntryPath = GetEntryFilePath(firstEntry.Time);
@@ -82,8 +82,7 @@ public class MeasurementsFileAccessTests
 
         StoreEntriesToFiles(
             fakeFileAccess,
-            new[]
-            {
+            [
                 entryDayBeforeStart,
                 entryHourBeforeStart,
                 entryOnStart,
@@ -92,10 +91,10 @@ public class MeasurementsFileAccessTests
                 entryOnEnd,
                 entryHourAfterEnd,
                 entryDayAfterEnd
-            });
+            ]);
 
         // When
-        var readEntries = collectedDataFileAccess.Read(startTime, endTime, default);
+        var readEntries = collectedDataFileAccess.Read(startTime, endTime, CancellationToken.None);
 
         // Then
         Assert.That(
@@ -131,7 +130,7 @@ public class MeasurementsFileAccessTests
         fakeFileAccess.WriteAllLines(path, measurementFileLines);
 
         // When
-        var readEntries = collectedDataFileAccess.Read(time.AddHours(-2), time.AddHours(2), default);
+        var readEntries = collectedDataFileAccess.Read(time.AddHours(-2), time.AddHours(2), CancellationToken.None);
 
         // Then
         Assert.That(readEntries, Is.EquivalentTo(validEntries).Using(new MeasurementEntryEqualityComparer()));
@@ -153,7 +152,7 @@ public class MeasurementsFileAccessTests
         var savingTask = Task.Run(() => collectedDataFileAccess.SaveAsync(dummyEntry, cancellationTokenSource.Token));
 
         await blockingFileAccess.OpeningStarted;
-        cancellationTokenSource.Cancel();
+        await cancellationTokenSource.CancelAsync();
         blockingFileAccess.Release();
 
         var savingCompleted = await savingTask.TryWait(TimeSpan.FromSeconds(1));
@@ -183,7 +182,7 @@ public class MeasurementsFileAccessTests
         var readingTask = Task.Run(() => readIterator.ToList(), cancellationTokenSource.Token);
 
         await blockingFileAccess.OpeningStarted;
-        cancellationTokenSource.Cancel();
+        await cancellationTokenSource.CancelAsync();
         blockingFileAccess.Release();
 
         var readingCompleted = await readingTask.TryWait(TimeSpan.FromSeconds(1));
@@ -237,16 +236,9 @@ public class MeasurementsFileAccessTests
         return Path.Combine(StoragePath, $"{entryTime:yyyy'-'MM'-'dd}.mst");
     }
 
-    private class DataStorageLocation : IDataStorageLocation
+    private class DataStorageLocation(string path) : IDataStorageLocation
     {
-        private readonly string _path;
-
-        public DataStorageLocation(string path)
-        {
-            _path = path;
-        }
-
-        public string GetDirectoryPath() => _path;
+        public string GetDirectoryPath() => path;
     }
 
     private sealed class MeasurementEntryEqualityComparer : IEqualityComparer<MeasurementEntry>
@@ -277,8 +269,8 @@ public class MeasurementsFileAccessTests
 
     private class BlockingFileAccess : IFileAccess, IDisposable
     {
-        private readonly SemaphoreSlim _openingSemaphore = new SemaphoreSlim(0);
-        private readonly SemaphoreSlim _blockingSemaphore = new SemaphoreSlim(0);
+        private readonly SemaphoreSlim _openingSemaphore = new(initialCount: 0);
+        private readonly SemaphoreSlim _blockingSemaphore = new(initialCount: 0);
 
         public IFileAccess UnderlyingFileAccess { get; set; } = new FakeFileAccess();
 

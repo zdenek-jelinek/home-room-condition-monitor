@@ -56,15 +56,8 @@ public class MeasurementsFilesNavigatorTests
             paths);
     }
 
-    private class StubDataStorageLocation : IDataStorageLocation
+    private class StubDataStorageLocation(string path) : IDataStorageLocation
     {
-        private readonly string _path;
-
-        public StubDataStorageLocation(string path)
-        {
-            _path = path;
-        }
-
-        public string GetDirectoryPath() => _path;
+        public string GetDirectoryPath() => path;
     }
 }

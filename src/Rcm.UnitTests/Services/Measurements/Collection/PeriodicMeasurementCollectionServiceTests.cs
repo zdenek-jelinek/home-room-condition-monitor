@@ -145,7 +145,7 @@ public class PeriodicMeasurementCollectionServiceTests
         var stoppingTask = periodicDataCollectionService.StopAsync(cancellationTokenSource.Token);
         var stoppedImmediately = stoppingTask.IsCompleted;
 
-        cancellationTokenSource.Cancel();
+        await cancellationTokenSource.CancelAsync();
 
         var stoppedAfterCancellation = await stoppingTask.TryWait(TimeSpan.FromSeconds(1));
 
@@ -176,8 +176,8 @@ public class PeriodicMeasurementCollectionServiceTests
 
     private class BlockingMeasurementCollector : IMeasurementCollector, IDisposable
     {
-        private readonly SemaphoreSlim _startedSemaphore = new SemaphoreSlim(0);
-        private readonly SemaphoreSlim _blockingSemaphore = new SemaphoreSlim(0);
+        private readonly SemaphoreSlim _startedSemaphore = new(initialCount: 0);
+        private readonly SemaphoreSlim _blockingSemaphore = new(initialCount: 0);
 
         public bool IsCancellable { get; set; }
         public bool BlocksAsynchronously { get; set; }
