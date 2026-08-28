@@ -9,7 +9,7 @@ using Rcm.Persistence.Abstractions;
 using Rcm.Sensors.Abstractions;
 using Rcm.Services.Measurements.Collection;
 
-namespace Rcm.UnitTests.Persistence;
+namespace Rcm.UnitTests.Services.Measurements.Collection;
 
 [TestFixture]
 public class MeasurementCollectorTests
