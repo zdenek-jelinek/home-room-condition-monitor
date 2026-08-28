@@ -1,15 +1,8 @@
 ﻿namespace Rcm.Web.Controllers;
 
-public class MeasurementAggregatesContract
+public class MeasurementAggregatesContract // TODO Rename to ApiResponse (Zdenek Jelinek, 28. 8. 2026)
 {
-    public AggregatesApiResponse Temperature { get; }
-    public AggregatesApiResponse Pressure { get; }
-    public AggregatesApiResponse Humidity { get; }
-
-    public MeasurementAggregatesContract(AggregatesApiResponse temperature, AggregatesApiResponse pressure, AggregatesApiResponse humidity)
-    {
-        Temperature = temperature;
-        Pressure = pressure;
-        Humidity = humidity;
-    }
+    public required AggregatesApiResponse Temperature { get; init; }
+    public required AggregatesApiResponse Pressure { get; init; }
+    public required AggregatesApiResponse Humidity { get; init; }
 }

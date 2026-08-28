@@ -43,26 +43,32 @@ public class MeasurementAggregatesController : Controller
 
         var aggregatedMeasurements = _measurementAggregatesAccessor.GetMeasurementAggregates(query, cancellationToken);
 
-        var result = aggregatedMeasurements
-            .Select(m => new MeasurementAggregatesContract(
-                temperature: MapAggregates(m.Temperature),
-                pressure: MapAggregates(m.Pressure),
-                humidity: MapAggregates(m.Humidity)));
-
-        return Ok(result);
+        return Ok(aggregatedMeasurements.Select(MapToResponse).ToArray());
     }
 
-    private static AggregatesApiResponse MapAggregates(Aggregates aggregates)
+    private static MeasurementAggregatesContract MapToResponse(MeasurementAggregates measurementAggregates)
     {
-        return new AggregatesApiResponse(
-            MapAggregateEntry(aggregates.First),
-            MapAggregateEntry(aggregates.Min),
-            MapAggregateEntry(aggregates.Max),
-            MapAggregateEntry(aggregates.Last));
+        return new()
+        {
+            Temperature = MapToResponse(measurementAggregates.Temperature),
+            Pressure = MapToResponse(measurementAggregates.Pressure),
+            Humidity = MapToResponse(measurementAggregates.Humidity)
+        };
     }
 
-    private static AggregateEntryApiResponse MapAggregateEntry(AggregateEntry entry)
+    private static AggregatesApiResponse MapToResponse(Aggregates aggregates)
     {
-        return new AggregateEntryApiResponse(entry.Time, entry.Value);
+        return new()
+        {
+            First = MapToResponse(aggregates.First),
+            Min = MapToResponse(aggregates.Min),
+            Max = MapToResponse(aggregates.Max),
+            Last = MapToResponse(aggregates.Last)
+        };
+    }
+
+    private static AggregateEntryApiResponse MapToResponse(AggregateEntry entry)
+    {
+        return new() { Time = entry.Time, Value = entry.Value };
     }
 }

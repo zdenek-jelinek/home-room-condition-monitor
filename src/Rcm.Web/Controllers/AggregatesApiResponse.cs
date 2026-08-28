@@ -1,17 +1,9 @@
 ﻿namespace Rcm.Web.Controllers;
 
-public class AggregatesApiResponse
+public sealed class AggregatesApiResponse
 {
-    public AggregateEntryApiResponse First { get; }
-    public AggregateEntryApiResponse Min { get; }
-    public AggregateEntryApiResponse Max { get; }
-    public AggregateEntryApiResponse Last { get; }
-
-    public AggregatesApiResponse(AggregateEntryApiResponse first, AggregateEntryApiResponse min, AggregateEntryApiResponse max, AggregateEntryApiResponse last)
-    {
-        First = first;
-        Min = min;
-        Max = max;
-        Last = last;
-    }
+    public required AggregateEntryApiResponse First { get; init; }
+    public required AggregateEntryApiResponse Min { get; init; }
+    public required AggregateEntryApiResponse Max { get; init; }
+    public required AggregateEntryApiResponse Last { get; init; }
 }

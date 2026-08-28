@@ -24,15 +24,17 @@ public class MeasurementDataController(IMeasurementsAccessor measurementsAccesso
 
         var measurements = measurementsAccessor.GetMeasurements(startTime.Value, endTime.Value, cancellationToken);
 
-        return Ok(measurements.Select(ToContract));
+        return Ok(measurements.Select(MapToResponse).ToArray());
     }
 
-    private static MeasurementApiResponse ToContract(MeasurementEntry entry)
+    private static MeasurementApiResponse MapToResponse(MeasurementEntry entry)
     {
-        return new MeasurementApiResponse(
-            entry.Time,
-            entry.CelsiusTemperature,
-            entry.HpaPressure,
-            entry.RelativeHumidity);
+        return new()
+        {
+            Time = entry.Time,
+            CelsiusTemperature = entry.CelsiusTemperature,
+            HpaPressure = entry.HpaPressure,
+            RelativeHumidity = entry.RelativeHumidity
+        };
     }
 }

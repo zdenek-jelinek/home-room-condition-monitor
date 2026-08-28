@@ -2,14 +2,8 @@
 
 namespace Rcm.Web.Controllers;
 
-public class AggregateEntryApiResponse
+public sealed class AggregateEntryApiResponse
 {
-    public DateTimeOffset Time { get; }
-    public decimal Value { get; }
-
-    public AggregateEntryApiResponse(DateTimeOffset time, decimal value)
-    {
-        Time = time;
-        Value = value;
-    }
+    public required DateTimeOffset Time { get; init; }
+    public required decimal Value { get; init; }
 }
