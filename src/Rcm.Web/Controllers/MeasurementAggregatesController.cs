@@ -24,7 +24,7 @@ public class MeasurementAggregatesController(IMeasurementAggregatesAccessor meas
             return BadRequest($"start time is after end time: {startTime:o} > {endTime:o}");
         }
 
-        if (count < 0)
+        if (count <= 0)
         {
             return BadRequest($"count must be positive integer, actual is {count}");
         }
