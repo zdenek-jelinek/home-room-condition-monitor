@@ -9,36 +9,23 @@ using Rcm.Persistence.Files;
 
 namespace Rcm.Persistence;
 
-public class CombinedFileAndMemoryMeasurementsStorage : IMeasurementsStorage, IDisposable
+public class CombinedFileAndMemoryMeasurementsStorage(IClock clock, IMeasurementsFileAccess fileAccess) : IMeasurementsStorage, IDisposable
 {
     private const int MeasurementsPerDay = 24 * 60;
 
-    private readonly IClock _clock;
-    private readonly IMeasurementsFileAccess _fileAccess;
-
-    private readonly ReaderWriterLockSlim _lock = new ReaderWriterLockSlim();
+    private readonly ReaderWriterLockSlim _lock = new();
 
     private List<MeasurementEntry>? _currentDayRecords;
 
     private bool _disposed;
-
-    public CombinedFileAndMemoryMeasurementsStorage(
-        IClock clock,
-        IMeasurementsFileAccess fileAccess)
-    {
-        _clock = clock;
-        _fileAccess = fileAccess;
-    }
 
     public async Task StoreAsync(MeasurementEntry value, CancellationToken token)
     {
         try
         {
             _lock.EnterWriteLock();
-            if (_currentDayRecords is null)
-            {
-                _currentDayRecords = LoadTodaysRecordsFromFile(token);
-            }
+
+            _currentDayRecords ??= LoadTodaysRecordsFromFile(token);
 
             if (_currentDayRecords.Count != 0 && _currentDayRecords[0].Time.Date < value.Time.Date)
             {
@@ -52,7 +39,7 @@ public class CombinedFileAndMemoryMeasurementsStorage : IMeasurementsStorage, ID
             _lock.ExitWriteLock();
         }
 
-        await _fileAccess.SaveAsync(value, token);
+        await fileAccess.SaveAsync(value, token);
     }
 
     public IEnumerable<MeasurementEntry> GetCollectedData(DateTimeOffset start, DateTimeOffset end, CancellationToken token)
@@ -62,10 +49,10 @@ public class CombinedFileAndMemoryMeasurementsStorage : IMeasurementsStorage, ID
             throw new InvalidOperationException($"Date range {start:o}:{end:o} is not valid");
         }
 
-        var now = _clock.Now;
+        var now = clock.Now;
         if (start > now)
         {
-            return Enumerable.Empty<MeasurementEntry>();
+            return [];
         }
 
         start = start.ToOffset(now.Offset);
@@ -75,12 +62,12 @@ public class CombinedFileAndMemoryMeasurementsStorage : IMeasurementsStorage, ID
         var startMidnight = new DateTimeOffset(start.Date, now.Offset);
         if (startMidnight > todayMidnight)
         {
-            return Enumerable.Empty<MeasurementEntry>();
+            return [];
         }
 
         if (end < todayMidnight)
         {
-            return _fileAccess.Read(start, end, token);
+            return fileAccess.Read(start, end, token);
         }
 
         if (end >= now)
@@ -90,7 +77,7 @@ public class CombinedFileAndMemoryMeasurementsStorage : IMeasurementsStorage, ID
 
         if (start < todayMidnight)
         {
-            return _fileAccess
+            return fileAccess
                 .Read(start, todayMidnight.AddSeconds(-1), token)
                 .Concat(GetTodaysData(todayMidnight, end, token));
         }
@@ -141,12 +128,12 @@ public class CombinedFileAndMemoryMeasurementsStorage : IMeasurementsStorage, ID
 
     private List<MeasurementEntry> LoadTodaysRecordsFromFile(CancellationToken token)
     {
-        var now = _clock.Now;
+        var now = clock.Now;
         var startOfToday = new DateTimeOffset(now.Date, now.Offset);
         var endOfToday = startOfToday.AddDays(1).AddTicks(-1);
 
         var result = new List<MeasurementEntry>(MeasurementsPerDay);
-        result.AddRange(_fileAccess.Read(startOfToday, endOfToday, token));
+        result.AddRange(fileAccess.Read(startOfToday, endOfToday, token));
 
         return result;
     }

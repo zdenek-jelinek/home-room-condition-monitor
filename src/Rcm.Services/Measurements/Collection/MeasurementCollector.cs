@@ -10,34 +10,23 @@ using Rcm.Sensors.Abstractions;
 
 namespace Rcm.Services.Measurements.Collection;
 
-public class MeasurementCollector : IMeasurementCollector
+public class MeasurementCollector(ILogger<MeasurementCollector> logger, ISensor sensor, IMeasurementsWriter measurementsWriter) : IMeasurementCollector
 {
-    private readonly ILogger<MeasurementCollector> _logger;
-    private readonly ISensor _sensor;
-    private readonly IMeasurementsWriter _measurementsWriter;
-
     private readonly List<MeasurementEntry> _entries = new();
 
     private int _measurementInProgress;
-
-    public MeasurementCollector(ILogger<MeasurementCollector> logger, ISensor sensor, IMeasurementsWriter measurementsWriter)
-    {
-        _logger = logger;
-        _sensor = sensor;
-        _measurementsWriter = measurementsWriter;
-    }
 
     public async Task MeasureAsync(CancellationToken token)
     {
         if (Interlocked.CompareExchange(ref _measurementInProgress, 1, 0) == 1)
         {
-            _logger.LogWarning("Cancelling measurement as a previous measurement is still pending");
+            logger.LogWarning("Cancelling measurement as a previous measurement is still pending");
             return;
         }
 
         try
         {
-            var measurement = await _sensor.ReadMeasurementAsync(token);
+            var measurement = await sensor.ReadMeasurementAsync(token);
             await AddMeasurementAsync(MapMeasurement(measurement), token);
         }
         finally
@@ -53,16 +42,16 @@ public class MeasurementCollector : IMeasurementCollector
 
     private async Task AddMeasurementAsync(MeasurementEntry measurement, CancellationToken token)
     {
-        _logger.LogTrace("Adding new record {Record}", measurement);
+        logger.LogTrace("Adding new record {Record}", measurement);
 
         if (_entries.Count != 0 && _entries[0].Time.Minute != measurement.Time.Minute)
         {
-            _logger.LogTrace("Persisting previous minute measurement records");
+            logger.LogTrace("Persisting previous minute measurement records");
             await PropagateCollectedDataAsync(_entries, token);
             _entries.Clear();
         }
 
-        _logger.LogTrace("Storing record for further processing");
+        logger.LogTrace("Storing record for further processing");
         _entries.Add(measurement);
     }
 
@@ -75,7 +64,7 @@ public class MeasurementCollector : IMeasurementCollector
 
         var averageValue = GetAverageValue(entries);
 
-        return _measurementsWriter.StoreAsync(averageValue, token);
+        return measurementsWriter.StoreAsync(averageValue, token);
     }
 
     private MeasurementEntry GetAverageValue(IReadOnlyCollection<MeasurementEntry> entries)

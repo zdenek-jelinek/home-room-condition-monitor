@@ -6,18 +6,11 @@ using Rcm.Persistence.Abstractions;
 
 namespace Rcm.Services.Aggregates;
 
-public class MeasurementAggregatesAccessor : IMeasurementAggregatesAccessor
+public class MeasurementAggregatesAccessor(IMeasurementsReader measurementsReader) : IMeasurementAggregatesAccessor
 {
-    private readonly IMeasurementsReader _measurementsReader;
-
-    public MeasurementAggregatesAccessor(IMeasurementsReader measurementsReader)
-    {
-        _measurementsReader = measurementsReader;
-    }
-
     public IEnumerable<MeasurementAggregates> GetMeasurementAggregates(MeasurementAggregatesQuery query, CancellationToken cancellationToken)
     {
-        var measurements = _measurementsReader.GetCollectedData(query.StartTime, query.EndTime, cancellationToken);
+        var measurements = measurementsReader.GetCollectedData(query.StartTime, query.EndTime, cancellationToken);
 
         var partitionSize = (query.EndTime - query.StartTime).Ticks / (double)query.PartitionCount;
 

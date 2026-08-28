@@ -12,24 +12,17 @@ using Rcm.Web.Extensions;
 
 namespace Rcm.Web;
 
-public class Startup
+public class Startup(IConfiguration configuration)
 {
-    private readonly IConfiguration _configuration;
-
-    public Startup(IConfiguration configuration)
-    {
-        _configuration = configuration;
-    }
-
     public void ConfigureServices(IServiceCollection services)
     {
         services.AddControllers();
         services.AddRazorPages(o => o.Conventions.AddPageRoute("/Now", ""));
 
-        var measurementsConfiguration = _configuration.GetSection("measurements");
+        var measurementsConfiguration = configuration.GetSection("measurements");
 
         services
-            .Install<CommonServicesInstaller>(_configuration)
+            .Install<CommonServicesInstaller>(configuration)
             .Install<ModeBasedMeasurementServicesInstaller>(measurementsConfiguration.GetSection("access"))
             .Install<MeasurementsServicesInstaller>()
             .Install<AggregatesServicesInstaller>();

@@ -6,16 +6,9 @@ using Rcm.Sensors.Abstractions;
 
 namespace Rcm.Sensors.Fakes;
 
-public class FakeSensor : ISensor
+public class FakeSensor(IClock clock) : ISensor
 {
-    private readonly IClock _clock;
-
-    private readonly Random _random = new Random();
-
-    public FakeSensor(IClock clock)
-    {
-        _clock = clock;
-    }
+    private readonly Random _random = new();
 
     public Task<SensorMeasurement> ReadMeasurementAsync(CancellationToken token)
     {
@@ -24,7 +17,7 @@ public class FakeSensor : ISensor
 
     private SensorMeasurement GenerateMeasurement()
     {
-        var now = _clock.Now;
+        var now = clock.Now;
 
         var baseTemperature = 15 + 10 * Math.Sin(Math.PI * now.Month / 12.0);
         var temperature = baseTemperature - 8 * Math.Sin(Math.PI * (now.Hour + 6) / 12.0);

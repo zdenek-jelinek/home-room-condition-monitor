@@ -9,7 +9,7 @@ namespace Rcm.Persistence;
 
 public class InMemoryMeasurementsStorage : IMeasurementsStorage
 {
-    private readonly ICollection<MeasurementEntry> _entries = new List<MeasurementEntry>();
+    private readonly List<MeasurementEntry> _entries = new();
 
     public Task StoreAsync(MeasurementEntry value, CancellationToken token)
     {
@@ -17,10 +17,7 @@ public class InMemoryMeasurementsStorage : IMeasurementsStorage
         return Task.CompletedTask;
     }
 
-    public IEnumerable<MeasurementEntry> GetCollectedData(
-        DateTimeOffset start,
-        DateTimeOffset end,
-        CancellationToken token)
+    public IEnumerable<MeasurementEntry> GetCollectedData(DateTimeOffset start, DateTimeOffset end, CancellationToken token)
     {
         return _entries.Where(e => e.Time >= start && e.Time <= end);
     }

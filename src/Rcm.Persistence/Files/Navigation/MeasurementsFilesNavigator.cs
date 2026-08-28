@@ -4,15 +4,8 @@ using System.IO;
 
 namespace Rcm.Persistence.Files.Navigation;
 
-public class MeasurementsFilesNavigator
+public class MeasurementsFilesNavigator(IDataStorageLocation dataStorageLocation)
 {
-    private readonly IDataStorageLocation _dataStorageLocation;
-
-    public MeasurementsFilesNavigator(IDataStorageLocation dataStorageLocation)
-    {
-        _dataStorageLocation = dataStorageLocation;
-    }
-
     public IEnumerable<(DateTime date, string path)> GetFilePaths(DateTimeOffset start, DateTimeOffset end)
     {
         var startDate = new DateTimeOffset(start.Date, start.Offset);
@@ -26,6 +19,6 @@ public class MeasurementsFilesNavigator
     {
         var fileName = time.ToString("yyyy'-'MM'-'dd'.mst'");
 
-        return Path.Combine(_dataStorageLocation.GetDirectoryPath(), "measurements", fileName);
+        return Path.Combine(dataStorageLocation.GetDirectoryPath(), "measurements", fileName);
     }
 }
