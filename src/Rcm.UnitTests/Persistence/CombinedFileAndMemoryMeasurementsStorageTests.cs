@@ -18,11 +18,13 @@ public class CombinedFileAndMemoryMeasurementsStorageTests
     public async Task StoresAllMeasurementsToFile()
     {
         // Given
-        var entry = new MeasurementEntry(
-            time: new DateTimeOffset(2018, 12, 30, 12, 0, 0, TimeSpan.Zero),
-            celsiusTemperature: 10m,
-            relativeHumidity: 45m,
-            hpaPressure: 980m);
+        var entry = new MeasurementEntry
+        {
+            Time = new DateTimeOffset(2018, 12, 30, 12, 0, 0, TimeSpan.Zero),
+            CelsiusTemperature = 10m,
+            RelativeHumidity = 45m,
+            HpaPressure = 980m
+        };
 
         var spyCollectedDataFileAccess = new SpyMeasurementsFileAccess();
 
@@ -47,11 +49,11 @@ public class CombinedFileAndMemoryMeasurementsStorageTests
         var now = new DateTimeOffset(2018, 12, 30, 12, 0, 0, TimeSpan.Zero);
         var todayMidnight = new DateTimeOffset(now.Date, now.Offset);
 
-        var startTimeBeforeToday = now.AddDays(-2);
-        var endTimeInFuture = now.AddDays(2);
+        var startTimeBeforeToday = now - TimeSpan.FromDays(2);
+        var endTimeInFuture = now + TimeSpan.FromDays(2);
 
-        var pastEntry = new MeasurementEntry(startTimeBeforeToday.AddMinutes(10), celsiusTemperature: 15m, relativeHumidity: 40m, hpaPressure: 980m);
-        var todaysEntry = new MeasurementEntry(now.AddMinutes(-20), celsiusTemperature: 25m, relativeHumidity: 45m, hpaPressure: 1050m);
+        var pastEntry = MakeMeasurementEntry(time: startTimeBeforeToday + TimeSpan.FromMinutes(10));
+        var todaysEntry = MakeMeasurementEntry(time: now - TimeSpan.FromMinutes(20));
 
         var spyCollectedDataFileAccess = new SpyMeasurementsFileAccess { Entries = [pastEntry] };
 
@@ -80,8 +82,8 @@ public class CombinedFileAndMemoryMeasurementsStorageTests
         // Given
         var now = new DateTimeOffset(2018, 12, 30, 12, 0, 0, TimeSpan.Zero);
 
-        var startTimeBeforeToday = now.AddDays(-2);
-        var endTimeBeforeToday = now.AddDays(-1);
+        var startTimeBeforeToday = now - TimeSpan.FromDays(2);
+        var endTimeBeforeToday = now - TimeSpan.FromDays(1);
 
         var spyCollectedDataFileAccess = new SpyMeasurementsFileAccess();
 
@@ -109,8 +111,8 @@ public class CombinedFileAndMemoryMeasurementsStorageTests
         var now = new DateTimeOffset(2018, 12, 30, 12, 0, 0, TimeSpan.Zero);
         var todayMidnight = new DateTimeOffset(now.Date, now.Offset);
 
-        var startTimeBeforeMidnight = todayMidnight.AddMinutes(-30).ToOffset(TimeSpan.FromHours(offset));
-        var endTimeBeforeMidnight = startTimeBeforeMidnight.AddMinutes(10);
+        var startTimeBeforeMidnight = todayMidnight.ToOffset(TimeSpan.FromHours(offset)) - TimeSpan.FromMinutes(30);
+        var endTimeBeforeMidnight = startTimeBeforeMidnight + TimeSpan.FromMinutes(10);
 
         var spyCollectedDataFileAccess = new SpyMeasurementsFileAccess();
 
@@ -135,14 +137,14 @@ public class CombinedFileAndMemoryMeasurementsStorageTests
         // Given
         var now = new DateTimeOffset(2018, 12, 30, 12, 0, 0, TimeSpan.Zero);
 
-        var startTimeOnToday = now.AddMinutes(-30);
-        var endTimeOnToday = now.AddMinutes(-10);
+        var startTimeOnToday = now - TimeSpan.FromMinutes(30);
+        var endTimeOnToday = now - TimeSpan.FromMinutes(10);
 
         var spyCollectedDataFileAccess = new SpyMeasurementsFileAccess();
 
         using var combinedStorage = MakeCombinedDataStorage(now, spyCollectedDataFileAccess);
 
-        var storedEntry = new MeasurementEntry(now.AddMinutes(-20), 25m, 45m, 1050m);
+        var storedEntry = MakeMeasurementEntry(time: now - TimeSpan.FromMinutes(20));
 
         await combinedStorage.StoreAsync(storedEntry, CancellationToken.None);
         spyCollectedDataFileAccess.Reset();
@@ -165,11 +167,11 @@ public class CombinedFileAndMemoryMeasurementsStorageTests
         var now = new DateTimeOffset(2018, 12, 30, 12, 0, 0, TimeSpan.Zero);
         var todayMidnight = new DateTimeOffset(now.Date, now.Offset);
 
-        var startTimeBeforeToday = now.AddDays(-2);
-        var endTimeOnToday = now.AddMinutes(-10);
+        var startTimeBeforeToday = now - TimeSpan.FromDays(2);
+        var endTimeOnToday = now - TimeSpan.FromMinutes(10);
 
-        var olderEntry = new MeasurementEntry(startTimeBeforeToday.AddMinutes(10), 15m, 40m, 980m);
-        var todaysEntry = new MeasurementEntry(now.AddMinutes(-20), 25m, 45m, 1050m);
+        var olderEntry = MakeMeasurementEntry(time: startTimeBeforeToday + TimeSpan.FromMinutes(10));
+        var todaysEntry = MakeMeasurementEntry(time: now - TimeSpan.FromMinutes(20));
 
         var spyCollectedDataFileAccess = new SpyMeasurementsFileAccess { Entries = [olderEntry] };
 
@@ -198,10 +200,10 @@ public class CombinedFileAndMemoryMeasurementsStorageTests
         // Given
         var now = new DateTimeOffset(2018, 12, 30, 12, 0, 0, TimeSpan.Zero);
 
-        var startTimeOnToday = now.AddHours(-1);
-        var endTimeOnToday = now.AddHours(1);
+        var startTimeOnToday = now - TimeSpan.FromHours(1);
+        var endTimeOnToday = now + TimeSpan.FromHours(1);
 
-        var entryStoredInFile = new MeasurementEntry(now, 20m, 40m, 970m);
+        var entryStoredInFile = MakeMeasurementEntry(time: now);
 
         var spyCollectedDataFileAccess = new SpyMeasurementsFileAccess { Entries = [entryStoredInFile] };
 
@@ -222,16 +224,16 @@ public class CombinedFileAndMemoryMeasurementsStorageTests
         // Given
         var now = new DateTimeOffset(2018, 12, 30, 12, 0, 0, TimeSpan.Zero);
 
-        var startTimeOnToday = now.AddHours(-10);
-        var endTimeOnToday = now.AddHours(10);
+        var startTimeOnToday = now - TimeSpan.FromHours(10);
+        var endTimeOnToday = now + TimeSpan.FromHours(10);
 
-        var entryPreviouslyStoredInFile = new MeasurementEntry(now.AddHours(-2), 20m, 40m, 970m);
+        var entryPreviouslyStoredInFile = MakeMeasurementEntry(time: now - TimeSpan.FromHours(2));
 
         var spyCollectedDataFileAccess = new SpyMeasurementsFileAccess { Entries = [entryPreviouslyStoredInFile] };
 
         using var combinedStorage = MakeCombinedDataStorage(now, spyCollectedDataFileAccess);
 
-        var newEntry = new MeasurementEntry(now, 25m, 32m, 985m);
+        var newEntry = new MeasurementEntry { Time = now, CelsiusTemperature = 25m, RelativeHumidity = 32m, HpaPressure = 985m };
 
         // When
         await combinedStorage.StoreAsync(newEntry, CancellationToken.None);
@@ -250,14 +252,14 @@ public class CombinedFileAndMemoryMeasurementsStorageTests
         // Given
         var now = new DateTimeOffset(2018, 12, 30, 12, 0, 0, TimeSpan.Zero);
 
-        var startTimeOnToday = now.AddMinutes(-20);
-        var endTimeOnToday = now.AddMinutes(-10);
+        var startTimeOnToday = now - TimeSpan.FromMinutes(20);
+        var endTimeOnToday = now - TimeSpan.FromMinutes(10);
 
-        var entryBeforeStart = new MeasurementEntry(startTimeOnToday.AddMinutes(-10), 15m, 40m, 980m);
-        var entryOnStart = new MeasurementEntry(startTimeOnToday, 20m, 47m, 990m);
-        var entryInsideRange = new MeasurementEntry(startTimeOnToday.AddMinutes(5), 25m, 45m, 1050m);
-        var entryOnEnd = new MeasurementEntry(endTimeOnToday, 30m, 42m, 1030m);
-        var entryAfterEnd = new MeasurementEntry(endTimeOnToday.AddMinutes(5), 28m, 50m, 995m);
+        var entryBeforeStart = MakeMeasurementEntry(time: startTimeOnToday - TimeSpan.FromMinutes(10));
+        var entryOnStart = MakeMeasurementEntry(time: startTimeOnToday);
+        var entryInsideRange = MakeMeasurementEntry(time: startTimeOnToday + TimeSpan.FromMinutes(5));
+        var entryOnEnd = MakeMeasurementEntry(time: endTimeOnToday);
+        var entryAfterEnd = MakeMeasurementEntry(time: endTimeOnToday + TimeSpan.FromMinutes(5));
 
         var spyCollectedDataFileAccess = new SpyMeasurementsFileAccess();
 
@@ -288,9 +290,9 @@ public class CombinedFileAndMemoryMeasurementsStorageTests
         var todayMidnight = new DateTimeOffset(now.Date, now.Offset);
 
         var startTimeOnMidnightInDifferentOffset = todayMidnight.ToOffset(TimeSpan.FromHours(offset));
-        var endTimeAfterMidnightInDifferentOffset = startTimeOnMidnightInDifferentOffset.AddMinutes(30);
+        var endTimeAfterMidnightInDifferentOffset = startTimeOnMidnightInDifferentOffset + TimeSpan.FromMinutes(30);
 
-        var entryPreviouslyStoredInFile = new MeasurementEntry(todayMidnight.AddMinutes(10), 20m, 40m, 970m);
+        var entryPreviouslyStoredInFile = MakeMeasurementEntry(time: todayMidnight + TimeSpan.FromMinutes(10));
 
         var spyCollectedDataFileAccess = new SpyMeasurementsFileAccess { Entries = [entryPreviouslyStoredInFile] };
 
@@ -313,10 +315,10 @@ public class CombinedFileAndMemoryMeasurementsStorageTests
         // Given
         var hourBeforeMidnight = new DateTimeOffset(2018, 12, 30, 23, 0, 0, TimeSpan.Zero);
 
-        var startTimeBeforeNextMidnightInDifferentOffset = hourBeforeMidnight.AddMinutes(-30).ToOffset(TimeSpan.FromHours(offset));
-        var endTimeBeforeNextMidnightInDifferentOffset = startTimeBeforeNextMidnightInDifferentOffset.AddMinutes(30);
+        var startTimeBeforeNextMidnightInDifferentOffset = hourBeforeMidnight.ToOffset(TimeSpan.FromHours(offset)) - TimeSpan.FromMinutes(30);
+        var endTimeBeforeNextMidnightInDifferentOffset = startTimeBeforeNextMidnightInDifferentOffset + TimeSpan.FromMinutes(30);
 
-        var entryPreviouslyStoredInFile = new MeasurementEntry(hourBeforeMidnight.AddMinutes(-10), 20m, 40m, 970m);
+        var entryPreviouslyStoredInFile = MakeMeasurementEntry(time: hourBeforeMidnight - TimeSpan.FromMinutes(10));
 
         var spyCollectedDataFileAccess = new SpyMeasurementsFileAccess { Entries = [entryPreviouslyStoredInFile] };
 
@@ -340,8 +342,8 @@ public class CombinedFileAndMemoryMeasurementsStorageTests
 
         var startSkew = TimeSpan.FromMinutes(10);
         var rangeSize = TimeSpan.FromHours(2);
-        var startTimeBeforeTodayInDifferentZone = timeEquivalentToUtcMidnightInMinusFive.Add(startSkew);
-        var endTimeBeforeTodayInDifferentZone = startTimeBeforeTodayInDifferentZone.Add(rangeSize);
+        var startTimeBeforeTodayInDifferentZone = timeEquivalentToUtcMidnightInMinusFive + startSkew;
+        var endTimeBeforeTodayInDifferentZone = startTimeBeforeTodayInDifferentZone + rangeSize;
 
         var spyCollectedDataFileAccess = new SpyMeasurementsFileAccess();
 
@@ -363,8 +365,8 @@ public class CombinedFileAndMemoryMeasurementsStorageTests
         // Given
         var now = new DateTimeOffset(2018, 12, 30, 12, 0, 0, TimeSpan.Zero);
 
-        var futureStartTime = now.AddDays(2);
-        var futureEndTime = now.AddDays(3);
+        var futureStartTime = now + TimeSpan.FromDays(2);
+        var futureEndTime = now + TimeSpan.FromDays(3);
 
         var spyCollectedDataFileAccess = new SpyMeasurementsFileAccess();
 
@@ -388,10 +390,10 @@ public class CombinedFileAndMemoryMeasurementsStorageTests
         var oneHourBeforeMidnight = new DateTimeOffset(2018, 12, 30, 23, 0, 0, TimeSpan.Zero);
 
         var fiveHoursOffset = TimeSpan.FromHours(-5);
-        var futureStartInNegativeOffset = oneHourBeforeMidnight.ToOffset(fiveHoursOffset).AddHours(2);
-        var futureEndTimeInNegativeOffset = futureStartInNegativeOffset.AddMinutes(30);
+        var futureStartInNegativeOffset = oneHourBeforeMidnight.ToOffset(fiveHoursOffset) + TimeSpan.FromHours(2);
+        var futureEndTimeInNegativeOffset = futureStartInNegativeOffset + TimeSpan.FromMinutes(30);
 
-        var entryAtCurrentTime = new MeasurementEntry(oneHourBeforeMidnight, 20m, 40m, 970m);
+        var entryAtCurrentTime = MakeMeasurementEntry(time: oneHourBeforeMidnight);
 
         var spyCollectedDataFileAccess = new SpyMeasurementsFileAccess { Entries = [entryAtCurrentTime] };
 
@@ -414,10 +416,10 @@ public class CombinedFileAndMemoryMeasurementsStorageTests
         // Given
         var now = new DateTimeOffset(2018, 12, 30, 12, 0, 0, TimeSpan.Zero);
 
-        var startTimeOnYesterday = now.AddDays(-1);
-        var endTimeOnToday = now.AddMinutes(-30);
+        var startTimeOnYesterday = now - TimeSpan.FromDays(1);
+        var endTimeOnToday = now - TimeSpan.FromMinutes(30);
 
-        var entryOnYesterday = new MeasurementEntry(startTimeOnYesterday.AddMinutes(30), 10m, 45m, 980m);
+        var entryOnYesterday = MakeMeasurementEntry(time: startTimeOnYesterday + TimeSpan.FromMinutes(30));
 
         var stubCollectedDataFileAccess = new StubMeasurementsFileAccess { Entries = [entryOnYesterday] };
 
@@ -453,6 +455,11 @@ public class CombinedFileAndMemoryMeasurementsStorageTests
         return new(
             new FixedClock { Now = now ?? DateTimeOffset.UnixEpoch },
             fileAccess ?? new DummyMeasurementsFileAccess());
+    }
+
+    private static MeasurementEntry MakeMeasurementEntry(DateTimeOffset time)
+    {
+        return MeasurementEntryFactory.Make(time, temperature: null, humidity: null, pressure: null);
     }
 
     private class SpyMeasurementsFileAccess : IMeasurementsFileAccess

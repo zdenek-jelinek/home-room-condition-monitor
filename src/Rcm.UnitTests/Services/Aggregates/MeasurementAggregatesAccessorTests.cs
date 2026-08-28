@@ -21,25 +21,25 @@ public class MeasurementAggregatesAccessorTests
         var endTime = startTime.AddHours(4);
         var partitionCount = 2;
 
-        var firstPartitionEndTime = new DateTimeOffset((startTime.Ticks + endTime.Ticks) / partitionCount, offset);
+        var firstPartitionEndTime = startTime + GetPartitionDuration(startTime, endTime, partitionCount);
 
-        var firstMeasurementInFirstPartition = new MeasurementEntry(startTime, 20m, 30m, 900m);
-        var maxTemperatureMeasurementInFirstPartition = new MeasurementEntry(startTime.AddMinutes(17), 35m, 30m, 900m);
-        var minTemperatureMeasurementInFirstPartition = new MeasurementEntry(startTime.AddMinutes(26), 0m, 30m, 900m);
-        var maxPressureMeasurementInFirstPartition = new MeasurementEntry(startTime.AddMinutes(35), 35m, 30m, 1100m);
-        var minPressureMeasurementInFirstPartition = new MeasurementEntry(startTime.AddMinutes(42), 35m, 30m, 750m);
-        var maxHumidityMeasurementInFirstPartition = new MeasurementEntry(startTime.AddMinutes(91), 20m, 55m, 900m);
-        var minHumidityMeasurementInFirstPartition = new MeasurementEntry(startTime.AddMinutes(110), 20m, 15m, 900m);
-        var lastMeasurementInFirstPartition = new MeasurementEntry(firstPartitionEndTime, 20m, 15m, 900m);
+        var firstMeasurementInFirstPartition = MakeMeasurementEntry(startTime, 20m, 30m, 900m);
+        var maxTemperatureMeasurementInFirstPartition = MakeMeasurementEntry(startTime + TimeSpan.FromMinutes(17), 35m, 30m, 900m);
+        var minTemperatureMeasurementInFirstPartition = MakeMeasurementEntry(startTime + TimeSpan.FromMinutes(26), 0m, 30m, 900m);
+        var maxPressureMeasurementInFirstPartition = MakeMeasurementEntry(startTime + TimeSpan.FromMinutes(35), 35m, 30m, 1100m);
+        var minPressureMeasurementInFirstPartition = MakeMeasurementEntry(startTime + TimeSpan.FromMinutes(42), 35m, 30m, 750m);
+        var maxHumidityMeasurementInFirstPartition = MakeMeasurementEntry(startTime + TimeSpan.FromMinutes(91), 20m, 55m, 900m);
+        var minHumidityMeasurementInFirstPartition = MakeMeasurementEntry(startTime + TimeSpan.FromMinutes(110), 20m, 15m, 900m);
+        var lastMeasurementInFirstPartition = MakeMeasurementEntry(firstPartitionEndTime, 20m, 15m, 900m);
 
-        var firstMeasurementInSecondPartition = new MeasurementEntry(firstPartitionEndTime.AddMinutes(1), 20m, 30m, 900m);
-        var maxTemperatureMeasurementInSecondPartition = new MeasurementEntry(firstPartitionEndTime.AddMinutes(17), 35m, 30m, 900m);
-        var minTemperatureMeasurementInSecondPartition = new MeasurementEntry(firstPartitionEndTime.AddMinutes(26), 0m, 30m, 900m);
-        var maxPressureMeasurementInSecondPartition = new MeasurementEntry(firstPartitionEndTime.AddMinutes(35), 35m, 30m, 1100m);
-        var minPressureMeasurementInSecondPartition = new MeasurementEntry(firstPartitionEndTime.AddMinutes(42), 35m, 30m, 750m);
-        var maxHumidityMeasurementInSecondPartition = new MeasurementEntry(firstPartitionEndTime.AddMinutes(91), 20m, 55m, 900m);
-        var minHumidityMeasurementInSecondPartition = new MeasurementEntry(firstPartitionEndTime.AddMinutes(110), 20m, 15m, 900m);
-        var lastMeasurementInSecondPartition = new MeasurementEntry(endTime, 20m, 15m, 900m);
+        var firstMeasurementInSecondPartition = MakeMeasurementEntry(firstPartitionEndTime + TimeSpan.FromMinutes(1), 20m, 30m, 900m);
+        var maxTemperatureMeasurementInSecondPartition = MakeMeasurementEntry(firstPartitionEndTime + TimeSpan.FromMinutes(17), 35m, 30m, 900m);
+        var minTemperatureMeasurementInSecondPartition = MakeMeasurementEntry(firstPartitionEndTime + TimeSpan.FromMinutes(26), 0m, 30m, 900m);
+        var maxPressureMeasurementInSecondPartition = MakeMeasurementEntry(firstPartitionEndTime + TimeSpan.FromMinutes(35), 35m, 30m, 1100m);
+        var minPressureMeasurementInSecondPartition = MakeMeasurementEntry(firstPartitionEndTime + TimeSpan.FromMinutes(42), 35m, 30m, 750m);
+        var maxHumidityMeasurementInSecondPartition = MakeMeasurementEntry(firstPartitionEndTime + TimeSpan.FromMinutes(91), 20m, 55m, 900m);
+        var minHumidityMeasurementInSecondPartition = MakeMeasurementEntry(firstPartitionEndTime + TimeSpan.FromMinutes(110), 20m, 15m, 900m);
+        var lastMeasurementInSecondPartition = MakeMeasurementEntry(endTime, 20m, 15m, 900m);
 
         var measurements = new[]
         {
@@ -137,16 +137,16 @@ public class MeasurementAggregatesAccessorTests
     {
         // Given
         var dummyStartTime = new DateTimeOffset(2019, 2, 7, 21, 48, 15, TimeSpan.FromHours(1));
-        var dummyEndTime = dummyStartTime.AddDays(1);
+        var dummyEndTime = dummyStartTime + TimeSpan.FromDays(1);
 
         var count = 1;
         var measurements = new[]
         {
-            new MeasurementEntry(dummyStartTime.AddHours(1), 25m, 30m, 950),
-            new MeasurementEntry(dummyStartTime.AddHours(6), 18m, 37m, 945),
-            new MeasurementEntry(dummyStartTime.AddHours(12), 21m, 32m, 1010),
-            new MeasurementEntry(dummyStartTime.AddHours(16), 22m, 28m, 985),
-            new MeasurementEntry(dummyStartTime.AddHours(19), 19m, 31m, 995)
+            MakeMeasurementEntry(time: dummyStartTime + TimeSpan.FromHours(1)),
+            MakeMeasurementEntry(time: dummyStartTime + TimeSpan.FromHours(6)),
+            MakeMeasurementEntry(time: dummyStartTime + TimeSpan.FromHours(12)),
+            MakeMeasurementEntry(time: dummyStartTime + TimeSpan.FromHours(16)),
+            MakeMeasurementEntry(time: dummyStartTime + TimeSpan.FromHours(19))
         };
 
         // When
@@ -191,15 +191,14 @@ public class MeasurementAggregatesAccessorTests
     public void ConsidersAllMeasurementsForUnevenPartitionSizes()
     {
         // Given
-        var offset = TimeSpan.FromHours(1);
-        var startTime = new DateTimeOffset(2019, 2, 9, 10, 0, 0, offset);
+        var startTime = new DateTimeOffset(2019, 2, 9, 10, 0, 0, TimeSpan.FromHours(1));
         var endTime = startTime.AddHours(1);
         var partitionCount = 2;
-        var secondPartitionStart = new DateTimeOffset((startTime.Ticks + endTime.Ticks) / partitionCount, offset);
+        var secondPartitionStart = startTime + GetPartitionDuration(startTime, endTime, partitionCount);
 
-        var measurementInFirstPartition = new MeasurementEntry(startTime, 10m, 20m, 900m);
-        var measurementOnBorderOfPartitions = new MeasurementEntry(secondPartitionStart, 20m, 30m, 950m);
-        var measurementInSecondPartition = new MeasurementEntry(endTime, 30m, 40m, 1000m);
+        var measurementInFirstPartition = MakeMeasurementEntry(startTime, 10m, 20m, 900m);
+        var measurementOnBorderOfPartitions = MakeMeasurementEntry(secondPartitionStart, 20m, 30m, 950m);
+        var measurementInSecondPartition = MakeMeasurementEntry(endTime, 30m, 40m, 1000m);
 
         // When
         var aggregates = GetMeasurementAggregates(
@@ -235,25 +234,22 @@ public class MeasurementAggregatesAccessorTests
     public void NoAggregatesAreReturnedForAPartitionIfThereAreNoMeasurementsInThePartition()
     {
         // Given
-        var offset = TimeSpan.FromHours(1);
-        var startTime = new DateTimeOffset(2019, 2, 9, 10, 0, 0, offset);
-        var endTime = startTime.AddHours(1);
+        var startTime = new DateTimeOffset(2019, 2, 9, 10, 0, 0, TimeSpan.FromHours(1));
+        var endTime = startTime + TimeSpan.FromHours(1);
         var partitionCount = 2;
-        var secondPartitionStart = new DateTimeOffset((startTime.Ticks + endTime.Ticks) / partitionCount, offset);
+        var secondPartitionStart = startTime + GetPartitionDuration(startTime, endTime, partitionCount);
 
-        var measurementsInFirstPartition = Array.Empty<MeasurementEntry>();
-        var actualMeasurementTime = secondPartitionStart.AddMinutes(5);
-        var measurementsInSecondPartition = new[] { new MeasurementEntry(actualMeasurementTime, 25m, 37m, 975m) };
+        var measurementInSecondPartition = MakeMeasurementEntry(secondPartitionStart + TimeSpan.FromMinutes(5));
 
         var query = MakeQuery(startTime, endTime, partitionCount);
 
         // When
-        var aggregates = GetMeasurementAggregates([.. measurementsInFirstPartition, .. measurementsInSecondPartition], query);
+        var aggregates = GetMeasurementAggregates([measurementInSecondPartition], query);
 
         // Then
-        var temperature = new AggregateEntry(actualMeasurementTime, 25m);
-        var humidity = new AggregateEntry(actualMeasurementTime, 37m);
-        var pressure = new AggregateEntry(actualMeasurementTime, 975m);
+        var temperature = new AggregateEntry(measurementInSecondPartition.Time, measurementInSecondPartition.CelsiusTemperature);
+        var humidity = new AggregateEntry(measurementInSecondPartition.Time, measurementInSecondPartition.RelativeHumidity);
+        var pressure = new AggregateEntry(measurementInSecondPartition.Time, measurementInSecondPartition.HpaPressure);
 
         Assert.That(
             aggregates,
@@ -279,25 +275,30 @@ public class MeasurementAggregatesAccessorTests
     }
 
     [Test]
-    public void ThrowsOnEvaluationForNonMonotonousMeasurementTimes()
+    public void ThrowsOnEvaluationForDecreasingMeasurementTimes()
     {
         // Given
         var query = MakeDummyQuery();
 
-        var nonMonotonousMeasurements = new[]
+        var decreasingTimeMeasurements = new[]
         {
-            new MeasurementEntry(query.StartTime.AddMinutes(10), 10m, 20m, 900m),
-            new MeasurementEntry(query.StartTime, 10m, 20m, 900m),
+            MakeMeasurementEntry(query.StartTime + TimeSpan.FromMinutes(10)),
+            MakeMeasurementEntry(query.StartTime)
         };
 
         // When
-        void GetAggregatesForNonMonotonousMeasurementTimes()
+        void GetAggregatesForDecreasingMeasurementTimes()
         {
-            _ = GetMeasurementAggregates(nonMonotonousMeasurements, query);
+            _ = GetMeasurementAggregates(decreasingTimeMeasurements, query);
         }
 
         // Then
-        _ = Assert.Catch(GetAggregatesForNonMonotonousMeasurementTimes);
+        _ = Assert.Catch(GetAggregatesForDecreasingMeasurementTimes);
+    }
+
+    private static TimeSpan GetPartitionDuration(DateTimeOffset startTime, DateTimeOffset endTime, int partitionCount)
+    {
+        return (endTime - startTime) / partitionCount;
     }
 
     private static MeasurementAggregatesQuery MakeDummyQuery()
@@ -310,6 +311,15 @@ public class MeasurementAggregatesAccessorTests
     private static MeasurementAggregatesQuery MakeQuery(DateTimeOffset startTime, DateTimeOffset endTime, int partitionCount)
     {
         return new() { StartTime = startTime, EndTime = endTime, PartitionCount = partitionCount };
+    }
+
+    private static MeasurementEntry MakeMeasurementEntry(
+        DateTimeOffset? time = null,
+        decimal? temperature = null,
+        decimal? humidity = null,
+        decimal? pressure = null)
+    {
+        return MeasurementEntryFactory.Make(time, temperature, humidity, pressure);
     }
 
     private static IReadOnlyList<MeasurementAggregates> GetMeasurementAggregates(IEnumerable<MeasurementEntry> measurements, MeasurementAggregatesQuery query)

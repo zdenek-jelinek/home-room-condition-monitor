@@ -14,20 +14,21 @@ public class MeasurementsSerializerTests
     public void SerializesEntryAsHoursAndMinutesThenOffsetHoursAndMinutesThenTemperatureThenHumidityThenPressureAllSeparatedBySpaces()
     {
         // Given
-        var offset = TimeSpan.FromHours(-1) + TimeSpan.FromMinutes(-30);
-        var time = new DateTimeOffset(2018, 12, 30, 19, 50, 10, offset);
-        var temperature = 32m;
-        var humidity = 52m;
-        var pressure = 980m;
-        var entry = new MeasurementEntry(time, temperature, humidity, pressure);
+        var measurement = new MeasurementEntry
+        {
+            Time = new DateTimeOffset(2018, 12, 30, 19, 50, 10, offset: TimeSpan.FromHours(-1.5)),
+            CelsiusTemperature = 32m,
+            HpaPressure = 980m,
+            RelativeHumidity = 52m
+        };
 
         var serializer = new MeasurementsSerializer();
 
         // When
-        var record = serializer.Serialize(entry);
+        var text = serializer.Serialize(measurement);
 
         // Then
-        Assert.AreEqual("19:50-01:30 32 52 980", record);
+        Assert.AreEqual("19:50-01:30 32 52 980", text);
     }
 
     [Test]
@@ -35,20 +36,21 @@ public class MeasurementsSerializerTests
     public void UsesInvariantCultureToSerializeEntries()
     {
         // Given
-        var offset = TimeSpan.FromHours(-1) + TimeSpan.FromMinutes(-30);
-        var time = new DateTimeOffset(2018, 12, 30, 19, 50, 10, offset);
-        var temperature = 32.3m;
-        var humidity = 52.5m;
-        var pressure = 980.93m;
-        var entry = new MeasurementEntry(time, temperature, humidity, pressure);
+        var entry = new MeasurementEntry
+        {
+            Time = new DateTimeOffset(2018, 12, 30, 19, 50, 10, offset: TimeSpan.FromHours(-1.5)),
+            CelsiusTemperature = 32.3m,
+            RelativeHumidity = 52.5m,
+            HpaPressure = 980.93m
+        };
 
         var serializer = new MeasurementsSerializer();
 
         // When
-        var record = serializer.Serialize(entry);
+        var text = serializer.Serialize(entry);
 
         // Then
-        Assert.AreEqual("19:50-01:30 32.3 52.5 980.93", record);
+        Assert.AreEqual("19:50-01:30 32.3 52.5 980.93", text);
     }
 
     [Test]

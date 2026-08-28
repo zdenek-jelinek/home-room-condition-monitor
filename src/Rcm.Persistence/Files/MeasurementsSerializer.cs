@@ -27,11 +27,13 @@ public class MeasurementsSerializer
         var pressure = ParseDecimal(record, ref offset);
         EnsureEnd(record, offset);
 
-        return new MeasurementEntry(
-            new DateTimeOffset(date.Year, date.Month, date.Day, time.Hour, time.Minute, second: 0, time.Offset),
-            temperature,
-            humidity,
-            pressure);
+        return new()
+        {
+            Time = new DateTimeOffset(date.Year, date.Month, date.Day, time.Hour, time.Minute, second: 0, time.Offset),
+            CelsiusTemperature = temperature,
+            RelativeHumidity = humidity,
+            HpaPressure = pressure
+        };
     }
 
     private void EnsureEnd(ReadOnlySpan<char> record, int offset)

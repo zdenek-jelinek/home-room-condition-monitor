@@ -30,17 +30,21 @@ public class MeasurementsFileAccessTests
 
         var collectedDataFileAccess = CreateCollectedDataFileAccess(fakeFileAccess);
 
-        var firstEntry = new MeasurementEntry(
-            new DateTimeOffset(2018, 12, 30, 15, 10, 30, TimeSpan.FromHours(2)),
-            30m,
-            41.2m,
-            985.47m);
+        var firstEntry = new MeasurementEntry
+        {
+            Time = new DateTimeOffset(2018, 12, 30, 15, 10, 30, TimeSpan.FromHours(2)),
+            CelsiusTemperature = 30m,
+            RelativeHumidity = 41.2m,
+            HpaPressure = 985.47m
+        };
 
-        var secondEntry = new MeasurementEntry(
-            new DateTimeOffset(2018, 12, 31, 10, 45, 15, TimeSpan.FromHours(1)),
-            33m,
-            47.1m,
-            994.36m);
+        var secondEntry = new MeasurementEntry
+        {
+            Time = new DateTimeOffset(2018, 12, 31, 10, 45, 15, TimeSpan.FromHours(1)),
+            CelsiusTemperature = 33m,
+            RelativeHumidity = 47.1m,
+            HpaPressure = 994.36m
+        };
 
         // When
         await collectedDataFileAccess.SaveAsync(firstEntry, CancellationToken.None);
@@ -71,14 +75,14 @@ public class MeasurementsFileAccessTests
         var startTime = new DateTimeOffset(2018, 12, 25, 15, 0, 0, TimeSpan.FromHours(1));
         var endTime = new DateTimeOffset(2018, 12, 30, 12, 0, 0, TimeSpan.FromHours(-1));
 
-        var entryDayBeforeStart = new MeasurementEntry(startTime.AddDays(-1), 28m, 47.6m, 974.59m);
-        var entryHourBeforeStart = new MeasurementEntry(startTime.AddHours(-1), 29m, 42.6m, 987m);
-        var entryOnStart = new MeasurementEntry(startTime, 30m, 41.2m, 985.47m);
-        var firstEntryInMiddle = new MeasurementEntry(startTime.AddDays(2).AddHours(10), 28m, 39.7m, 994.12m);
-        var secondEntryInMiddle = new MeasurementEntry(startTime.AddDays(2).AddHours(11), 27m, 39.8m, 993.68m);
-        var entryOnEnd = new MeasurementEntry(endTime, 22m, 43m, 1000m);
-        var entryHourAfterEnd = new MeasurementEntry(endTime.AddHours(1), 23m, 41m, 998m);
-        var entryDayAfterEnd = new MeasurementEntry(endTime.AddDays(1), 27m, 48m, 1014.3m);
+        var entryDayBeforeStart = MakeMeasurementEntry(time: startTime - TimeSpan.FromDays(1));
+        var entryHourBeforeStart = MakeMeasurementEntry(time: startTime - TimeSpan.FromHours(1));
+        var entryOnStart = MakeMeasurementEntry(time: startTime);
+        var firstEntryInMiddle = MakeMeasurementEntry(time: startTime + TimeSpan.FromDays(days: 2, hours: 10));
+        var secondEntryInMiddle = MakeMeasurementEntry(time: startTime + TimeSpan.FromDays(days: 2, hours: 11));
+        var entryOnEnd = MakeMeasurementEntry(time: endTime);
+        var entryHourAfterEnd = MakeMeasurementEntry(time: endTime + TimeSpan.FromHours(1));
+        var entryDayAfterEnd = MakeMeasurementEntry(time: endTime + TimeSpan.FromDays(1));
 
         StoreEntriesToFiles(
             fakeFileAccess,
@@ -113,11 +117,7 @@ public class MeasurementsFileAccessTests
 
         var collectedDataFileAccess = CreateCollectedDataFileAccess(fakeFileAccess);
 
-        var validEntries = new[]
-        {
-            new MeasurementEntry(time, 28m, 47.6m, 974.59m),
-            new MeasurementEntry(time.AddHours(1), 29m, 42.6m, 987m)
-        };
+        var validEntries = new[] { MakeMeasurementEntry(time), MakeMeasurementEntry(time  + TimeSpan.FromHours(1)) };
 
         var measurementFileLines = new[]
         {
@@ -130,7 +130,7 @@ public class MeasurementsFileAccessTests
         fakeFileAccess.WriteAllLines(path, measurementFileLines);
 
         // When
-        var readEntries = collectedDataFileAccess.Read(time.AddHours(-2), time.AddHours(2), CancellationToken.None);
+        var readEntries = collectedDataFileAccess.Read(time - TimeSpan.FromHours(2), time + TimeSpan.FromHours(2), CancellationToken.None);
 
         // Then
         Assert.That(readEntries, Is.EquivalentTo(validEntries).Using(new MeasurementEntryEqualityComparer()));
@@ -142,7 +142,7 @@ public class MeasurementsFileAccessTests
         // Given
         using var cancellationTokenSource = new CancellationTokenSource();
 
-        var dummyEntry = new MeasurementEntry(new DateTimeOffset(2000, 1, 1, 12, 0, 0, TimeSpan.FromHours(2)), 25m, 42m, 1010m);
+        var dummyEntry = MakeMeasurementEntry();
 
         using var blockingFileAccess = new BlockingFileAccess();
 
@@ -207,13 +207,18 @@ public class MeasurementsFileAccessTests
         for (var day = start; day <= end; day = day.AddDays(1))
         {
             var filePath = GetEntryFilePath(day);
-            var dummyEntry = new MeasurementEntry(day, 25m, 85m, 1010m);
+            var dummyEntry = MakeMeasurementEntry(day);
 
             using (var measurementFile = file.AppendText(filePath))
             {
                 measurementFile.WriteLine(GetEntryRecord(dummyEntry));
             }
         }
+    }
+
+    private static MeasurementEntry MakeMeasurementEntry(DateTimeOffset? time = null)
+    {
+        return MeasurementEntryFactory.Make(time, temperature: null, humidity: null, pressure: null);
     }
 
     private static void StoreEntriesToFiles(IFileAccess file, IEnumerable<MeasurementEntry> entries)
