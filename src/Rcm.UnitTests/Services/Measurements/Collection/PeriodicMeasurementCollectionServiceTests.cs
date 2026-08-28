@@ -2,7 +2,6 @@ using System;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging.Abstractions;
 using NUnit.Framework;
 using Rcm.Services.Measurements.Collection;
 using Rcm.Testing.Threading.Tasks;
@@ -14,6 +13,8 @@ public class PeriodicMeasurementCollectionServiceTests
 {
     private static TimeSpan Tolerance => TimeSpan.FromMilliseconds(32);
 
+    // TODO Use TimeProvider instead of waiting for actual time to pass (Zdenek Jelinek, 28. 8. 2026)
+
     [Test]
     public async Task InvokesMeasurementWithSpecifiedTimeoutAndPeriodAfterStarting()
     {
@@ -23,7 +24,7 @@ public class PeriodicMeasurementCollectionServiceTests
 
         using var blockingMeasurementCollector = new BlockingMeasurementCollector();
 
-        await using var periodicDataCollectionService = CreatePeriodicDataCollectionService(
+        var periodicDataCollectionService = CreatePeriodicDataCollectionService(
             blockingMeasurementCollector,
             measurementTimings: new() { InitialDelay = initialMeasurementDelay, Period = measurementPeriod });
 
@@ -53,7 +54,7 @@ public class PeriodicMeasurementCollectionServiceTests
 
         using var blockingMeasurementCollector = new BlockingMeasurementCollector();
 
-        await using var periodicDataCollectionService = CreatePeriodicDataCollectionService(
+        var periodicDataCollectionService = CreatePeriodicDataCollectionService(
             blockingMeasurementCollector,
             measurementTimings: new() { InitialDelay = TimeSpan.Zero, Period = measurementPeriod });
 
@@ -80,7 +81,7 @@ public class PeriodicMeasurementCollectionServiceTests
 
         using var blockingMeasurementCollector = new BlockingMeasurementCollector();
 
-        await using var periodicDataCollectionService = CreatePeriodicDataCollectionService(
+        var periodicDataCollectionService = CreatePeriodicDataCollectionService(
             blockingMeasurementCollector,
             measurementTimingsWithLargeDelay);
 
@@ -106,7 +107,7 @@ public class PeriodicMeasurementCollectionServiceTests
             IsCancellable = true
         };
 
-        await using var periodicDataCollectionService = CreatePeriodicDataCollectionService(blockingMeasurementCollector);
+        var periodicDataCollectionService = CreatePeriodicDataCollectionService(blockingMeasurementCollector);
 
         await periodicDataCollectionService.StartAsync(CancellationToken.None);
 
@@ -134,7 +135,7 @@ public class PeriodicMeasurementCollectionServiceTests
             IsCancellable = false
         };
 
-        await using var periodicDataCollectionService = CreatePeriodicDataCollectionService(blockingMeasurementCollector);
+        var periodicDataCollectionService = CreatePeriodicDataCollectionService(blockingMeasurementCollector);
 
         await periodicDataCollectionService.StartAsync(CancellationToken.None);
 
@@ -159,7 +160,6 @@ public class PeriodicMeasurementCollectionServiceTests
         MeasurementCollectionTimings? measurementTimings = null)
     {
         return new(
-            NullLogger<PeriodicMeasurementCollectionService>.Instance,
             new StubMeasurementTimingsCalculator { Timings = measurementTimings ?? new() { InitialDelay = TimeSpan.Zero, Period = TimeSpan.FromDays(10) } },
             measurementCollector);
     }
