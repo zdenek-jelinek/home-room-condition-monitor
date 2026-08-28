@@ -5,6 +5,5 @@ namespace Rcm.Services.Measurements.Collection;
 
 public interface IMeasurementCollector
 {
-    MeasurementCollectionTimings DetermineMeasurementTimings();
     Task MeasureAsync(CancellationToken token);
 }

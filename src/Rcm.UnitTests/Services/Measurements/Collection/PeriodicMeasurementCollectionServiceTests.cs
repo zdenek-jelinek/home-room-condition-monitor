@@ -18,15 +18,14 @@ public class PeriodicMeasurementCollectionServiceTests
     public async Task InvokesMeasurementWithSpecifiedTimeoutAndPeriodAfterStarting()
     {
         // given
-        var firstMeasurementDelay = TimeSpan.FromMilliseconds(50);
+        var initialMeasurementDelay = TimeSpan.FromMilliseconds(50);
         var measurementPeriod = TimeSpan.FromMilliseconds(100);
 
-        using var blockingMeasurementCollector = new BlockingMeasurementCollector
-        {
-            MeasurementTimings = new() { InitialDelay = firstMeasurementDelay, Period = measurementPeriod }
-        };
+        using var blockingMeasurementCollector = new BlockingMeasurementCollector();
 
-        await using var periodicDataCollectionService = CreatePeriodicDataCollectionService(blockingMeasurementCollector);
+        await using var periodicDataCollectionService = CreatePeriodicDataCollectionService(
+            blockingMeasurementCollector,
+            measurementTimings: new() { InitialDelay = initialMeasurementDelay, Period = measurementPeriod });
 
         // when
         var stopwatch = Stopwatch.StartNew();
@@ -42,7 +41,7 @@ public class PeriodicMeasurementCollectionServiceTests
         var subsequentMeasurementDelay = stopwatch.ElapsedMilliseconds;
 
         // then
-        Assert.AreEqual(firstMeasurementDelay.TotalMilliseconds, measuredFirstMeasurementDelay, Tolerance.TotalMilliseconds);
+        Assert.AreEqual(initialMeasurementDelay.TotalMilliseconds, measuredFirstMeasurementDelay, Tolerance.TotalMilliseconds);
         Assert.AreEqual(measurementPeriod.TotalMilliseconds, subsequentMeasurementDelay, Tolerance.TotalMilliseconds);
     }
 
@@ -52,12 +51,11 @@ public class PeriodicMeasurementCollectionServiceTests
         // given
         var measurementPeriod = TimeSpan.FromMilliseconds(32);
 
-        using var blockingMeasurementCollector = new BlockingMeasurementCollector
-        {
-            MeasurementTimings = new() { InitialDelay = TimeSpan.Zero, Period = measurementPeriod }
-        };
+        using var blockingMeasurementCollector = new BlockingMeasurementCollector();
 
-        await using var periodicDataCollectionService = CreatePeriodicDataCollectionService(blockingMeasurementCollector);
+        await using var periodicDataCollectionService = CreatePeriodicDataCollectionService(
+            blockingMeasurementCollector,
+            measurementTimings: new() { InitialDelay = TimeSpan.Zero, Period = measurementPeriod });
 
         // when
         await periodicDataCollectionService.StartAsync(CancellationToken.None);
@@ -74,12 +72,17 @@ public class PeriodicMeasurementCollectionServiceTests
     public async Task StoppingWithoutPendingMeasurementStopsImmediately()
     {
         // given
-        using var measurementCollectorWithLargeDelay = new BlockingMeasurementCollector
+        var measurementTimingsWithLargeDelay = new MeasurementCollectionTimings
         {
-            MeasurementTimings = new() { InitialDelay = TimeSpan.FromDays(10), Period = TimeSpan.FromDays(10) }
+            InitialDelay = TimeSpan.FromDays(10),
+            Period = TimeSpan.FromDays(10)
         };
 
-        await using var periodicDataCollectionService = CreatePeriodicDataCollectionService(measurementCollectorWithLargeDelay);
+        using var blockingMeasurementCollector = new BlockingMeasurementCollector();
+
+        await using var periodicDataCollectionService = CreatePeriodicDataCollectionService(
+            blockingMeasurementCollector,
+            measurementTimingsWithLargeDelay);
 
         await periodicDataCollectionService.StartAsync(CancellationToken.None);
 
@@ -152,11 +155,23 @@ public class PeriodicMeasurementCollectionServiceTests
     }
 
     private static PeriodicMeasurementCollectionService CreatePeriodicDataCollectionService(
-        IMeasurementCollector measurementCollector)
+        IMeasurementCollector measurementCollector,
+        MeasurementCollectionTimings? measurementTimings = null)
     {
-        return new PeriodicMeasurementCollectionService(
+        return new(
             NullLogger<PeriodicMeasurementCollectionService>.Instance,
+            new StubMeasurementTimingsCalculator { Timings = measurementTimings ?? new() { InitialDelay = TimeSpan.Zero, Period = TimeSpan.FromDays(10) } },
             measurementCollector);
+    }
+
+    private class StubMeasurementTimingsCalculator : IMeasurementTimingsCalculator
+    {
+        public required MeasurementCollectionTimings Timings { get; init; }
+
+        public MeasurementCollectionTimings DetermineMeasurementTimings()
+        {
+            return Timings;
+        }
     }
 
     private class BlockingMeasurementCollector : IMeasurementCollector, IDisposable
@@ -168,13 +183,6 @@ public class PeriodicMeasurementCollectionServiceTests
         public bool BlocksAsynchronously { get; set; }
 
         public Task MeasurementStarted => _startedSemaphore.WaitAsync();
-
-        public MeasurementCollectionTimings MeasurementTimings { get; set; } = new() { InitialDelay = TimeSpan.Zero, Period = TimeSpan.FromDays(10) };
-
-        public MeasurementCollectionTimings DetermineMeasurementTimings()
-        {
-            return MeasurementTimings;
-        }
 
         public async Task MeasureAsync(CancellationToken token)
         {

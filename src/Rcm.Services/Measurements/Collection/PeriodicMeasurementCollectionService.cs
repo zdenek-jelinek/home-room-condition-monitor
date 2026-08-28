@@ -9,25 +9,28 @@ namespace Rcm.Services.Measurements.Collection;
 public class PeriodicMeasurementCollectionService : IHostedService, IAsyncDisposable
 {
     private readonly ILogger<PeriodicMeasurementCollectionService> _logger;
+    private readonly IMeasurementTimingsCalculator _measurementTimingsCalculator;
     private readonly IMeasurementCollector _measurementCollector;
 
-    private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
-    private readonly CancellationTokenSource _stoppingSource = new CancellationTokenSource();
+    private readonly SemaphoreSlim _semaphore = new(initialCount: 1, maxCount: 1);
+    private readonly CancellationTokenSource _stoppingSource = new();
 
     private Task? _pendingMeasurement;
     private Timer? _timer;
 
     public PeriodicMeasurementCollectionService(
         ILogger<PeriodicMeasurementCollectionService> logger,
+        IMeasurementTimingsCalculator measurementTimingsCalculator,
         IMeasurementCollector measurementCollector)
     {
         _logger = logger;
+        _measurementTimingsCalculator = measurementTimingsCalculator;
         _measurementCollector = measurementCollector;
     }
 
     public Task StartAsync(CancellationToken cancellationToken)
     {
-        var timings = _measurementCollector.DetermineMeasurementTimings();
+        var timings = _measurementTimingsCalculator.DetermineMeasurementTimings();
         _timer = new Timer(_ => RunMeasurement(), state: null, dueTime: timings.InitialDelay, period: timings.Period);
 
         _logger.LogInformation("Periodic measurement started");

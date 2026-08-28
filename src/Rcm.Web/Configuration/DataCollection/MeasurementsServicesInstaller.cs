@@ -12,6 +12,7 @@ public class MeasurementsServicesInstaller : IInstaller
     public void Install(IServiceCollection services)
     {
         services
+            .AddTransient<IMeasurementTimingsCalculator, MeasurementCollector>()
             .AddTransient<IMeasurementCollector, MeasurementCollector>()
             .AddSingleton<IMeasurementsStorage, CombinedFileAndMemoryMeasurementsStorage>()
             .AddSingleton<IMeasurementsWriter>(s => s.GetRequiredService<IMeasurementsStorage>())

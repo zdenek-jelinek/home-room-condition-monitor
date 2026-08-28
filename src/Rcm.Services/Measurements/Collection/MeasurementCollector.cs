@@ -11,7 +11,7 @@ using Rcm.Sensors.Abstractions;
 
 namespace Rcm.Services.Measurements.Collection;
 
-public class MeasurementCollector : IMeasurementCollector
+public class MeasurementCollector : IMeasurementCollector, IMeasurementTimingsCalculator
 {
     private static readonly TimeSpan MeasurementPeriod = TimeSpan.FromSeconds(6);
 
