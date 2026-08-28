@@ -15,7 +15,7 @@ public class MeasurementsSerializer
         return $@"{entry.Time:HH\:mmK} {temperature} {relativeHumidity} {pressure}";
     }
 
-    public MeasurementEntry Deserialize(DateTime date, ReadOnlySpan<char> record)
+    public MeasurementEntry Deserialize(DateOnly date, ReadOnlySpan<char> record)
     {
         var offset = 0;
         var time = ParseTime(record, ref offset);
@@ -29,7 +29,7 @@ public class MeasurementsSerializer
 
         return new()
         {
-            Time = new DateTimeOffset(date.Year, date.Month, date.Day, time.Hour, time.Minute, second: 0, time.Offset),
+            Time = new DateTimeOffset(date, new(time.Hour, time.Minute, second: 0), time.Offset),
             CelsiusTemperature = temperature,
             RelativeHumidity = humidity,
             HpaPressure = pressure
@@ -67,7 +67,7 @@ public class MeasurementsSerializer
     {
         if (record[offset] != ' ')
         {
-            throw new FormatException($"Invalid separator in record {new string(record)} at offset {offset}");
+            throw new FormatException($"Invalid separator in record {record} at offset {offset}");
         }
 
         offset += 1;
@@ -78,7 +78,7 @@ public class MeasurementsSerializer
         var separatorIndex = record.Slice(offset).IndexOf(" ");
         if (separatorIndex < 0)
         {
-            throw new FormatException($"Invalid record: Space expected after time entry in \"{new string(record)}\"");
+            throw new FormatException($"Invalid record: Space expected after time entry in \"{record}\"");
         }
 
         var time = record.Slice(offset, separatorIndex);
@@ -88,12 +88,5 @@ public class MeasurementsSerializer
         offset += separatorIndex;
 
         return result;
-    }
-
-    public class ParseException : Exception
-    {
-        public ParseException(string message) : base(message)
-        {
-        }
     }
 }

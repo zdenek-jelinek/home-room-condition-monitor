@@ -65,7 +65,7 @@ public class MeasurementsFileAccess : IMeasurementsFileAccess
         }
     }
 
-    private MeasurementEntry? TryParseEntry(DateTime date, string filePath, int lineNumber, string line)
+    private MeasurementEntry? TryParseEntry(DateOnly date, string filePath, int lineNumber, string line)
     {
         try
         {

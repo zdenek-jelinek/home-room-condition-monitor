@@ -39,11 +39,11 @@ public class MeasurementsFilesNavigatorTests
         var startTime = new DateTimeOffset(2018, 12, 20, 19, 0, 0, TimeSpan.FromHours(1));
         var endTime = new DateTimeOffset(2018, 12, 22, 15, 0, 0, TimeSpan.FromHours(1));
 
-        var daysBetweenStartAndEnd = new[]
+        var datesBetweenStartAndEnd = new[]
         {
-            new DateTime(2018, 12, 20, 0, 0, 0),
-            new DateTime(2018, 12, 21, 0, 0, 0),
-            new DateTime(2018, 12, 22, 0, 0, 0)
+            new DateOnly(2018, 12, 20),
+            new DateOnly(2018, 12, 21),
+            new DateOnly(2018, 12, 22)
         };
 
         // When
@@ -52,7 +52,7 @@ public class MeasurementsFilesNavigatorTests
         // Then
         var separator = Path.DirectorySeparatorChar;
         CollectionAssert.AreEquivalent(
-            daysBetweenStartAndEnd.Select(d => (d.Date, $"dataStorage{separator}measurements{separator}2018-12-{d.Day:00}.mst")),
+            datesBetweenStartAndEnd.Select(date => (date, $"dataStorage{separator}measurements{separator}{date:yyyy'-'MM'-'dd}.mst")),
             paths);
     }
 

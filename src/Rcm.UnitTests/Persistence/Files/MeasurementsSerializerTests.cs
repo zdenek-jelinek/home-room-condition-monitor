@@ -1,6 +1,7 @@
 ﻿using System;
 using NUnit.Framework;
 using Rcm.Common;
+using Rcm.Common.Temporal;
 using Rcm.Persistence.Files;
 
 namespace Rcm.UnitTests.Persistence.Files;
@@ -63,7 +64,7 @@ public class MeasurementsSerializerTests
         var serializer = new MeasurementsSerializer();
 
         // When
-        var entry = serializer.Deserialize(time.Date, record);
+        var entry = serializer.Deserialize(time.ToDateOnly(), record);
 
         // Then
         Assert.AreEqual(time, entry.Time);
@@ -83,7 +84,7 @@ public class MeasurementsSerializerTests
         var serializer = new MeasurementsSerializer();
 
         // When
-        var entry = serializer.Deserialize(time.Date, record);
+        var entry = serializer.Deserialize(time.ToDateOnly(), record);
 
         // Then
         Assert.AreEqual(time, entry.Time);
@@ -108,7 +109,7 @@ public class MeasurementsSerializerTests
     public void ThrowsForInvalidRecords(string invalidRecord)
     {
         // Given
-        var dummyDate = new DateTime(2018, 12, 31, 0, 0, 0);
+        var dummyDate = new DateOnly(2018, 12, 31);
 
         var serializer = new MeasurementsSerializer();
 
