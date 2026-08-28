@@ -5,51 +5,26 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Rcm.Common;
-using Rcm.Common.Temporal;
 using Rcm.Persistence.Abstractions;
 using Rcm.Sensors.Abstractions;
 
 namespace Rcm.Services.Measurements.Collection;
 
-public class MeasurementCollector : IMeasurementCollector, IMeasurementTimingsCalculator
+public class MeasurementCollector : IMeasurementCollector
 {
-    private static readonly TimeSpan MeasurementPeriod = TimeSpan.FromSeconds(6);
-
-    private static readonly int MeasurementsPerMinute =
-        (int)Math.Ceiling((double)TimeSpan.FromMinutes(1).Ticks / MeasurementPeriod.Ticks);
-
     private readonly ILogger<MeasurementCollector> _logger;
-    private readonly IClock _clock;
     private readonly ISensor _sensor;
     private readonly IMeasurementsWriter _measurementsWriter;
 
-    private readonly List<MeasurementEntry> _entries = new List<MeasurementEntry>(MeasurementsPerMinute);
+    private readonly List<MeasurementEntry> _entries = new();
 
     private int _measurementInProgress;
 
-    public MeasurementCollector(
-        ILogger<MeasurementCollector> logger,
-        IClock clock,
-        ISensor sensor,
-        IMeasurementsWriter measurementsWriter)
+    public MeasurementCollector(ILogger<MeasurementCollector> logger, ISensor sensor, IMeasurementsWriter measurementsWriter)
     {
         _logger = logger;
-        _clock = clock;
         _sensor = sensor;
         _measurementsWriter = measurementsWriter;
-    }
-
-    public MeasurementCollectionTimings DetermineMeasurementTimings()
-    {
-        var now = _clock.Now;
-
-        var nextMeasurementDelay = now.Second == 0 ? 0 : 60 - now.Second;
-
-        return new()
-        {
-            InitialDelay = TimeSpan.FromSeconds(nextMeasurementDelay),
-            Period = MeasurementPeriod
-        };
     }
 
     public async Task MeasureAsync(CancellationToken token)

@@ -5,11 +5,9 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging.Abstractions;
 using NUnit.Framework;
 using Rcm.Common;
-using Rcm.Common.Temporal;
 using Rcm.Persistence.Abstractions;
 using Rcm.Sensors.Abstractions;
 using Rcm.Services.Measurements.Collection;
-using Rcm.Testing.Common.Temporal;
 
 namespace Rcm.UnitTests.Persistence;
 
@@ -26,7 +24,6 @@ public class MeasurementCollectorTests
 
             var measurementCollector = new MeasurementCollector(
                 NullLogger<MeasurementCollector>.Instance,
-                new Clock(),
                 blockingSpyMeasurementProvider,
                 new DummyMeasurementsWriter());
 
@@ -51,7 +48,6 @@ public class MeasurementCollectorTests
 
             var measurementCollector = new MeasurementCollector(
                 NullLogger<MeasurementCollector>.Instance,
-                new Clock(),
                 throwingSpyMeasurementProvider,
                 new DummyMeasurementsWriter());
 
@@ -79,7 +75,6 @@ public class MeasurementCollectorTests
 
             var measurementCollector = new MeasurementCollector(
                 NullLogger<MeasurementCollector>.Instance,
-                new Clock(),
                 new FakeSensor(new[] { firstMeasurement, secondMeasurementWithinSameMinute, measurementInNextMinute }),
                 spyCollectedDataStorage);
 
@@ -189,49 +184,6 @@ public class MeasurementCollectorTests
             {
                 _task.RunSynchronously();
             }
-        }
-    }
-
-    public class MeasurementTimings
-    {
-        [Test]
-        public void MeasurementStartsOnNextMinuteWithSixSecondsPeriodForNonZeroSecondsTime()
-        {
-            // given
-            var nonZeroSecondsTime = new DateTimeOffset(2018, 12, 27, 13, 28, 10, TimeSpan.Zero);
-
-            var measurementCollector = new MeasurementCollector(
-                NullLogger<MeasurementCollector>.Instance,
-                new FixedClock { Now = nonZeroSecondsTime },
-                new DummySensor(),
-                new DummyMeasurementsWriter());
-
-            // when
-            var timings = measurementCollector.DetermineMeasurementTimings();
-
-            // then
-            Assert.AreEqual(TimeSpan.FromSeconds(60 - nonZeroSecondsTime.Second), timings.InitialDelay);
-            Assert.AreEqual(TimeSpan.FromSeconds(6), timings.Period);
-        }
-
-        [Test]
-        public void MeasurementStartsNowWithSixSecondsPeriodForZeroSecondsTime()
-        {
-            // given
-            var zeroSecondsTime = new DateTimeOffset(2018, 12, 27, 13, 28, 0, TimeSpan.Zero);
-
-            var measurementCollector = new MeasurementCollector(
-                NullLogger<MeasurementCollector>.Instance,
-                new FixedClock { Now = zeroSecondsTime },
-                new DummySensor(),
-                new DummyMeasurementsWriter());
-
-            // when
-            var timings = measurementCollector.DetermineMeasurementTimings();
-
-            // then
-            Assert.AreEqual(TimeSpan.Zero, timings.InitialDelay);
-            Assert.AreEqual(TimeSpan.FromSeconds(6), timings.Period);
         }
     }
 
