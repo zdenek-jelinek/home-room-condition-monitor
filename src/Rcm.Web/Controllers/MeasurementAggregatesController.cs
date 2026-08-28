@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using Microsoft.AspNetCore.Mvc;
@@ -13,7 +12,7 @@ namespace Rcm.Web.Controllers;
 public class MeasurementAggregatesController(IMeasurementAggregatesAccessor measurementAggregatesAccessor) : ControllerBase
 {
     [HttpGet]
-    public ActionResult<IEnumerable<MeasurementAggregatesApiResponse>> Get(
+    public IActionResult Get(
         [FromQuery(Name = "start")][BindRequired] DateTimeOffset startTime,
         [FromQuery(Name = "end")][BindRequired] DateTimeOffset endTime,
         [FromQuery(Name = "count")][BindRequired] int count,

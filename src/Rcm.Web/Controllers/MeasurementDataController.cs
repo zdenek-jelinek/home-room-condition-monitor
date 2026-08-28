@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using Microsoft.AspNetCore.Mvc;
@@ -14,7 +13,7 @@ namespace Rcm.Web.Controllers;
 public class MeasurementDataController(IMeasurementsAccessor measurementsAccessor) : ControllerBase
 {
     [HttpGet]
-    public ActionResult<IEnumerable<MeasurementApiResponse>> Get(
+    public IActionResult Get(
         [FromQuery(Name = "start")][BindRequired] DateTimeOffset startTime,
         [FromQuery(Name = "end")][BindRequired] DateTimeOffset endTime,
         CancellationToken cancellationToken)
