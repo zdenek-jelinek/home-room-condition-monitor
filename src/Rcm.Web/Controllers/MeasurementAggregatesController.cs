@@ -3,32 +3,22 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Rcm.Services.Aggregates;
 
 namespace Rcm.Web.Controllers;
 
+[ApiController]
 [Route("api/measurements/aggregates")]
-public class MeasurementAggregatesController : Controller
+public class MeasurementAggregatesController(IMeasurementAggregatesAccessor measurementAggregatesAccessor) : ControllerBase
 {
-    private readonly IMeasurementAggregatesAccessor _measurementAggregatesAccessor;
-
-    public MeasurementAggregatesController(IMeasurementAggregatesAccessor measurementAggregatesAccessor)
-    {
-        _measurementAggregatesAccessor = measurementAggregatesAccessor;
-    }
-
     [HttpGet]
     public ActionResult<IEnumerable<MeasurementAggregatesApiResponse>> Get(
-        [FromQuery(Name = "start")] DateTimeOffset? startTime,
-        [FromQuery(Name = "end")] DateTimeOffset? endTime,
-        [FromQuery(Name = "count")] int? count,
+        [FromQuery(Name = "start")][BindRequired] DateTimeOffset startTime,
+        [FromQuery(Name = "end")][BindRequired] DateTimeOffset endTime,
+        [FromQuery(Name = "count")][BindRequired] int count,
         CancellationToken cancellationToken)
     {
-        if (!startTime.HasValue || !endTime.HasValue || !count.HasValue)
-        {
-            return BadRequest("start, end and count are required");
-        }
-
         if (startTime > endTime)
         {
             return BadRequest($"start time is after end time: {startTime:o} > {endTime:o}");
@@ -39,9 +29,9 @@ public class MeasurementAggregatesController : Controller
             return BadRequest($"count must be positive integer, actual is {count}");
         }
 
-        var query = new MeasurementAggregatesQuery { StartTime = startTime.Value, EndTime = endTime.Value, PartitionCount = count.Value };
+        var query = new MeasurementAggregatesQuery { StartTime = startTime, EndTime = endTime, PartitionCount = count };
 
-        var aggregatedMeasurements = _measurementAggregatesAccessor.GetMeasurementAggregates(query, cancellationToken);
+        var aggregatedMeasurements = measurementAggregatesAccessor.GetMeasurementAggregates(query, cancellationToken);
 
         return Ok(aggregatedMeasurements.Select(MapToResponse).ToArray());
     }
