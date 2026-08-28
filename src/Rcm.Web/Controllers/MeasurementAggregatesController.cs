@@ -18,7 +18,7 @@ public class MeasurementAggregatesController : Controller
     }
 
     [HttpGet]
-    public ActionResult<IEnumerable<MeasurementAggregatesContract>> Get(
+    public ActionResult<IEnumerable<MeasurementAggregatesApiResponse>> Get(
         [FromQuery(Name = "start")] DateTimeOffset? startTime,
         [FromQuery(Name = "end")] DateTimeOffset? endTime,
         [FromQuery(Name = "count")] int? count,
@@ -46,7 +46,7 @@ public class MeasurementAggregatesController : Controller
         return Ok(aggregatedMeasurements.Select(MapToResponse).ToArray());
     }
 
-    private static MeasurementAggregatesContract MapToResponse(MeasurementAggregates measurementAggregates)
+    private static MeasurementAggregatesApiResponse MapToResponse(MeasurementAggregates measurementAggregates)
     {
         return new()
         {
