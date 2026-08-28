@@ -204,7 +204,7 @@ public class MeasurementsFileAccessTests
 
     private static void CreateDummyMeasurementFiles(IFileAccess file, DateTimeOffset start, DateTimeOffset end)
     {
-        for (var day = start; day <= end; day = day.AddDays(1))
+        for (var day = start; day <= end; day += TimeSpan.FromDays(1))
         {
             var filePath = GetEntryFilePath(day);
             var dummyEntry = MakeMeasurementEntry(day);

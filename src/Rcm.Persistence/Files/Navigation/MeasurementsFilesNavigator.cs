@@ -9,7 +9,7 @@ public class MeasurementsFilesNavigator(IDataStorageLocation dataStorageLocation
     public IEnumerable<(DateTime date, string path)> GetFilePaths(DateTimeOffset start, DateTimeOffset end)
     {
         var startDate = new DateTimeOffset(start.Date, start.Offset);
-        for (var date = startDate; date <= end; date = date.AddDays(1))
+        for (var date = startDate; date <= end; date += TimeSpan.FromDays(1))
         {
             yield return (date.Date, GetFilePath(date));
         }

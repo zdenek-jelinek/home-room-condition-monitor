@@ -16,9 +16,8 @@ public class MeasurementAggregatesAccessorTests
     public void CalculatesAggregatesFromMeasurementsWithinCorrespondingTimeRange()
     {
         // Given
-        var offset = TimeSpan.FromHours(1);
-        var startTime = new DateTimeOffset(2019, 2, 8, 12, 0, 0, offset);
-        var endTime = startTime.AddHours(4);
+        var startTime = new DateTimeOffset(2019, 2, 8, 12, 0, 0, TimeSpan.FromHours(1));
+        var endTime = startTime + TimeSpan.FromHours(4);
         var partitionCount = 2;
 
         var firstPartitionEndTime = startTime + GetPartitionDuration(startTime, endTime, partitionCount);
@@ -192,7 +191,7 @@ public class MeasurementAggregatesAccessorTests
     {
         // Given
         var startTime = new DateTimeOffset(2019, 2, 9, 10, 0, 0, TimeSpan.FromHours(1));
-        var endTime = startTime.AddHours(1);
+        var endTime = startTime + TimeSpan.FromHours(1);
         var partitionCount = 2;
         var secondPartitionStart = startTime + GetPartitionDuration(startTime, endTime, partitionCount);
 
@@ -305,7 +304,7 @@ public class MeasurementAggregatesAccessorTests
     {
         var dummyStartTime = new DateTimeOffset(2019, 2, 7, 12, 0, 0, TimeSpan.FromHours(1));
 
-        return MakeQuery(dummyStartTime, dummyStartTime.AddDays(1), 3);
+        return MakeQuery(dummyStartTime, dummyStartTime + TimeSpan.FromDays(1), 3);
     }
 
     private static MeasurementAggregatesQuery MakeQuery(DateTimeOffset startTime, DateTimeOffset endTime, int partitionCount)

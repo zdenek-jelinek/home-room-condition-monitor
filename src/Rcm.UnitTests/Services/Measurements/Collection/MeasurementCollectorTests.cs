@@ -62,8 +62,8 @@ public class MeasurementCollectorTests
     {
         // Given
         var firstMeasurementTime = new DateTimeOffset(2018, 12, 28, 19, 50, 10, TimeSpan.Zero);
-        var secondMeasurementTimeWithinSameMinute = firstMeasurementTime.AddSeconds(30);
-        var measurementTimeInNextMinute = firstMeasurementTime.AddMinutes(1);
+        var secondMeasurementTimeWithinSameMinute = firstMeasurementTime + TimeSpan.FromSeconds(30);
+        var measurementTimeInNextMinute = firstMeasurementTime + TimeSpan.FromMinutes(1);
 
         var firstMeasurement = new SensorMeasurement { Time = firstMeasurementTime, CelsiusTemperature = 30m, RelativeHumidity = 45m, HpaPressure = 950m };
         var secondMeasurementWithinSameMinute = new SensorMeasurement { Time = secondMeasurementTimeWithinSameMinute, CelsiusTemperature = 20m, RelativeHumidity = 40m, HpaPressure = 1050m };

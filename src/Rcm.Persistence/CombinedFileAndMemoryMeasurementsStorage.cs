@@ -130,7 +130,7 @@ public class CombinedFileAndMemoryMeasurementsStorage(IClock clock, IMeasurement
     {
         var now = clock.Now;
         var startOfToday = new DateTimeOffset(now.Date, now.Offset);
-        var endOfToday = startOfToday.AddDays(1).AddTicks(-1);
+        var endOfToday = startOfToday + TimeSpan.FromDays(1) - TimeSpan.FromTicks(1);
 
         var result = new List<MeasurementEntry>(MeasurementsPerDay);
         result.AddRange(fileAccess.Read(startOfToday, endOfToday, token));
