@@ -25,7 +25,7 @@ public class MeasurementsFileAccessTests
     [Test]
     public async Task WritesDataToDataStorageLocationUnderFilenameMatchingEntryDate()
     {
-        // given
+        // Given
         var fakeFileAccess = new FakeFileAccess();
 
         var collectedDataFileAccess = CreateCollectedDataFileAccess(fakeFileAccess);
@@ -42,11 +42,11 @@ public class MeasurementsFileAccessTests
             47.1m,
             994.36m);
 
-        // when
+        // When
         await collectedDataFileAccess.SaveAsync(firstEntry, default);
         await collectedDataFileAccess.SaveAsync(secondEntry, default);
 
-        // then
+        // Then
         var firstEntryPath = GetEntryFilePath(firstEntry.Time);
         Assert.True(fakeFileAccess.Exists(firstEntryPath));
         Assert.AreEqual(
@@ -63,7 +63,7 @@ public class MeasurementsFileAccessTests
     [Test]
     public void ReadsDataFromStorageLocationFilesBasedOnSuppliedRange()
     {
-        // given
+        // Given
         var fakeFileAccess = new FakeFileAccess();
 
         var collectedDataFileAccess = CreateCollectedDataFileAccess(fakeFileAccess);
@@ -94,10 +94,10 @@ public class MeasurementsFileAccessTests
                 entryDayAfterEnd
             });
 
-        // when
+        // When
         var readEntries = collectedDataFileAccess.Read(startTime, endTime, default);
 
-        // then
+        // Then
         Assert.That(
             readEntries,
             Is.EquivalentTo(new[] { entryOnStart, firstEntryInMiddle, secondEntryInMiddle, entryOnEnd })
@@ -107,7 +107,7 @@ public class MeasurementsFileAccessTests
     [Test]
     public void SkipsInvalidLinesInFiles()
     {
-        // given
+        // Given
         var time = new DateTimeOffset(2020, 1, 28, 18, 45, 0, TimeSpan.FromHours(1));
 
         var fakeFileAccess = new FakeFileAccess();
@@ -130,17 +130,17 @@ public class MeasurementsFileAccessTests
         var path = GetEntryFilePath(time);
         fakeFileAccess.WriteAllLines(path, measurementFileLines);
 
-        // when
+        // When
         var readEntries = collectedDataFileAccess.Read(time.AddHours(-2), time.AddHours(2), default);
 
-        // then
+        // Then
         Assert.That(readEntries, Is.EquivalentTo(validEntries).Using(new MeasurementEntryEqualityComparer()));
     }
 
     [Test]
     public async Task AbortsWriteIfCancellationIsSignaledBeforeOrDuringFileOpening()
     {
-        // given
+        // Given
         using var cancellationTokenSource = new CancellationTokenSource();
 
         var dummyEntry = new MeasurementEntry(new DateTimeOffset(2000, 1, 1, 12, 0, 0, TimeSpan.FromHours(2)), 25m, 42m, 1010m);
@@ -149,7 +149,7 @@ public class MeasurementsFileAccessTests
 
         var collectedDataFileAccess = CreateCollectedDataFileAccess(blockingFileAccess);
 
-        // when
+        // When
         var savingTask = Task.Run(() => collectedDataFileAccess.SaveAsync(dummyEntry, cancellationTokenSource.Token));
 
         await blockingFileAccess.OpeningStarted;
@@ -158,7 +158,7 @@ public class MeasurementsFileAccessTests
 
         var savingCompleted = await savingTask.TryWait(TimeSpan.FromSeconds(1));
 
-        // then
+        // Then
         Assert.IsTrue(savingCompleted, nameof(savingCompleted));
         Assert.AreEqual(TaskStatus.Canceled, savingTask.Status);
     }
@@ -166,7 +166,7 @@ public class MeasurementsFileAccessTests
     [Test]
     public async Task AbortsReadWhenCancelledBetweenReadingFiles()
     {
-        // given
+        // Given
         using var cancellationTokenSource = new CancellationTokenSource();
 
         var dummyStart = new DateTimeOffset(2000, 1, 1, 12, 0, 0, TimeSpan.FromHours(2));
@@ -178,7 +178,7 @@ public class MeasurementsFileAccessTests
 
         CreateDummyMeasurementFiles(blockingFileAccess.UnderlyingFileAccess, dummyStart, dummyEnd);
 
-        // when
+        // When
         var readIterator = collectedDataFileAccess.Read(dummyStart, dummyEnd, cancellationTokenSource.Token);
         var readingTask = Task.Run(() => readIterator.ToList(), cancellationTokenSource.Token);
 
@@ -188,7 +188,7 @@ public class MeasurementsFileAccessTests
 
         var readingCompleted = await readingTask.TryWait(TimeSpan.FromSeconds(1));
 
-        // then
+        // Then
         Assert.IsTrue(readingCompleted, nameof(readingCompleted));
         Assert.AreEqual(TaskStatus.Canceled, readingTask.Status);
     }

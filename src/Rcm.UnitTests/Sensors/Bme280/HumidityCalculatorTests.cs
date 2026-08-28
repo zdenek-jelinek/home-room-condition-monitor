@@ -10,7 +10,7 @@ public class HumidityCalculatorTests
     [Test(Description = "This test is based on real-use data and tests datasheet-based code. Its main purpose is debugging")]
     public void CalculatesHumidityCorrectly()
     {
-        // given
+        // Given
         var rawHumidity = 0x6E32;
         var fineTemperature = 0x19E8C;
         var compensationParameters = new HumidityCompensationParameters
@@ -25,10 +25,10 @@ public class HumidityCalculatorTests
 
         var calculator = new HumidityCalculator(compensationParameters);
 
-        // when
+        // When
         var humidity = calculator.CalculateHumidity(rawHumidity, fineTemperature);
 
-        // then
+        // Then
         Assert.AreEqual(42.38, Math.Round(humidity, 2));
     }
 }

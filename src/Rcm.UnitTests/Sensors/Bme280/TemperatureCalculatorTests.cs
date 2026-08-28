@@ -9,7 +9,7 @@ public class TemperatureCalculatorTests
     [Test(Description = "This test is based on real-use data and tests datasheet-based code. Its main purpose is debugging")]
     public void CorrectlyCalculatesCompensatedTemperature()
     {
-        // given
+        // Given
         var parameters = new TemperatureCompensationParameters
         {
             Temperature1 = 0x6D86,
@@ -21,10 +21,10 @@ public class TemperatureCalculatorTests
 
         var rawTemperature = 0x7D9D4;
 
-        // when
+        // When
         var (temperature, _) = calculator.CalculateTemperature(rawTemperature);
 
-        // then
+        // Then
         Assert.AreEqual(20.73m, temperature);
     }
 }

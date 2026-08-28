@@ -12,17 +12,17 @@ public class MeasurementsFilesNavigatorTests
     [Test]
     public void EntryFilePathIsDataStoragePathCombinedWithMeasurementsAndEntryDateWithMstExtension()
     {
-        // given
+        // Given
         var dataStorageLocation = new StubDataStorageLocation("dataStorage");
 
         var navigator = new MeasurementsFilesNavigator(dataStorageLocation);
 
         var entryTime = new DateTimeOffset(2018, 12, 30, 19, 30, 15, TimeSpan.FromHours(1));
 
-        // when
+        // When
         var path = navigator.GetFilePath(entryTime);
 
-        // then
+        // Then
         var separator = Path.DirectorySeparatorChar;
         var expectedPath = $"dataStorage{separator}measurements{separator}2018-12-30.mst";
         Assert.AreEqual(expectedPath, path);
@@ -31,7 +31,7 @@ public class MeasurementsFilesNavigatorTests
     [Test]
     public void FilePathsOfEntriesWithinRangeAreDatesWithinThatRangeCombinedWithDataStoragePathAndMeasurementsAndMstExtension()
     {
-        // given
+        // Given
         var dataStorageLocation = new StubDataStorageLocation("dataStorage");
 
         var navigator = new MeasurementsFilesNavigator(dataStorageLocation);
@@ -46,10 +46,10 @@ public class MeasurementsFilesNavigatorTests
             new DateTime(2018, 12, 22, 0, 0, 0)
         };
 
-        // when
+        // When
         var paths = navigator.GetFilePaths(startTime, endTime);
 
-        // then
+        // Then
         var separator = Path.DirectorySeparatorChar;
         CollectionAssert.AreEquivalent(
             daysBetweenStartAndEnd.Select(d => (d.Date, $"dataStorage{separator}measurements{separator}2018-12-{d.Day:00}.mst")),

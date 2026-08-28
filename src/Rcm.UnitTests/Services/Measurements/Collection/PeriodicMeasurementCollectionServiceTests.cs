@@ -17,7 +17,7 @@ public class PeriodicMeasurementCollectionServiceTests
     [Test]
     public async Task InvokesMeasurementWithSpecifiedTimeoutAndPeriodAfterStarting()
     {
-        // given
+        // Given
         var initialMeasurementDelay = TimeSpan.FromMilliseconds(50);
         var measurementPeriod = TimeSpan.FromMilliseconds(100);
 
@@ -27,7 +27,7 @@ public class PeriodicMeasurementCollectionServiceTests
             blockingMeasurementCollector,
             measurementTimings: new() { InitialDelay = initialMeasurementDelay, Period = measurementPeriod });
 
-        // when
+        // When
         var stopwatch = Stopwatch.StartNew();
         await periodicDataCollectionService.StartAsync(CancellationToken.None);
 
@@ -40,7 +40,7 @@ public class PeriodicMeasurementCollectionServiceTests
         await blockingMeasurementCollector.MeasurementStarted;
         var subsequentMeasurementDelay = stopwatch.ElapsedMilliseconds;
 
-        // then
+        // Then
         Assert.AreEqual(initialMeasurementDelay.TotalMilliseconds, measuredFirstMeasurementDelay, Tolerance.TotalMilliseconds);
         Assert.AreEqual(measurementPeriod.TotalMilliseconds, subsequentMeasurementDelay, Tolerance.TotalMilliseconds);
     }
@@ -48,7 +48,7 @@ public class PeriodicMeasurementCollectionServiceTests
     [Test]
     public async Task DoesNotInvokeNextMeasurementIfPreviousMeasurementIsStillPending()
     {
-        // given
+        // Given
         var measurementPeriod = TimeSpan.FromMilliseconds(32);
 
         using var blockingMeasurementCollector = new BlockingMeasurementCollector();
@@ -57,21 +57,21 @@ public class PeriodicMeasurementCollectionServiceTests
             blockingMeasurementCollector,
             measurementTimings: new() { InitialDelay = TimeSpan.Zero, Period = measurementPeriod });
 
-        // when
+        // When
         await periodicDataCollectionService.StartAsync(CancellationToken.None);
 
         await blockingMeasurementCollector.MeasurementStarted;
 
         var subsequentMeasurementIssued = await blockingMeasurementCollector.MeasurementStarted.TryWait(4 * measurementPeriod);
 
-        // then
+        // Then
         Assert.IsFalse(subsequentMeasurementIssued, nameof(subsequentMeasurementIssued));
     }
 
     [Test]
     public async Task StoppingWithoutPendingMeasurementStopsImmediately()
     {
-        // given
+        // Given
         var measurementTimingsWithLargeDelay = new MeasurementCollectionTimings
         {
             InitialDelay = TimeSpan.FromDays(10),
@@ -86,12 +86,12 @@ public class PeriodicMeasurementCollectionServiceTests
 
         await periodicDataCollectionService.StartAsync(CancellationToken.None);
 
-        // when
+        // When
         var stoppingCompleted = await periodicDataCollectionService
             .StopAsync(CancellationToken.None)
             .TryWait(TimeSpan.FromSeconds(1));
 
-        // then
+        // Then
         Assert.IsTrue(stoppingCompleted, nameof(stoppingCompleted));
     }
 
@@ -99,7 +99,7 @@ public class PeriodicMeasurementCollectionServiceTests
     [Theory]
     public async Task StoppingCancelsPendingSynchronousMeasurement(bool blockedAsynchronously)
     {
-        // given
+        // Given
         using var blockingMeasurementCollector = new BlockingMeasurementCollector
         {
             BlocksAsynchronously = blockedAsynchronously,
@@ -110,14 +110,14 @@ public class PeriodicMeasurementCollectionServiceTests
 
         await periodicDataCollectionService.StartAsync(CancellationToken.None);
 
-        // when
+        // When
         await blockingMeasurementCollector.MeasurementStarted;
 
         var stoppingCompleted = await periodicDataCollectionService
             .StopAsync(CancellationToken.None)
             .TryWait(TimeSpan.FromSeconds(1));
 
-        // then
+        // Then
         Assert.IsTrue(stoppingCompleted, nameof(stoppingCompleted));
     }
 
@@ -125,7 +125,7 @@ public class PeriodicMeasurementCollectionServiceTests
     [Theory]
     public async Task StoppingCanBeCancelledImmediatelyIfMeasurementIsBlocked(bool blockedAsynchronously)
     {
-        // given
+        // Given
         using var cancellationTokenSource = new CancellationTokenSource();
 
         using var blockingMeasurementCollector = new BlockingMeasurementCollector
@@ -138,7 +138,7 @@ public class PeriodicMeasurementCollectionServiceTests
 
         await periodicDataCollectionService.StartAsync(CancellationToken.None);
 
-        // when
+        // When
         await blockingMeasurementCollector.MeasurementStarted;
 
         var stoppingTask = periodicDataCollectionService.StopAsync(cancellationTokenSource.Token);
@@ -148,7 +148,7 @@ public class PeriodicMeasurementCollectionServiceTests
 
         var stoppedAfterCancellation = await stoppingTask.TryWait(TimeSpan.FromSeconds(1));
 
-        // then
+        // Then
         Assert.IsFalse(stoppedImmediately, nameof(stoppedImmediately));
         Assert.IsTrue(stoppedAfterCancellation, nameof(stoppedAfterCancellation));
         Assert.AreEqual(TaskStatus.RanToCompletion, stoppingTask.Status);

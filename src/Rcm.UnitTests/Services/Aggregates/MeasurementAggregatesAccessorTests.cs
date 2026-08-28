@@ -15,7 +15,7 @@ public class MeasurementAggregatesAccessorTests
     [Test]
     public void CalculatesAggregatesFromMeasurementsWithinCorrespondingTimeRange()
     {
-        // given
+        // Given
         var offset = TimeSpan.FromHours(1);
         var startTime = new DateTimeOffset(2019, 2, 8, 12, 0, 0, offset);
         var endTime = startTime.AddHours(4);
@@ -61,10 +61,10 @@ public class MeasurementAggregatesAccessorTests
             lastMeasurementInSecondPartition
         };
 
-        // when
+        // When
         var aggregates = GetMeasurementAggregates(measurements, MakeQuery(startTime, endTime, partitionCount));
 
-        // then
+        // Then
         Assert.AreEqual(partitionCount, aggregates.Count);
 
         Assert.AreEqual(firstMeasurementInFirstPartition.Time, aggregates[0].Temperature.First.Time);
@@ -135,7 +135,7 @@ public class MeasurementAggregatesAccessorTests
     [Test]
     public void ReturnsSingleAggregationOfSelectedRangeForCountEqualToOne()
     {
-        // given
+        // Given
         var dummyStartTime = new DateTimeOffset(2019, 2, 7, 21, 48, 15, TimeSpan.FromHours(1));
         var dummyEndTime = dummyStartTime.AddDays(1);
 
@@ -149,10 +149,10 @@ public class MeasurementAggregatesAccessorTests
             new MeasurementEntry(dummyStartTime.AddHours(19), 19m, 31m, 995)
         };
 
-        // when
+        // When
         var aggregates = GetMeasurementAggregates(measurements, MakeQuery(dummyStartTime, dummyEndTime, count));
 
-        // then
+        // Then
         var aggregate = aggregates.Single();
         var measurementsByTime = measurements.OrderBy(m => m.Time);
         var measurementsByTemperature = measurements.OrderBy(m => m.CelsiusTemperature);
@@ -190,7 +190,7 @@ public class MeasurementAggregatesAccessorTests
     [Test]
     public void ConsidersAllMeasurementsForUnevenPartitionSizes()
     {
-        // given
+        // Given
         var offset = TimeSpan.FromHours(1);
         var startTime = new DateTimeOffset(2019, 2, 9, 10, 0, 0, offset);
         var endTime = startTime.AddHours(1);
@@ -201,12 +201,12 @@ public class MeasurementAggregatesAccessorTests
         var measurementOnBorderOfPartitions = new MeasurementEntry(secondPartitionStart, 20m, 30m, 950m);
         var measurementInSecondPartition = new MeasurementEntry(endTime, 30m, 40m, 1000m);
 
-        // when
+        // When
         var aggregates = GetMeasurementAggregates(
             measurements: [measurementInFirstPartition, measurementOnBorderOfPartitions, measurementInSecondPartition],
             query: MakeQuery(startTime, endTime, partitionCount));
 
-        // then
+        // Then
         var minTemperature = new AggregateEntry(measurementInFirstPartition.Time, measurementInFirstPartition.CelsiusTemperature);
         var maxTemperature = new AggregateEntry(measurementOnBorderOfPartitions.Time, measurementOnBorderOfPartitions.CelsiusTemperature);
         var minPressure = new AggregateEntry(measurementInFirstPartition.Time, measurementInFirstPartition.HpaPressure);
@@ -234,7 +234,7 @@ public class MeasurementAggregatesAccessorTests
     [Test]
     public void NoAggregatesAreReturnedForAPartitionIfThereAreNoMeasurementsInThePartition()
     {
-        // given
+        // Given
         var offset = TimeSpan.FromHours(1);
         var startTime = new DateTimeOffset(2019, 2, 9, 10, 0, 0, offset);
         var endTime = startTime.AddHours(1);
@@ -247,10 +247,10 @@ public class MeasurementAggregatesAccessorTests
 
         var query = MakeQuery(startTime, endTime, partitionCount);
 
-        // when
+        // When
         var aggregates = GetMeasurementAggregates([.. measurementsInFirstPartition, .. measurementsInSecondPartition], query);
 
-        // then
+        // Then
         var temperature = new AggregateEntry(actualMeasurementTime, 25m);
         var humidity = new AggregateEntry(actualMeasurementTime, 37m);
         var pressure = new AggregateEntry(actualMeasurementTime, 975m);
@@ -271,17 +271,17 @@ public class MeasurementAggregatesAccessorTests
     [Test]
     public void NoAggregatesAreReturnedIfThereAreNoMeasurements()
     {
-        // when
+        // When
         var aggregates = GetMeasurementAggregates(measurements: [], MakeDummyQuery());
 
-        // then
+        // Then
         CollectionAssert.IsEmpty(aggregates);
     }
 
     [Test]
     public void ThrowsOnEvaluationForNonMonotonousMeasurementTimes()
     {
-        // given
+        // Given
         var query = MakeDummyQuery();
 
         var nonMonotonousMeasurements = new[]
@@ -290,13 +290,13 @@ public class MeasurementAggregatesAccessorTests
             new MeasurementEntry(query.StartTime, 10m, 20m, 900m),
         };
 
-        // when
+        // When
         void GetAggregatesForNonMonotonousMeasurementTimes()
         {
             _ = GetMeasurementAggregates(nonMonotonousMeasurements, query);
         }
 
-        // then
+        // Then
         _ = Assert.Catch(GetAggregatesForNonMonotonousMeasurementTimes);
     }
 

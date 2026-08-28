@@ -17,7 +17,7 @@ public class CombinedFileAndMemoryMeasurementsStorageTests
     [Test]
     public async Task StoresAllMeasurementsToFile()
     {
-        // given
+        // Given
         var entry = new MeasurementEntry(
             time: new DateTimeOffset(2018, 12, 30, 12, 0, 0, TimeSpan.Zero),
             celsiusTemperature: 10m,
@@ -28,10 +28,10 @@ public class CombinedFileAndMemoryMeasurementsStorageTests
 
         using var combinedStorage = MakeCombinedDataStorage(fileAccess: spyCollectedDataFileAccess);
 
-        // when
+        // When
         await combinedStorage.StoreAsync(entry, CancellationToken.None);
 
-        // then
+        // Then
         Assert.IsNotNull(spyCollectedDataFileAccess.SavedEntry);
 
         Assert.AreEqual(entry.Time, spyCollectedDataFileAccess.SavedEntry!.Time);
@@ -43,7 +43,7 @@ public class CombinedFileAndMemoryMeasurementsStorageTests
     [Test]
     public async Task AccessFilesForDataInThePastReadsTodayDataFromMemoryAndDoesNotReadDataFromFuture()
     {
-        // given
+        // Given
         var now = new DateTimeOffset(2018, 12, 30, 12, 0, 0, TimeSpan.Zero);
         var todayMidnight = new DateTimeOffset(now.Date, now.Offset);
 
@@ -59,12 +59,12 @@ public class CombinedFileAndMemoryMeasurementsStorageTests
 
         await combinedStorage.StoreAsync(todaysEntry, CancellationToken.None);
 
-        // when
+        // When
         var entries = combinedStorage
             .GetCollectedData(startTimeBeforeToday, endTimeInFuture, CancellationToken.None)
             .ToList();
 
-        // then
+        // Then
         Assert.IsNotNull(spyCollectedDataFileAccess.ReadRange);
 
         var (fileReadStart, fileReadEnd) = spyCollectedDataFileAccess.ReadRange.GetValueOrDefault();
@@ -77,7 +77,7 @@ public class CombinedFileAndMemoryMeasurementsStorageTests
     [Test]
     public void ReadsDataOlderThanTodayFromFiles()
     {
-        // given
+        // Given
         var now = new DateTimeOffset(2018, 12, 30, 12, 0, 0, TimeSpan.Zero);
 
         var startTimeBeforeToday = now.AddDays(-2);
@@ -87,12 +87,12 @@ public class CombinedFileAndMemoryMeasurementsStorageTests
 
         using var combinedStorage = MakeCombinedDataStorage(now, spyCollectedDataFileAccess);
 
-        // when
+        // When
         _ = combinedStorage
             .GetCollectedData(startTimeBeforeToday, endTimeBeforeToday, CancellationToken.None)
             .ToList();
 
-        // then
+        // Then
         Assert.IsNotNull(spyCollectedDataFileAccess.ReadRange);
 
         var (readStart, readEnd) = spyCollectedDataFileAccess.ReadRange.GetValueOrDefault();
@@ -105,7 +105,7 @@ public class CombinedFileAndMemoryMeasurementsStorageTests
     [TestCase(2)]
     public void ReadsDataJustBeforeTodayFromFilesRegardlessOfOffset(int offset)
     {
-        // given
+        // Given
         var now = new DateTimeOffset(2018, 12, 30, 12, 0, 0, TimeSpan.Zero);
         var todayMidnight = new DateTimeOffset(now.Date, now.Offset);
 
@@ -116,12 +116,12 @@ public class CombinedFileAndMemoryMeasurementsStorageTests
 
         using var combinedStorage = MakeCombinedDataStorage(now, spyCollectedDataFileAccess);
 
-        // when
+        // When
         _ = combinedStorage
             .GetCollectedData(startTimeBeforeMidnight, endTimeBeforeMidnight, CancellationToken.None)
             .ToList();
 
-        // then
+        // Then
         Assert.IsNotNull(spyCollectedDataFileAccess.ReadRange);
 
         var (readStart, readEnd) = spyCollectedDataFileAccess.ReadRange.GetValueOrDefault();
@@ -132,7 +132,7 @@ public class CombinedFileAndMemoryMeasurementsStorageTests
     [Test]
     public async Task DoesNotAccessFilesToReadTodaysDataAfterPreviousOperation()
     {
-        // given
+        // Given
         var now = new DateTimeOffset(2018, 12, 30, 12, 0, 0, TimeSpan.Zero);
 
         var startTimeOnToday = now.AddMinutes(-30);
@@ -147,12 +147,12 @@ public class CombinedFileAndMemoryMeasurementsStorageTests
         await combinedStorage.StoreAsync(storedEntry, CancellationToken.None);
         spyCollectedDataFileAccess.Reset();
 
-        // when
+        // When
         var entries = combinedStorage
             .GetCollectedData(startTimeOnToday, endTimeOnToday, CancellationToken.None)
             .ToList();
 
-        // then
+        // Then
         Assert.IsNull(spyCollectedDataFileAccess.ReadRange);
 
         CollectionAssert.AreEquivalent(new[] { storedEntry }, entries);
@@ -161,7 +161,7 @@ public class CombinedFileAndMemoryMeasurementsStorageTests
     [Test]
     public async Task AccessesFilesForOlderDaysAndNotForTodayForDateRangeIncludingToday()
     {
-        // given
+        // Given
         var now = new DateTimeOffset(2018, 12, 30, 12, 0, 0, TimeSpan.Zero);
         var todayMidnight = new DateTimeOffset(now.Date, now.Offset);
 
@@ -177,12 +177,12 @@ public class CombinedFileAndMemoryMeasurementsStorageTests
 
         await combinedStorage.StoreAsync(todaysEntry, CancellationToken.None);
 
-        // when
+        // When
         var entries = combinedStorage
             .GetCollectedData(startTimeBeforeToday, endTimeOnToday, CancellationToken.None)
             .ToList();
 
-        // then
+        // Then
         Assert.IsNotNull(spyCollectedDataFileAccess.ReadRange);
 
         var (fileReadStart, fileReadEnd) = spyCollectedDataFileAccess.ReadRange.GetValueOrDefault();
@@ -195,7 +195,7 @@ public class CombinedFileAndMemoryMeasurementsStorageTests
     [Test]
     public void TodaysDataReadWithoutAnyPrecedingStoresIncludeDataStoredInFile()
     {
-        // given
+        // Given
         var now = new DateTimeOffset(2018, 12, 30, 12, 0, 0, TimeSpan.Zero);
 
         var startTimeOnToday = now.AddHours(-1);
@@ -207,19 +207,19 @@ public class CombinedFileAndMemoryMeasurementsStorageTests
 
         using var combinedStorage = MakeCombinedDataStorage(now, spyCollectedDataFileAccess);
 
-        // when
+        // When
         var readEntries = combinedStorage
             .GetCollectedData(startTimeOnToday, endTimeOnToday, CancellationToken.None)
             .ToList();
 
-        // then
+        // Then
         CollectionAssert.AreEquivalent(new[] { entryStoredInFile }, readEntries);
     }
 
     [Test]
     public async Task TodaysDataReadAfterStoreIncludeDataAlreadyStoredInFile()
     {
-        // given
+        // Given
         var now = new DateTimeOffset(2018, 12, 30, 12, 0, 0, TimeSpan.Zero);
 
         var startTimeOnToday = now.AddHours(-10);
@@ -233,21 +233,21 @@ public class CombinedFileAndMemoryMeasurementsStorageTests
 
         var newEntry = new MeasurementEntry(now, 25m, 32m, 985m);
 
-        // when
+        // When
         await combinedStorage.StoreAsync(newEntry, CancellationToken.None);
 
         var readEntries = combinedStorage
             .GetCollectedData(startTimeOnToday, endTimeOnToday, CancellationToken.None)
             .ToList();
 
-        // then
+        // Then
         CollectionAssert.AreEquivalent(new[] { entryPreviouslyStoredInFile, newEntry }, readEntries);
     }
 
     [Test]
     public async Task ReturnsTodaysEntriesWithinRangeForTodayRange()
     {
-        // given
+        // Given
         var now = new DateTimeOffset(2018, 12, 30, 12, 0, 0, TimeSpan.Zero);
 
         var startTimeOnToday = now.AddMinutes(-20);
@@ -269,12 +269,12 @@ public class CombinedFileAndMemoryMeasurementsStorageTests
         await combinedStorage.StoreAsync(entryOnEnd, CancellationToken.None);
         await combinedStorage.StoreAsync(entryAfterEnd, CancellationToken.None);
 
-        // when
+        // When
         var entries = combinedStorage
             .GetCollectedData(startTimeOnToday, endTimeOnToday, CancellationToken.None)
             .ToList();
 
-        // then
+        // Then
         CollectionAssert.AreEquivalent(new[] { entryOnStart, entryInsideRange, entryOnEnd }, entries);
     }
 
@@ -283,7 +283,7 @@ public class CombinedFileAndMemoryMeasurementsStorageTests
     [TestCase(2)]
     public void ReturnsTodaysEntriesForTimesAtOrAfterMidnightRegardlessOfOffset(int offset)
     {
-        // given
+        // Given
         var now = new DateTimeOffset(2018, 12, 30, 12, 0, 0, TimeSpan.Zero);
         var todayMidnight = new DateTimeOffset(now.Date, now.Offset);
 
@@ -296,12 +296,12 @@ public class CombinedFileAndMemoryMeasurementsStorageTests
 
         using var combinedStorage = MakeCombinedDataStorage(now, spyCollectedDataFileAccess);
 
-        // when
+        // When
         var readEntries = combinedStorage
             .GetCollectedData(startTimeOnMidnightInDifferentOffset, endTimeAfterMidnightInDifferentOffset, CancellationToken.None)
             .ToList();
 
-        // then
+        // Then
         CollectionAssert.AreEquivalent(new[] { entryPreviouslyStoredInFile }, readEntries);
     }
 
@@ -310,7 +310,7 @@ public class CombinedFileAndMemoryMeasurementsStorageTests
     [TestCase(2)]
     public void ReturnsTodaysEntriesForTimesBeforeNextMidnightRegardlessOfOffset(int offset)
     {
-        // given
+        // Given
         var hourBeforeMidnight = new DateTimeOffset(2018, 12, 30, 23, 0, 0, TimeSpan.Zero);
 
         var startTimeBeforeNextMidnightInDifferentOffset = hourBeforeMidnight.AddMinutes(-30).ToOffset(TimeSpan.FromHours(offset));
@@ -322,19 +322,19 @@ public class CombinedFileAndMemoryMeasurementsStorageTests
 
         using var combinedStorage = MakeCombinedDataStorage(hourBeforeMidnight, spyCollectedDataFileAccess);
 
-        // when
+        // When
         var readEntries = combinedStorage
             .GetCollectedData(startTimeBeforeNextMidnightInDifferentOffset, endTimeBeforeNextMidnightInDifferentOffset, CancellationToken.None)
             .ToList();
 
-        // then
+        // Then
         CollectionAssert.AreEquivalent(new[] { entryPreviouslyStoredInFile }, readEntries);
     }
 
     [Test]
     public void DoesNotAccessFilesForDataBeforeQueriedRangeDueToNegativeOffset()
     {
-        // given
+        // Given
         var midnightInUtc = new DateTimeOffset(2018, 12, 30, 0, 0, 0, TimeSpan.Zero);
         var timeEquivalentToUtcMidnightInMinusFive = midnightInUtc.ToOffset(TimeSpan.FromHours(-5));
 
@@ -347,12 +347,12 @@ public class CombinedFileAndMemoryMeasurementsStorageTests
 
         using var combinedStorage = MakeCombinedDataStorage(midnightInUtc, spyCollectedDataFileAccess);
 
-        // when
+        // When
         var entries = combinedStorage
             .GetCollectedData(startTimeBeforeTodayInDifferentZone, endTimeBeforeTodayInDifferentZone, CancellationToken.None)
             .ToList();
 
-        // then
+        // Then
         Assert.IsNull(spyCollectedDataFileAccess.ReadRange);
         Assert.IsEmpty(entries);
     }
@@ -360,7 +360,7 @@ public class CombinedFileAndMemoryMeasurementsStorageTests
     [Test]
     public void DoesNotAccessFilesForDataStartingInFuture()
     {
-        // given
+        // Given
         var now = new DateTimeOffset(2018, 12, 30, 12, 0, 0, TimeSpan.Zero);
 
         var futureStartTime = now.AddDays(2);
@@ -370,12 +370,12 @@ public class CombinedFileAndMemoryMeasurementsStorageTests
 
         using var combinedStorage = MakeCombinedDataStorage(now, spyCollectedDataFileAccess);
 
-        // when
+        // When
         var entries = combinedStorage
             .GetCollectedData(futureStartTime, futureEndTime, CancellationToken.None)
             .ToList();
 
-        // then
+        // Then
         Assert.IsNull(spyCollectedDataFileAccess.ReadRange);
 
         Assert.IsEmpty(entries);
@@ -384,7 +384,7 @@ public class CombinedFileAndMemoryMeasurementsStorageTests
     [Test]
     public void DoesNotAccessFilesForDataStartingInFutureWithSeeminglyPastTimeDueToNegativeOffset()
     {
-        // given
+        // Given
         var oneHourBeforeMidnight = new DateTimeOffset(2018, 12, 30, 23, 0, 0, TimeSpan.Zero);
 
         var fiveHoursOffset = TimeSpan.FromHours(-5);
@@ -397,12 +397,12 @@ public class CombinedFileAndMemoryMeasurementsStorageTests
 
         using var combinedStorage = MakeCombinedDataStorage(oneHourBeforeMidnight, spyCollectedDataFileAccess);
 
-        // when
+        // When
         var entries = combinedStorage
             .GetCollectedData(futureStartInNegativeOffset, futureEndTimeInNegativeOffset, CancellationToken.None)
             .ToList();
 
-        // then
+        // Then
         Assert.IsNull(spyCollectedDataFileAccess.ReadRange);
 
         Assert.IsEmpty(entries);
@@ -411,7 +411,7 @@ public class CombinedFileAndMemoryMeasurementsStorageTests
     [Test]
     public async Task RetrievedDataOnlyContainsYesterdayOnceEvenIfNoOtherMeasurementWasSubsequentlyAdded()
     {
-        // given
+        // Given
         var now = new DateTimeOffset(2018, 12, 30, 12, 0, 0, TimeSpan.Zero);
 
         var startTimeOnYesterday = now.AddDays(-1);
@@ -425,26 +425,26 @@ public class CombinedFileAndMemoryMeasurementsStorageTests
 
         await combinedStorage.StoreAsync(entryOnYesterday, CancellationToken.None);
 
-        // when
+        // When
         var entries = combinedStorage.GetCollectedData(startTimeOnYesterday, endTimeOnToday, CancellationToken.None);
 
-        // then
+        // Then
         CollectionAssert.AreEquivalent(new[] { entryOnYesterday }, entries);
     }
 
     [Test]
     public void ThrowsForDateRangeWhereStartIsAfterEnd()
     {
-        // given
+        // Given
         var startTime = new DateTimeOffset(2018, 12, 30, 11, 30, 0, 0, TimeSpan.Zero);
         var endTime = startTime - TimeSpan.FromHours(1);
 
         using var combinedStorage = MakeCombinedDataStorage();
 
-        // when
+        // When
         void RetrieveDataForInvalidTimeRange() => combinedStorage.GetCollectedData(startTime, endTime, CancellationToken.None);
 
-        // then
+        // Then
         _ = Assert.Catch(RetrieveDataForInvalidTimeRange);
     }
 

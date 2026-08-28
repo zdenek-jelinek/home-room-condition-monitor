@@ -17,7 +17,7 @@ public class MeasurementCollectorTests
     [Test]
     public void SubsequentMeasurementIsSkippedIfPreviousMeasurementIsStillInProgress()
     {
-        // given
+        // Given
         var blockingSpyMeasurementProvider = new BlockingSpySensor();
 
         var measurementCollector = new MeasurementCollector(
@@ -25,15 +25,15 @@ public class MeasurementCollectorTests
             blockingSpyMeasurementProvider,
             new DummyMeasurementsWriter());
 
-        // when
+        // When
         var firstMeasurementTask = measurementCollector.MeasureAsync(default);
         var secondMeasurementTask = measurementCollector.MeasureAsync(default);
 
-        // then
+        // Then
         Assert.AreEqual(1, blockingSpyMeasurementProvider.InvocationCount);
         Assert.IsTrue(secondMeasurementTask.IsCompleted);
 
-        // clean-up
+        // Clean-up
         blockingSpyMeasurementProvider.Release();
         Task.WaitAll(firstMeasurementTask, secondMeasurementTask);
     }
@@ -41,7 +41,7 @@ public class MeasurementCollectorTests
     [Test]
     public async Task SubsequentMeasurementIsCarriedOutEvenIfPreviousMeasurementHasThrown()
     {
-        // given
+        // Given
         var throwingSpyMeasurementProvider = new ThrowingSpySensor();
 
         var measurementCollector = new MeasurementCollector(
@@ -49,18 +49,18 @@ public class MeasurementCollectorTests
             throwingSpyMeasurementProvider,
             new DummyMeasurementsWriter());
 
-        // when
+        // When
         await IgnoreExceptions(() => measurementCollector.MeasureAsync(default));
         await IgnoreExceptions(() => measurementCollector.MeasureAsync(default));
 
-        // then
+        // Then
         Assert.AreEqual(2, throwingSpyMeasurementProvider.InvocationCount);
     }
 
     [Test]
     public async Task AverageOfPreviousMeasurementsIsStoredIfNewMeasurementDiffersInTimeMinutes()
     {
-        // given
+        // Given
         var firstMeasurementTime = new DateTimeOffset(2018, 12, 28, 19, 50, 10, TimeSpan.Zero);
         var secondMeasurementTimeWithinSameMinute = firstMeasurementTime.AddSeconds(30);
         var measurementTimeInNextMinute = firstMeasurementTime.AddMinutes(1);
@@ -76,12 +76,12 @@ public class MeasurementCollectorTests
             new FakeSensor(new[] { firstMeasurement, secondMeasurementWithinSameMinute, measurementInNextMinute }),
             spyCollectedDataStorage);
 
-        // when
+        // When
         await measurementCollector.MeasureAsync(default);
         await measurementCollector.MeasureAsync(default);
         await measurementCollector.MeasureAsync(default);
 
-        // then
+        // Then
         Assert.IsNotNull(spyCollectedDataStorage.StoredEntry);
 
         Assert.AreEqual(firstMeasurementTime.Offset, spyCollectedDataStorage.StoredEntry!.Time.Offset);

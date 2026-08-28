@@ -20,24 +20,24 @@ public class FakeFileAccessUnitTests
         [Test]
         public void DataWrittenToFileCanBeRetrievedWithSubsequentRead()
         {
-            // given
+            // Given
             var contents = "Hello world!";
             var path = "file.txt";
 
             var fileAccess = new FakeFileAccess();
 
-            // when
+            // When
             fileAccess.WriteAllText(path, contents);
             var readContents = fileAccess.ReadAllText(path);
 
-            // then
+            // Then
             Assert.AreEqual(contents, readContents);
         }
 
         [Test]
         public void EmptyFileCanBeEnlargedUsingSetLength()
         {
-            // given
+            // Given
             var path = "file.txt";
             var newLength = 10L;
 
@@ -45,17 +45,17 @@ public class FakeFileAccessUnitTests
 
             using var file = fileAccess.Open(path, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None);
 
-            // when
+            // When
             file.SetLength(newLength);
 
-            // then
+            // Then
             Assert.AreEqual(newLength, file.Length);
         }
 
         [Test]
         public void FileCanBeShrunkUsingSetLength()
         {
-            // given
+            // Given
             var path = "file.txt";
             var newLength = 0L;
 
@@ -63,34 +63,34 @@ public class FakeFileAccessUnitTests
 
             using var file = fileAccess.Open(path, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None);
 
-            // when
+            // When
             file.SetLength(newLength);
 
-            // then
+            // Then
             Assert.AreEqual(newLength, file.Length);
         }
 
         [Test]
         public void ThrowsArgumentOutOfRangeExceptionForNegativeLength()
         {
-            // given
+            // Given
             var path = "file.txt";
 
             var fileAccess = new FakeFileAccess();
 
             using var file = fileAccess.Open(path, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None);
 
-            // when
+            // When
             void SetNegativeLength() => file.SetLength(-1L);
 
-            // then
+            // Then
             Assert.Catch<ArgumentOutOfRangeException>(SetNegativeLength);
         }
 
         [Test]
         public void WritingPastFileSizeEnlargesTheFile()
         {
-            // given
+            // Given
             var path = "file.txt";
             var contentsToWrite = "Hello world!"u8;
 
@@ -98,17 +98,17 @@ public class FakeFileAccessUnitTests
 
             using var file = fileAccess.Open(path, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None);
 
-            // when
+            // When
             file.Write(contentsToWrite);
 
-            // then
+            // Then
             Assert.AreEqual(contentsToWrite.Length, file.Length);
         }
 
         [Test]
         public void ReadingPastFileSizeReadsOnlyUntilFileEndAndReturnsCountOfBytesActuallyRead()
         {
-            // given
+            // Given
             var contents = "Hello world!";
             var path = "file.txt";
 
@@ -116,11 +116,11 @@ public class FakeFileAccessUnitTests
 
             using var file = fileAccess.Open(path, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None);
 
-            // when
+            // When
             var buffer = new byte[2 * contents.Length];
             var readCount = file.Read(buffer.AsSpan());
 
-            // then
+            // Then
             Assert.AreEqual(contents.Length, readCount);
             Assert.AreEqual(contents, Encoding.UTF8.GetString(buffer.AsSpan(0, readCount)));
         }
@@ -130,13 +130,13 @@ public class FakeFileAccessUnitTests
         [TestCase(FileAccess.ReadWrite)]
         public void FileOpenedWithReadAccessCanBeRead(FileAccess readFileAccess)
         {
-            // given
+            // Given
             var contents = "Hello world!";
             var path = "file.txt";
 
             var fileAccess = new FakeFileAccess((path, Encoding.UTF8.GetBytes(contents)));
 
-            // when
+            // When
             using var file = fileAccess.Open(path, FileMode.OpenOrCreate, readFileAccess, FileShare.None);
 
             string ReadFromFile()
@@ -146,7 +146,7 @@ public class FakeFileAccessUnitTests
                 return Encoding.UTF8.GetString(buffer);
             }
 
-            // then
+            // Then
             Assert.IsTrue(file.CanRead);
             Assert.AreEqual(contents, ReadFromFile());
         }
@@ -156,17 +156,17 @@ public class FakeFileAccessUnitTests
         [TestCase(FileAccess.ReadWrite)]
         public void FileOpenedWithWriteAccessCanBeWritten(FileAccess writeFileAccess)
         {
-            // given
+            // Given
             var path = "file.txt";
 
             var fileAccess = new FakeFileAccess((path, []));
 
-            // when
+            // When
             using var file = fileAccess.Open(path, FileMode.OpenOrCreate, writeFileAccess, FileShare.None);
 
             void WriteIntoFile() => file.Write("Hello world!"u8);
 
-            // then
+            // Then
             Assert.IsTrue(file.CanWrite);
             Assert.DoesNotThrow(WriteIntoFile);
         }
@@ -174,7 +174,7 @@ public class FakeFileAccessUnitTests
         [Test]
         public void FileSupportsSettingPositionWithinItsSize()
         {
-            // given
+            // Given
             var contents = "Hello world!";
             var path = "file.txt";
 
@@ -184,17 +184,17 @@ public class FakeFileAccessUnitTests
 
             var newPositon = contents.Length / 2;
 
-            // when
+            // When
             file.Position = newPositon;
 
-            // then
+            // Then
             Assert.AreEqual(newPositon, file.Position);
         }
 
         [Test]
         public void SettingFilePositionBeforeTheStartOfFileThrowsArgumentOutOfRangeException()
         {
-            // given
+            // Given
             var contents = "Hello world!";
             var path = "file.txt";
 
@@ -202,10 +202,10 @@ public class FakeFileAccessUnitTests
 
             using var file = fileAccess.Open(path, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None);
 
-            // when
+            // When
             void SetPositionBeyondFileEnd() => file.Position = -1;
 
-            // then
+            // Then
             Assert.Catch<ArgumentOutOfRangeException>(SetPositionBeyondFileEnd);
         }
 
@@ -219,17 +219,17 @@ public class FakeFileAccessUnitTests
 
             using var file = fileAccess.Open(path, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None);
 
-            // when
+            // When
             void SetPositionBeyondFileEnd() => file.Position = contents.Length + 1;
 
-            // then
+            // Then
             Assert.Catch<ArgumentOutOfRangeException>(SetPositionBeyondFileEnd);
         }
 
         [Test]
         public void FileSupportsSeekingFromStart()
         {
-            // given
+            // Given
             var seekOffset = 5L;
             var contents = "Hello world!";
 
@@ -239,17 +239,17 @@ public class FakeFileAccessUnitTests
 
             using var file = fileAccess.Open(path, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None);
 
-            // when
+            // When
             file.Seek(seekOffset, SeekOrigin.Begin);
 
-            // then
+            // Then
             Assert.AreEqual(seekOffset, file.Position);
         }
 
         [Test]
         public void FileSupportsSeekingFromCurrentPosition()
         {
-            // given
+            // Given
             var seekOffset = -5L;
             var written = "Hello world!"u8;
 
@@ -259,19 +259,19 @@ public class FakeFileAccessUnitTests
 
             using var file = fileAccess.Open(path, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None);
 
-            // when
+            // When
             file.Write(written);
 
             file.Seek(seekOffset, SeekOrigin.Current);
 
-            // then
+            // Then
             Assert.AreEqual(written.Length + seekOffset, file.Position);
         }
 
         [Test]
         public void FileSupportsSeekingFromEnd()
         {
-            // given
+            // Given
             var seekOffset = -5L;
 
             var path = "file.txt";
@@ -281,10 +281,10 @@ public class FakeFileAccessUnitTests
 
             using var file = fileAccess.Open(path, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None);
 
-            // when
+            // When
             file.Seek(seekOffset, SeekOrigin.End);
 
-            // then
+            // Then
             Assert.AreEqual(contents.Length + seekOffset, file.Position);
         }
 
@@ -292,17 +292,17 @@ public class FakeFileAccessUnitTests
         [Theory]
         public void SeekingBeyondFileEndThrowsArgumentOutOfRangeException(SeekOrigin origin)
         {
-            // given
+            // Given
             var path = "empty.txt";
 
             var fileAccess = new FakeFileAccess((path, []));
 
             using var file = fileAccess.Open(path, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None);
 
-            // when
+            // When
             void SeekBeyondFileEnd() => file.Seek(42L, origin);
 
-            // then
+            // Then
             Assert.Catch<ArgumentOutOfRangeException>(SeekBeyondFileEnd);
         }
 
@@ -310,37 +310,37 @@ public class FakeFileAccessUnitTests
         [Theory]
         public void SeekingBeforeFileStartThrowsArgumentOutOfRangeException(SeekOrigin origin)
         {
-            // given
+            // Given
             var path = "empty.txt";
 
             var fileAccess = new FakeFileAccess((path, []));
 
             using var file = fileAccess.Open(path, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None);
 
-            // when
+            // When
             void SeekBeforeFileStart() => file.Seek(-42L, origin);
 
-            // then
+            // Then
             Assert.Catch<ArgumentOutOfRangeException>(SeekBeforeFileStart);
         }
 
         [Test]
         public void OpeningFileWithAppendModeOpensItAtItsEnd()
         {
-            // given
+            // Given
             var dummyPath = "dummy.txt";
             var content = "Hello world!";
 
             var fileAccess = new FakeFileAccess((dummyPath, Encoding.UTF8.GetBytes(content)));
 
-            // when
+            // When
             var file = fileAccess.Open(dummyPath, FileMode.Append, FileAccess.ReadWrite, FileShare.None);
 
             var positionAfterOpen = file.Position;
 
             file.Close();
 
-            // then
+            // Then
             Assert.AreEqual(content.Length, positionAfterOpen);
             Assert.AreEqual(content, fileAccess.ReadAllText(dummyPath));
         }
@@ -350,19 +350,19 @@ public class FakeFileAccessUnitTests
         [TestCase(FileMode.Truncate)]
         public void OpeningFileWithCreateOrTruncateErasesItsContent(FileMode createOrTruncateFileMode)
         {
-            // given
+            // Given
             var dummyPath = "dummy.txt";
 
             var fileAccess = new FakeFileAccess((dummyPath, [.. "Hello world!"u8]));
 
-            // when
+            // When
             var file = fileAccess.Open(dummyPath, createOrTruncateFileMode, FileAccess.ReadWrite, FileShare.None);
 
             var positionAfterOpen = file.Position;
 
             file.Close();
 
-            // then
+            // Then
             Assert.AreEqual(0, positionAfterOpen);
             Assert.IsEmpty(fileAccess.ReadAllText(dummyPath));
         }
@@ -370,11 +370,11 @@ public class FakeFileAccessUnitTests
         [Test]
         public void DisposedFileCanBeReopenedWithConflictingAccess()
         {
-            // given
+            // Given
             var dummyPath = "dummy.txt";
             var fileAccess = new FakeFileAccess();
 
-            // when
+            // When
             var file = fileAccess.Open(dummyPath, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None);
 
             file.Dispose();
@@ -384,18 +384,18 @@ public class FakeFileAccessUnitTests
                 fileAccess.Open(dummyPath, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None);
             }
 
-            // then
+            // Then
             Assert.DoesNotThrow(ReopenFile);
         }
 
         [Test]
         public void NonDisposedFileCanBeReopenedWithConflictingAccessAfterItIsFinalized()
         {
-            // given
+            // Given
             var dummyPath = "dummy.txt";
             var fileAccess = new FakeFileAccess();
 
-            // when
+            // When
             void OpenFileWithoutDisposing()
             {
                 fileAccess.Open(dummyPath, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None);
@@ -411,18 +411,18 @@ public class FakeFileAccessUnitTests
                 fileAccess.Open(dummyPath, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None);
             }
 
-            // then
+            // Then
             Assert.DoesNotThrow(ReopenFile);
         }
 
         [Test]
         public void DisposingFileMultipleTimesDoesNotThrow()
         {
-            // given
+            // Given
             var dummyPath = "dummy.txt";
             var fileAccess = new FakeFileAccess();
 
-            // when
+            // When
             var file = fileAccess.Open(dummyPath, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None);
 
             void DisposeMultipleTimes()
@@ -431,18 +431,18 @@ public class FakeFileAccessUnitTests
                 file.Dispose();
             }
 
-            // then
+            // Then
             Assert.DoesNotThrow(DisposeMultipleTimes);
         }
 
         [Test]
         public void FileOpenedWithReadAccessDoesNotSupportWriting()
         {
-            // given
+            // Given
             var dummyPath = "dummy.txt";
             var fileAccess = new FakeFileAccess();
 
-            // when
+            // When
             using var readOnlyFile = fileAccess.Open(dummyPath, FileMode.OpenOrCreate, FileAccess.Read, FileShare.None);
 
             void WriteToReadOnlyFile()
@@ -450,7 +450,7 @@ public class FakeFileAccessUnitTests
                 readOnlyFile.Write("Hello World!"u8);
             }
 
-            // then
+            // Then
             Assert.IsFalse(readOnlyFile.CanWrite, nameof(Stream.CanWrite));
             Assert.Catch<NotSupportedException>(WriteToReadOnlyFile);
         }
@@ -458,11 +458,11 @@ public class FakeFileAccessUnitTests
         [Test]
         public void FileOpenedWithWriteAccessDoesNotSupportReading()
         {
-            // given
+            // Given
             var dummyPath = "dummy.txt";
             var fileAccess = new FakeFileAccess();
 
-            // when
+            // When
             using var writeOnlyFile = fileAccess.Open(dummyPath, FileMode.OpenOrCreate, FileAccess.Write, FileShare.None);
 
             void ReadFromWriteOnlyFile()
@@ -471,7 +471,7 @@ public class FakeFileAccessUnitTests
                 writeOnlyFile.ReadExactly(buffer.AsSpan());
             }
 
-            // then
+            // Then
             Assert.IsFalse(writeOnlyFile.CanRead, nameof(Stream.CanRead));
             Assert.Catch<NotSupportedException>(ReadFromWriteOnlyFile);
         }
@@ -479,17 +479,17 @@ public class FakeFileAccessUnitTests
         [Test]
         public void OpeningPreexistingFileWithCreateNewModeThrowsIOException()
         {
-            // given
+            // Given
             var preexistingFile = "dummy.txt";
             var fileAccess = new FakeFileAccess((preexistingFile, []));
 
-            // when
+            // When
             void OpenPreexistingFileWithCreateNewMode()
             {
                 fileAccess.Open(preexistingFile, FileMode.CreateNew, FileAccess.Write, FileShare.None);
             }
 
-            // then
+            // Then
             Assert.Catch<IOException>(OpenPreexistingFileWithCreateNewMode);
         }
 
@@ -498,17 +498,17 @@ public class FakeFileAccessUnitTests
         [TestCase(FileMode.Truncate)]
         public void OpeningNonExtantFileWithOpenOrTruncateModeThrowsFileNotFoundException(FileMode openOrTruncateMode)
         {
-            // given
+            // Given
             var dummyPath = "dummy.txt";
             var fileAccess = new FakeFileAccess();
 
-            // when
+            // When
             void OpenNonExtantFileWithOpenOrTruncateMode()
             {
                 fileAccess.Open(dummyPath, openOrTruncateMode, FileAccess.Write, FileShare.None);
             }
 
-            // then
+            // Then
             Assert.Catch<FileNotFoundException>(OpenNonExtantFileWithOpenOrTruncateMode);
         }
 
@@ -517,17 +517,17 @@ public class FakeFileAccessUnitTests
         [TestCase(FileShare.Delete)]
         public void FileSharesInheritableAndDeleteAreNotSupported(FileShare unsupportedFileShare)
         {
-            // given
+            // Given
             var dummyPath = "dummy.txt";
             var fileAccess = new FakeFileAccess();
 
-            // when
+            // When
             void OpenFileWithUnsupportedSharing()
             {
                 fileAccess.Open(dummyPath, FileMode.OpenOrCreate, FileAccess.Read, unsupportedFileShare);
             }
 
-            // then
+            // Then
             Assert.Catch<NotSupportedException>(OpenFileWithUnsupportedSharing);
         }
 
@@ -536,19 +536,19 @@ public class FakeFileAccessUnitTests
         [TestCase(FileAccess.ReadWrite)]
         public void ThrowsIOExceptionWhenAttemptingToOpenFileForWritingWithNoWriteSharing(FileAccess writeFileAccess)
         {
-            // given
+            // Given
             var dummyPath = "dummy.txt";
             var fileAccess = new FakeFileAccess();
 
             using var file = fileAccess.Open(dummyPath, FileMode.OpenOrCreate, FileAccess.Read, FileShare.Read);
 
-            // when
+            // When
             void OpenFilePreviouslyOpenedWithoutWriteSharing()
             {
                 fileAccess.Open(dummyPath, FileMode.OpenOrCreate, writeFileAccess, FileShare.ReadWrite);
             }
 
-            // then
+            // Then
             Assert.Catch<IOException>(OpenFilePreviouslyOpenedWithoutWriteSharing);
         }
 
@@ -558,19 +558,19 @@ public class FakeFileAccessUnitTests
         public void ThrowsIOExceptionWhenAttemptingToOpenFileForReadingPreviouslyOpenedWithNoReadSharing(
             FileAccess readFileAccess)
         {
-            // given
+            // Given
             var dummyPath = "dummy.txt";
             var fileAccess = new FakeFileAccess();
 
             using var file = fileAccess.Open(dummyPath, FileMode.OpenOrCreate, FileAccess.Read, FileShare.Write);
 
-            // when
+            // When
             void OpenFilePreviouslyOpenedWithoutReadSharing()
             {
                 fileAccess.Open(dummyPath, FileMode.OpenOrCreate, readFileAccess, FileShare.ReadWrite);
             }
 
-            // then
+            // Then
             Assert.Catch<IOException>(OpenFilePreviouslyOpenedWithoutReadSharing);
         }
 
@@ -580,19 +580,19 @@ public class FakeFileAccessUnitTests
         [TestCase(FileAccess.ReadWrite)]
         public void ThrowsIOExceptionWhenAttemptingToOpenFilePreviouslyOpenedWithNoSharing(FileAccess secondAccess)
         {
-            // given
+            // Given
             var dummyPath = "dummy.txt";
             var fileAccess = new FakeFileAccess();
 
             using var file = fileAccess.Open(dummyPath, FileMode.OpenOrCreate, FileAccess.Read, FileShare.None);
 
-            // when
+            // When
             void OpenFilePreviouslyOpenedWithNoSharing()
             {
                 fileAccess.Open(dummyPath, FileMode.OpenOrCreate, secondAccess, FileShare.ReadWrite);
             }
 
-            // then
+            // Then
             Assert.Catch<IOException>(OpenFilePreviouslyOpenedWithNoSharing);
         }
 
@@ -603,17 +603,17 @@ public class FakeFileAccessUnitTests
         [TestCase(FileMode.Truncate)]
         public void ThrowsArgumentExceptionForReadFileAccessWithFileModeOtherThanOpenOrOpenOrCreate(FileMode nonReadFileMode)
         {
-            // given
+            // Given
             var dummyPath = "dummy.txt";
             var fileAccess = new FakeFileAccess();
 
-            // when
+            // When
             void OpenFileWithReadAccessAndNonReadMode()
             {
                 fileAccess.Open(dummyPath, nonReadFileMode, FileAccess.Read, FileShare.ReadWrite);
             }
 
-            // then
+            // Then
             Assert.Catch<ArgumentException>(OpenFileWithReadAccessAndNonReadMode);
         }
 
@@ -626,17 +626,17 @@ public class FakeFileAccessUnitTests
         [TestCase(FileShare.ReadWrite | (FileShare)0x8)]
         public void ThrowsArgumentOutOfRangeForInvalidFileShare(FileShare invalidFileShare)
         {
-            // given
+            // Given
             var dummyPath = "dummy.txt";
             var fileAccess = new FakeFileAccess();
 
-            // when
+            // When
             void OpenFileWithInvalidShare()
             {
                 fileAccess.Open(dummyPath, FileMode.OpenOrCreate, FileAccess.Read, invalidFileShare);
             }
 
-            // then
+            // Then
             Assert.Catch<ArgumentException>(OpenFileWithInvalidShare);
         }
 
@@ -646,17 +646,17 @@ public class FakeFileAccessUnitTests
         [TestCase(FileAccess.ReadWrite + 1)]
         public void ThrowsArgumentOutOfRangeForInvalidFileAccess(FileAccess invalidFileAccess)
         {
-            // given
+            // Given
             var dummyPath = "dummy.txt";
             var fileAccess = new FakeFileAccess();
 
-            // when
+            // When
             void OpenFileWithInvalidAccess()
             {
                 fileAccess.Open(dummyPath, FileMode.OpenOrCreate, invalidFileAccess, FileShare.None);
             }
 
-            // then
+            // Then
             Assert.Catch<ArgumentException>(OpenFileWithInvalidAccess);
         }
 
@@ -666,17 +666,17 @@ public class FakeFileAccessUnitTests
         [TestCase(FileMode.Append + 1)]
         public void ThrowsArgumentOutOfRangeForInvalidFileMode(FileMode invalidFileMode)
         {
-            // given
+            // Given
             var dummyPath = "dummy.txt";
             var fileAccess = new FakeFileAccess();
 
-            // when
+            // When
             void OpenFileWithInvalidMode()
             {
                 fileAccess.Open(dummyPath, invalidFileMode, FileAccess.ReadWrite, FileShare.None);
             }
 
-            // then
+            // Then
             Assert.Catch<ArgumentException>(OpenFileWithInvalidMode);
         }
 
@@ -691,17 +691,17 @@ public class FakeFileAccessUnitTests
         [TestCaseSource(nameof(InvalidPathCharacters))]
         public void ThrowsArgumentExceptionForPathThatContainsInvalidCharacters(int invalidPathCharacter)
         {
-            // given
+            // Given
             var pathIncludingInvalidCharacters = $"abc{(char)invalidPathCharacter}def{Path.DirectorySeparatorChar}file.ext";
             var fileAccess = new FakeFileAccess();
 
-            // when
+            // When
             void OpenInvalidPathFile()
             {
                 fileAccess.Open(pathIncludingInvalidCharacters, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None);
             }
 
-            // then
+            // Then
             Assert.Catch<ArgumentException>(OpenInvalidPathFile);
         }
 
@@ -711,33 +711,33 @@ public class FakeFileAccessUnitTests
         [TestCase("\t")]
         public void ThrowsArgumentExceptionForPathThatIsEmptyOrWhitespace(string emptyOrWhitespacePath)
         {
-            // given
+            // Given
             var fileAccess = new FakeFileAccess();
 
-            // when
+            // When
             void OpenEmptyOrWhitespacePathFile()
             {
                 fileAccess.Open(emptyOrWhitespacePath, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None);
             }
 
-            // then
+            // Then
             Assert.Catch<ArgumentException>(OpenEmptyOrWhitespacePathFile);
         }
 
         [Test]
         public void ThrowsArgumentNullExceptionForNullPath()
         {
-            // given
+            // Given
             var nullPath = (string?)null;
             var fileAccess = new FakeFileAccess();
 
-            // when
+            // When
             void OpenNullPathFile()
             {
                 fileAccess.Open(nullPath!, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None);
             }
 
-            // then
+            // Then
             Assert.Catch<ArgumentNullException>(OpenNullPathFile);
         }
     }
@@ -764,17 +764,17 @@ public class FakeFileAccessUnitTests
         [TestCaseSource(nameof(Paths))]
         public void PreviouslyCreatedFileExists((string, string) paths)
         {
-            // given
+            // Given
             var (createdPath, checkedPath) = paths;
 
             var fileAccess = new FakeFileAccess();
 
             CreateEmptyFile(fileAccess, createdPath);
 
-            // when
+            // When
             var exists = fileAccess.Exists(checkedPath);
 
-            // then
+            // Then
             Assert.IsTrue(exists);
         }
 
@@ -782,28 +782,28 @@ public class FakeFileAccessUnitTests
         [TestCaseSource(nameof(Paths))]
         public void ConstructorProvidedFileExists((string, string) paths)
         {
-            // given
+            // Given
             var (createdPath, checkedPath) = paths;
 
             var fileAccess = new FakeFileAccess((createdPath, []));
 
-            // when
+            // When
             var exists = fileAccess.Exists(checkedPath);
 
-            // then
+            // Then
             Assert.IsTrue(exists);
         }
 
         [Test]
         public void FileThatWasNotCreatedDoesNotExist()
         {
-            // given
+            // Given
             var emptyFileAccess = new FakeFileAccess();
 
-            // when
+            // When
             var exists = emptyFileAccess.Exists("dummy.file.path");
 
-            // then
+            // Then
             Assert.IsFalse(exists);
         }
 

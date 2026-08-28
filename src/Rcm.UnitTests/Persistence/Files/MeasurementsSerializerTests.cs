@@ -13,7 +13,7 @@ public class MeasurementsSerializerTests
     [Test]
     public void SerializesEntryAsHoursAndMinutesThenOffsetHoursAndMinutesThenTemperatureThenHumidityThenPressureAllSeparatedBySpaces()
     {
-        // given
+        // Given
         var offset = TimeSpan.FromHours(-1) + TimeSpan.FromMinutes(-30);
         var time = new DateTimeOffset(2018, 12, 30, 19, 50, 10, offset);
         var temperature = 32m;
@@ -23,10 +23,10 @@ public class MeasurementsSerializerTests
 
         var serializer = new MeasurementsSerializer();
 
-        // when
+        // When
         var record = serializer.Serialize(entry);
 
-        // then
+        // Then
         Assert.AreEqual("19:50-01:30 32 52 980", record);
     }
 
@@ -34,7 +34,7 @@ public class MeasurementsSerializerTests
     [SetCulture(CultureThatUsesCommaAsDecimalSeparator)]
     public void UsesInvariantCultureToSerializeEntries()
     {
-        // given
+        // Given
         var offset = TimeSpan.FromHours(-1) + TimeSpan.FromMinutes(-30);
         var time = new DateTimeOffset(2018, 12, 30, 19, 50, 10, offset);
         var temperature = 32.3m;
@@ -44,26 +44,26 @@ public class MeasurementsSerializerTests
 
         var serializer = new MeasurementsSerializer();
 
-        // when
+        // When
         var record = serializer.Serialize(entry);
 
-        // then
+        // Then
         Assert.AreEqual("19:50-01:30 32.3 52.5 980.93", record);
     }
 
     [Test]
     public void DeserializesEntryFromRecordComposedOfTimeAndOffsetAndTemperatureAndHumidityAndPressureAllSeparatedBySpaces()
     {
-        // given
+        // Given
         var time = new DateTimeOffset(2018, 12, 30, 20, 50, 0, TimeSpan.FromHours(2));
         var record = "20:50+02:00 35 48 1010";
 
         var serializer = new MeasurementsSerializer();
 
-        // when
+        // When
         var entry = serializer.Deserialize(time.Date, record);
 
-        // then
+        // Then
         Assert.AreEqual(time, entry.Time);
         Assert.AreEqual(35m, entry.CelsiusTemperature);
         Assert.AreEqual(48m, entry.RelativeHumidity);
@@ -74,16 +74,16 @@ public class MeasurementsSerializerTests
     [SetCulture(CultureThatUsesCommaAsDecimalSeparator)]
     public void UsesInvariantCultureToDeserializeEntries()
     {
-        // given
+        // Given
         var time = new DateTimeOffset(2018, 12, 30, 20, 50, 0, TimeSpan.FromHours(2));
         var record = "20:50+02:00 35.0 48.2 1010.8";
 
         var serializer = new MeasurementsSerializer();
 
-        // when
+        // When
         var entry = serializer.Deserialize(time.Date, record);
 
-        // then
+        // Then
         Assert.AreEqual(time, entry.Time);
         Assert.AreEqual(35.0m, entry.CelsiusTemperature);
         Assert.AreEqual(48.2m, entry.RelativeHumidity);
@@ -105,15 +105,15 @@ public class MeasurementsSerializerTests
     [TestCase("12:00+1:00 17.5  42.1 975.2", Description = "Unexpected whitespace between temperature and humidity")]
     public void ThrowsForInvalidRecords(string invalidRecord)
     {
-        // given
+        // Given
         var dummyDate = new DateTime(2018, 12, 31, 0, 0, 0);
 
         var serializer = new MeasurementsSerializer();
 
-        // when
+        // When
         void DeserializingInvalidRecord() => serializer.Deserialize(dummyDate, invalidRecord);
 
-        // then
+        // Then
         _ = Assert.Catch(DeserializingInvalidRecord);
     }
 }

@@ -11,13 +11,13 @@ public class MeasurementTimingsCalculatorTests
     [Test]
     public void MeasurementStartsOnNextMinuteWithSixSecondsPeriodForNonZeroSecondsTime()
     {
-        // given
+        // Given
         var nonZeroSecondsTime = new DateTimeOffset(2018, 12, 27, 13, 28, 10, TimeSpan.Zero);
 
-        // when
+        // When
         var timings = CalculateMeasurementTimings(nonZeroSecondsTime);
 
-        // then
+        // Then
         Assert.AreEqual(TimeSpan.FromSeconds(60 - nonZeroSecondsTime.Second), timings.InitialDelay);
         Assert.AreEqual(TimeSpan.FromSeconds(6), timings.Period);
     }
@@ -25,13 +25,13 @@ public class MeasurementTimingsCalculatorTests
     [Test]
     public void MeasurementStartsNowWithSixSecondsPeriodForZeroSecondsTime()
     {
-        // given
+        // Given
         var zeroSecondsTime = new DateTimeOffset(2018, 12, 27, 13, 28, 0, TimeSpan.Zero);
 
-        // when
+        // When
         var timings = CalculateMeasurementTimings(zeroSecondsTime);
 
-        // then
+        // Then
         Assert.AreEqual(TimeSpan.Zero, timings.InitialDelay);
         Assert.AreEqual(TimeSpan.FromSeconds(6), timings.Period);
     }
