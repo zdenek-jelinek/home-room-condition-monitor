@@ -52,17 +52,17 @@ public class MeasurementAggregatesController : Controller
         return Ok(result);
     }
 
-    private static AggregatesContract MapAggregates(Aggregates aggregates)
+    private static AggregatesApiResponse MapAggregates(Aggregates aggregates)
     {
-        return new AggregatesContract(
+        return new AggregatesApiResponse(
             MapAggregateEntry(aggregates.First),
             MapAggregateEntry(aggregates.Min),
             MapAggregateEntry(aggregates.Max),
             MapAggregateEntry(aggregates.Last));
     }
 
-    private static AggregateEntryContract MapAggregateEntry(AggregateEntry entry)
+    private static AggregateEntryApiResponse MapAggregateEntry(AggregateEntry entry)
     {
-        return new AggregateEntryContract(entry.Time, entry.Value);
+        return new AggregateEntryApiResponse(entry.Time, entry.Value);
     }
 }

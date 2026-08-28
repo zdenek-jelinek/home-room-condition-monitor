@@ -1,13 +1,13 @@
 ﻿namespace Rcm.Web.Controllers;
 
-public class AggregatesContract
+public class AggregatesApiResponse
 {
-    public AggregateEntryContract First { get; }
-    public AggregateEntryContract Min { get; }
-    public AggregateEntryContract Max { get; }
-    public AggregateEntryContract Last { get; }
+    public AggregateEntryApiResponse First { get; }
+    public AggregateEntryApiResponse Min { get; }
+    public AggregateEntryApiResponse Max { get; }
+    public AggregateEntryApiResponse Last { get; }
 
-    public AggregatesContract(AggregateEntryContract first, AggregateEntryContract min, AggregateEntryContract max, AggregateEntryContract last)
+    public AggregatesApiResponse(AggregateEntryApiResponse first, AggregateEntryApiResponse min, AggregateEntryApiResponse max, AggregateEntryApiResponse last)
     {
         First = first;
         Min = min;

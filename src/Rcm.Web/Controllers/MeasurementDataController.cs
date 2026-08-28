@@ -12,7 +12,7 @@ namespace Rcm.Web.Controllers;
 public class MeasurementDataController(IMeasurementsAccessor measurementsAccessor) : Controller
 {
     [HttpGet]
-    public ActionResult<IEnumerable<MeasurementContract>> Get(
+    public ActionResult<IEnumerable<MeasurementApiResponse>> Get(
         [FromQuery(Name = "start")] DateTimeOffset? startTime,
         [FromQuery(Name = "end")] DateTimeOffset? endTime,
         CancellationToken cancellationToken)
@@ -27,9 +27,9 @@ public class MeasurementDataController(IMeasurementsAccessor measurementsAccesso
         return Ok(measurements.Select(ToContract));
     }
 
-    private static MeasurementContract ToContract(MeasurementEntry entry)
+    private static MeasurementApiResponse ToContract(MeasurementEntry entry)
     {
-        return new MeasurementContract(
+        return new MeasurementApiResponse(
             entry.Time,
             entry.CelsiusTemperature,
             entry.HpaPressure,

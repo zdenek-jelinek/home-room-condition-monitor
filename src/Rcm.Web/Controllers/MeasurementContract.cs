@@ -2,14 +2,14 @@
 
 namespace Rcm.Web.Controllers;
 
-public class MeasurementContract
+public class MeasurementApiResponse
 {
     public DateTimeOffset Time { get; set; }
     public decimal CelsiusTemperature { get; set; }
     public decimal HpaPressure { get; set; }
     public decimal RelativeHumidity { get; set; }
 
-    public MeasurementContract(
+    public MeasurementApiResponse(
         DateTimeOffset time,
         decimal celsiusTemperature,
         decimal hpaPressure,

@@ -2,12 +2,12 @@
 
 namespace Rcm.Web.Controllers;
 
-public class AggregateEntryContract
+public class AggregateEntryApiResponse
 {
     public DateTimeOffset Time { get; }
     public decimal Value { get; }
 
-    public AggregateEntryContract(DateTimeOffset time, decimal value)
+    public AggregateEntryApiResponse(DateTimeOffset time, decimal value)
     {
         Time = time;
         Value = value;

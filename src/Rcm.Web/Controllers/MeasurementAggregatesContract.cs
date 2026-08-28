@@ -2,11 +2,11 @@
 
 public class MeasurementAggregatesContract
 {
-    public AggregatesContract Temperature { get; }
-    public AggregatesContract Pressure { get; }
-    public AggregatesContract Humidity { get; }
+    public AggregatesApiResponse Temperature { get; }
+    public AggregatesApiResponse Pressure { get; }
+    public AggregatesApiResponse Humidity { get; }
 
-    public MeasurementAggregatesContract(AggregatesContract temperature, AggregatesContract pressure, AggregatesContract humidity)
+    public MeasurementAggregatesContract(AggregatesApiResponse temperature, AggregatesApiResponse pressure, AggregatesApiResponse humidity)
     {
         Temperature = temperature;
         Pressure = pressure;
