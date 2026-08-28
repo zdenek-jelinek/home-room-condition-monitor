@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using Microsoft.AspNetCore.Mvc;
@@ -20,12 +21,12 @@ public class MeasurementAggregatesController(IMeasurementAggregatesAccessor meas
     {
         if (startTime > endTime)
         {
-            return BadRequest($"start time is after end time: {startTime:o} > {endTime:o}");
+            return ValidationProblem(Error(property: "startTime", message: "start time must be earlier than end time"));
         }
 
         if (count <= 0)
         {
-            return BadRequest($"count must be positive integer, actual is {count}");
+            return ValidationProblem(Error(property: "count", message: "count must be a positive integer"));
         }
 
         var query = new MeasurementAggregatesQuery { StartTime = startTime, EndTime = endTime, PartitionCount = count };
@@ -59,5 +60,10 @@ public class MeasurementAggregatesController(IMeasurementAggregatesAccessor meas
     private static AggregateEntryApiResponse MapToResponse(AggregateEntry entry)
     {
         return new() { Time = entry.Time, Value = entry.Value };
+    }
+
+    private static ValidationProblemDetails Error(string property, string message)
+    {
+        return new(new Dictionary<string, string[]> { [property] = [message] });
     }
 }
