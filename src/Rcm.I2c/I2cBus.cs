@@ -77,12 +77,15 @@ public class I2cBus : IDisposable
         _logger.LogTrace("Selected I2C device at {DeviceAddress:x}", address);
     }
 
-    private unsafe void Read(Span<byte> buffer)
+    private void Read(Span<byte> buffer)
     {
         int read;
+        unsafe
+        {
         fixed (byte* ptr = buffer)
         {
             read = Read(_i2cBusHandle, Unsafe.AsRef<byte>(ptr), buffer.Length);
+        }
         }
 
         if (read == -1)
@@ -111,12 +114,16 @@ public class I2cBus : IDisposable
         Read(buffer);
     }
 
-    private unsafe void Write(ReadOnlySpan<byte> data)
+    private void Write(ReadOnlySpan<byte> data)
     {
         int written;
+
+        unsafe
+        {
         fixed (byte* ptr = data)
         {
             written = Write(_i2cBusHandle, Unsafe.AsRef<byte>(ptr), data.Length);
+        }
         }
 
         if (written == -1)
