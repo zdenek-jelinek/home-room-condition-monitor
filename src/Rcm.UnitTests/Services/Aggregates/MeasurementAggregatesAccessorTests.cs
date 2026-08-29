@@ -205,28 +205,18 @@ public class MeasurementAggregatesAccessorTests
             query: MakeQuery(startTime, endTime, partitionCount));
 
         // Then
-        var minTemperature = new AggregateEntry(measurementInFirstPartition.Time, measurementInFirstPartition.CelsiusTemperature);
-        var maxTemperature = new AggregateEntry(measurementOnBorderOfPartitions.Time, measurementOnBorderOfPartitions.CelsiusTemperature);
-        var minPressure = new AggregateEntry(measurementInFirstPartition.Time, measurementInFirstPartition.HpaPressure);
-        var maxPressure = new AggregateEntry(measurementOnBorderOfPartitions.Time, measurementOnBorderOfPartitions.HpaPressure);
-        var minHumidity = new AggregateEntry(measurementInFirstPartition.Time, measurementInFirstPartition.RelativeHumidity);
-        var maxHumidity = new AggregateEntry(measurementOnBorderOfPartitions.Time, measurementOnBorderOfPartitions.RelativeHumidity);
-        var firstPartitionAggregates = new MeasurementAggregates(
-            new(minTemperature, minTemperature, maxTemperature, maxTemperature),
-            new(minPressure, minPressure, maxPressure, maxPressure),
-            new(minHumidity, minHumidity, maxHumidity, maxHumidity));
+        var firstPartitionAggregates = MakeAggregates(
+            first: measurementInFirstPartition,
+            min: measurementInFirstPartition,
+            max: measurementOnBorderOfPartitions,
+            last: measurementOnBorderOfPartitions);
 
-        var secondPartitionTemperature = new AggregateEntry(measurementInSecondPartition.Time, measurementInSecondPartition.CelsiusTemperature);
-        var secondPartitionPressure = new AggregateEntry(measurementInSecondPartition.Time, measurementInSecondPartition.HpaPressure);
-        var secondPartitionHumidity = new AggregateEntry(measurementInSecondPartition.Time, measurementInSecondPartition.RelativeHumidity);
-        var secondPartitionAggregates = new MeasurementAggregates(
-            new(secondPartitionTemperature, secondPartitionTemperature, secondPartitionTemperature, secondPartitionTemperature),
-            new(secondPartitionPressure, secondPartitionPressure, secondPartitionPressure, secondPartitionPressure),
-            new(secondPartitionHumidity, secondPartitionHumidity, secondPartitionHumidity, secondPartitionHumidity));
+        var secondPartitionAggregates = MakeSingletonAggregates(measurementInSecondPartition);
 
         Assert.That(
             aggregates,
-            Is.EquivalentTo(new[] { firstPartitionAggregates, secondPartitionAggregates }).Using(new MeasurementAggregatesEqualityComparer()));
+            Is.EquivalentTo(new[] { firstPartitionAggregates, secondPartitionAggregates })
+                .Using(new MeasurementAggregatesEqualityComparer()));
     }
 
     [Test]
@@ -246,20 +236,9 @@ public class MeasurementAggregatesAccessorTests
         var aggregates = GetMeasurementAggregates([measurementInSecondPartition], query);
 
         // Then
-        var temperature = new AggregateEntry(measurementInSecondPartition.Time, measurementInSecondPartition.CelsiusTemperature);
-        var humidity = new AggregateEntry(measurementInSecondPartition.Time, measurementInSecondPartition.RelativeHumidity);
-        var pressure = new AggregateEntry(measurementInSecondPartition.Time, measurementInSecondPartition.HpaPressure);
-
         Assert.That(
             aggregates,
-            Is.EquivalentTo(
-                    new[]
-                    {
-                        new MeasurementAggregates(
-                            new(temperature, temperature, temperature, temperature),
-                            new(pressure, pressure, pressure, pressure),
-                            new(humidity, humidity, humidity, humidity))
-                    })
+            Is.EquivalentTo(new[] { MakeSingletonAggregates(measurementInSecondPartition) })
                 .Using(new MeasurementAggregatesEqualityComparer()));
     }
 
@@ -319,6 +298,31 @@ public class MeasurementAggregatesAccessorTests
         decimal? pressure = null)
     {
         return MeasurementEntryFactory.Make(time, temperature, humidity, pressure);
+    }
+
+    private static MeasurementAggregates MakeSingletonAggregates(MeasurementEntry measurement)
+    {
+        return MakeAggregates(first: measurement, min: measurement, max: measurement, last: measurement);
+    }
+
+    private static MeasurementAggregates MakeAggregates(MeasurementEntry first, MeasurementEntry min, MeasurementEntry max, MeasurementEntry last)
+    {
+        return new()
+        {
+            Temperature = MakeDimension(m => m.CelsiusTemperature),
+            Humidity = MakeDimension(m => m.RelativeHumidity),
+            Pressure = MakeDimension(m => m.HpaPressure)
+        };
+
+        Rcm.Services.Aggregates.Aggregates MakeDimension(Func<MeasurementEntry, decimal> propertySelector)
+        {
+            return new() { First = MakeComponent(first), Min = MakeComponent(min), Max = MakeComponent(max), Last = MakeComponent(last) };
+
+            AggregateEntry MakeComponent(MeasurementEntry measurement)
+            {
+                return new() { Time = measurement.Time, Value = propertySelector.Invoke(measurement) };
+            }
+        }
     }
 
     private static IReadOnlyList<MeasurementAggregates> GetMeasurementAggregates(IEnumerable<MeasurementEntry> measurements, MeasurementAggregatesQuery query)

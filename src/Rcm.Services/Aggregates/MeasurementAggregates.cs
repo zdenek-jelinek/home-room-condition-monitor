@@ -1,15 +1,8 @@
 ﻿namespace Rcm.Services.Aggregates;
 
-public class MeasurementAggregates
+public sealed record class MeasurementAggregates
 {
-    public Aggregates Temperature { get; }
-    public Aggregates Pressure { get; }
-    public Aggregates Humidity { get; }
-
-    public MeasurementAggregates(Aggregates temperature, Aggregates pressure, Aggregates humidity)
-    {
-        Temperature = temperature;
-        Pressure = pressure;
-        Humidity = humidity;
-    }
+    public required Aggregates Temperature { get; init; }
+    public required Aggregates Pressure { get; init; }
+    public required Aggregates Humidity { get; init; }
 }

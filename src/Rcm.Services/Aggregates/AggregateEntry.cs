@@ -2,14 +2,8 @@
 
 namespace Rcm.Services.Aggregates;
 
-public class AggregateEntry
+public sealed record class AggregateEntry
 {
-    public DateTimeOffset Time { get; }
-    public decimal Value { get; }
-
-    public AggregateEntry(DateTimeOffset time, decimal value)
-    {
-        Time = time;
-        Value = value;
-    }
+    public required DateTimeOffset Time { get; init; }
+    public required decimal Value { get; init; }
 }

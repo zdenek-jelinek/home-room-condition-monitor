@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using Rcm.Common;
 using Rcm.Persistence.Abstractions;
@@ -73,13 +75,22 @@ public class MeasurementAggregatesAccessor(IMeasurementsReader measurementsReade
         {
             if (IsEmpty)
             {
-                throw new InvalidOperationException("Cannot extract result of empty aggregate");
+                ThrowEmptyAccumulator();
             }
 
-            return new MeasurementAggregates(
-                _temperatureAccumulator.ExtractResult(),
-                _pressureAccumulator.ExtractResult(),
-                _humidityAccumulator.ExtractResult());
+            return new()
+            {
+                Temperature = _temperatureAccumulator.ExtractResult(),
+                Pressure = _pressureAccumulator.ExtractResult(),
+                Humidity = _humidityAccumulator.ExtractResult()
+            };
+        }
+
+        [DoesNotReturn]
+        [StackTraceHidden]
+        private static void ThrowEmptyAccumulator()
+        {
+            throw new InvalidOperationException("Cannot extract result of empty aggregate accumulator.");
         }
 
         private class SubAccumulator(Func<MeasurementEntry, decimal> selector)
@@ -123,11 +134,13 @@ public class MeasurementAggregatesAccessor(IMeasurementsReader measurementsReade
 
             public Aggregates ExtractResult()
             {
-                return new Aggregates(
-                    new AggregateEntry(_minTime, _minTimeValue),
-                    new AggregateEntry(_minValueTime, _minValue),
-                    new AggregateEntry(_maxValueTime, _maxValue),
-                    new AggregateEntry(_maxTime, _maxTimeValue));
+                return new()
+                {
+                    First = new() { Time = _minTime, Value = _minTimeValue },
+                    Min = new() { Time = _minValueTime, Value = _minValue },
+                    Max = new() { Time = _maxValueTime, Value = _maxValue },
+                    Last = new() { Time = _maxTime, Value = _maxTimeValue }
+                };
             }
         }
     }
