@@ -1,9 +1,9 @@
 ﻿namespace Rcm.Web.Controllers;
 
-public sealed class AggregatesApiResponse
+public sealed class MeasurementAggregatesDimensionApiResponse
 {
-    public required AggregateEntryApiResponse First { get; init; }
-    public required AggregateEntryApiResponse Min { get; init; }
-    public required AggregateEntryApiResponse Max { get; init; }
-    public required AggregateEntryApiResponse Last { get; init; }
+    public required MeasurementAggregatesEntryApiResponse First { get; init; }
+    public required MeasurementAggregatesEntryApiResponse Min { get; init; }
+    public required MeasurementAggregatesEntryApiResponse Max { get; init; }
+    public required MeasurementAggregatesEntryApiResponse Last { get; init; }
 }
