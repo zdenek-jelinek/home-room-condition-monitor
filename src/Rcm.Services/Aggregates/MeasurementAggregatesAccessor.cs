@@ -132,7 +132,7 @@ public class MeasurementAggregatesAccessor(IMeasurementsReader measurementsReade
                 }
             }
 
-            public Aggregates ExtractResult()
+            public MeasurementDimensionAggregates ExtractResult()
             {
                 return new()
                 {

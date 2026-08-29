@@ -2,7 +2,7 @@
 
 public sealed record class MeasurementAggregates
 {
-    public required Aggregates Temperature { get; init; }
-    public required Aggregates Pressure { get; init; }
-    public required Aggregates Humidity { get; init; }
+    public required MeasurementDimensionAggregates Temperature { get; init; }
+    public required MeasurementDimensionAggregates Pressure { get; init; }
+    public required MeasurementDimensionAggregates Humidity { get; init; }
 }

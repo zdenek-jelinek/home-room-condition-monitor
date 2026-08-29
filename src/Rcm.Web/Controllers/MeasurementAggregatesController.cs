@@ -46,7 +46,7 @@ public class MeasurementAggregatesController(IMeasurementAggregatesAccessor meas
         };
     }
 
-    private static AggregatesApiResponse MapToResponse(Aggregates aggregates)
+    private static AggregatesApiResponse MapToResponse(MeasurementDimensionAggregates aggregates)
     {
         return new()
         {
@@ -57,7 +57,7 @@ public class MeasurementAggregatesController(IMeasurementAggregatesAccessor meas
         };
     }
 
-    private static AggregateEntryApiResponse MapToResponse(AggregateEntry entry)
+    private static AggregateEntryApiResponse MapToResponse(MeasurementAggregatesEntry entry)
     {
         return new() { Time = entry.Time, Value = entry.Value };
     }

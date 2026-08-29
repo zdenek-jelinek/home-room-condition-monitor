@@ -314,11 +314,11 @@ public class MeasurementAggregatesAccessorTests
             Pressure = MakeDimension(m => m.HpaPressure)
         };
 
-        Rcm.Services.Aggregates.Aggregates MakeDimension(Func<MeasurementEntry, decimal> propertySelector)
+        MeasurementDimensionAggregates MakeDimension(Func<MeasurementEntry, decimal> propertySelector)
         {
             return new() { First = MakeComponent(first), Min = MakeComponent(min), Max = MakeComponent(max), Last = MakeComponent(last) };
 
-            AggregateEntry MakeComponent(MeasurementEntry measurement)
+            MeasurementAggregatesEntry MakeComponent(MeasurementEntry measurement)
             {
                 return new() { Time = measurement.Time, Value = propertySelector.Invoke(measurement) };
             }
@@ -364,11 +364,11 @@ public class MeasurementAggregatesAccessorTests
         }
     }
 
-    private class AggregatesEqualityComparer : IEqualityComparer<Rcm.Services.Aggregates.Aggregates>
+    private class AggregatesEqualityComparer : IEqualityComparer<Rcm.Services.Aggregates.MeasurementDimensionAggregates>
     {
         private readonly AggregateEntryEqualityComparer _entryComparer = new();
 
-        public bool Equals(Rcm.Services.Aggregates.Aggregates? x, Rcm.Services.Aggregates.Aggregates? y)
+        public bool Equals(Rcm.Services.Aggregates.MeasurementDimensionAggregates? x, Rcm.Services.Aggregates.MeasurementDimensionAggregates? y)
         {
             return _entryComparer.Equals(x?.First, y?.First)
                 && _entryComparer.Equals(x?.Min, y?.Min)
@@ -376,7 +376,7 @@ public class MeasurementAggregatesAccessorTests
                 && _entryComparer.Equals(x?.Last, y?.Last);
         }
 
-        public int GetHashCode(Rcm.Services.Aggregates.Aggregates obj)
+        public int GetHashCode(Rcm.Services.Aggregates.MeasurementDimensionAggregates obj)
         {
             return HashCode.Combine(
                 _entryComparer.GetHashCode(obj.First),
@@ -386,14 +386,14 @@ public class MeasurementAggregatesAccessorTests
         }
     }
 
-    private class AggregateEntryEqualityComparer : IEqualityComparer<AggregateEntry>
+    private class AggregateEntryEqualityComparer : IEqualityComparer<MeasurementAggregatesEntry>
     {
-        public bool Equals(AggregateEntry? x, AggregateEntry? y)
+        public bool Equals(MeasurementAggregatesEntry? x, MeasurementAggregatesEntry? y)
         {
             return x?.Time == y?.Time && x?.Value == y?.Value;
         }
 
-        public int GetHashCode(AggregateEntry obj)
+        public int GetHashCode(MeasurementAggregatesEntry obj)
         {
             return HashCode.Combine(obj.Time, obj.Value);
         }

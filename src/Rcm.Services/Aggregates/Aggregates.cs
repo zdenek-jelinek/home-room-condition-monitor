@@ -1,9 +1,9 @@
 ﻿namespace Rcm.Services.Aggregates;
 
-public sealed record class Aggregates
+public sealed record class MeasurementDimensionAggregates
 {
-    public required AggregateEntry First { get; init; }
-    public required AggregateEntry Min { get; init; }
-    public required AggregateEntry Max { get; init; }
-    public required AggregateEntry Last { get; init; }
+    public required MeasurementAggregatesEntry First { get; init; }
+    public required MeasurementAggregatesEntry Min { get; init; }
+    public required MeasurementAggregatesEntry Max { get; init; }
+    public required MeasurementAggregatesEntry Last { get; init; }
 }
