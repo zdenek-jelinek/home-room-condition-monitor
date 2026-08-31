@@ -47,8 +47,12 @@
       <_NpmPackageFile Include="$(NpmPackageFiles)" />
     </ItemGroup>
 
-    <Copy SourceFiles="@(_NpmPackageFile)" DestinationFiles="@(_NpmPackageFile -&gt; 'wwwroot\lib$([System.String]::new(%(Identity)).TrimStart('node_modules'))')" SkipUnchangedFiles="true" />
+    <Copy SourceFiles="@(_NpmPackageFile)" DestinationFiles="@(_NpmPackageFile->'wwwroot\lib$([System.String]::new(%(Identity)).TrimStart('node_modules'))')" SkipUnchangedFiles="true" />
 
+  </Target>
+
+  <Target Name="RemoveNpmPackageFiles" BeforeTargets="CoreClean">
+    <RemoveDir Directories="wwwroot\lib" />
   </Target>
 
 </Project>
