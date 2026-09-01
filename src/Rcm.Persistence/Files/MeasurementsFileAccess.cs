@@ -10,42 +10,31 @@ using Rcm.Persistence.Files.Navigation;
 
 namespace Rcm.Persistence.Files;
 
-public class MeasurementsFileAccess : IMeasurementsFileAccess
+public class MeasurementsFileAccess(ILogger<MeasurementsFileAccess> logger, MeasurementsFilesNavigator filesNavigator, IFileAccess file)
+    : IMeasurementsFileAccess
 {
-    private readonly ILogger<MeasurementsFileAccess> _logger;
-    private readonly IFileAccess _file;
-
-    private readonly MeasurementsFilesNavigator _filesNavigator;
-    private readonly MeasurementsSerializer _serializer;
-
-    public MeasurementsFileAccess(ILogger<MeasurementsFileAccess> logger, MeasurementsFilesNavigator filesNavigator, IFileAccess file)
-    {
-        _logger = logger;
-        _file = file;
-        _filesNavigator = filesNavigator;
-        _serializer = new MeasurementsSerializer();
-    }
+    private readonly MeasurementsSerializer _serializer = new();
 
     public IEnumerable<MeasurementEntry> Read(DateTimeOffset start, DateTimeOffset end, CancellationToken token)
     {
-        foreach (var (date, path) in _filesNavigator.GetFilePaths(start, end))
+        foreach (var (date, path) in filesNavigator.GetFilePaths(start, end))
         {
             token.ThrowIfCancellationRequested();
 
             var fullFilePath = Path.GetFullPath(path);
 
-            using var file = _file.OpenText(path, CannotOpenFile);
-            if (file is null)
+            using var file1 = file.OpenText(path, CannotOpenFile);
+            if (file1 is null)
             {
-                _logger.LogTrace("Skipping read from '{FullSourceFilePath}', the file does not exist", fullFilePath);
+                logger.LogTrace("Skipping read from '{FullSourceFilePath}', the file does not exist", fullFilePath);
                 continue;
             }
 
-            for (var lineNumber = 1; !file.EndOfStream; ++lineNumber)
+            for (var lineNumber = 1; !file1.EndOfStream; ++lineNumber)
             {
                 token.ThrowIfCancellationRequested();
 
-                var line = file.ReadLine();
+                var line = file1.ReadLine();
                 if (line == null)
                 {
                     // End of file
@@ -55,7 +44,7 @@ public class MeasurementsFileAccess : IMeasurementsFileAccess
                 var entry = TryParseEntry(date, fullFilePath, lineNumber, line);
                 if (entry != null && entry.Time >= start && entry.Time <= end)
                 {
-                    _logger.LogTrace("Read record {Record} from '{FullSourceFilePath}'", entry, fullFilePath);
+                    logger.LogTrace("Read record {Record} from '{FullSourceFilePath}'", entry, fullFilePath);
                     yield return entry;
                 }
             }
@@ -70,31 +59,31 @@ public class MeasurementsFileAccess : IMeasurementsFileAccess
         }
         catch (FormatException e)
         {
-            _logger.LogWarning(e, "Skipping corrupt entry in '{FullSourceFilePath}', line: {LineNumber}, value: '{LineText}'", filePath, lineNumber, line);
+            logger.LogWarning(e, "Skipping corrupt entry in '{FullSourceFilePath}', line: {LineNumber}, value: '{LineText}'", filePath, lineNumber, line);
             return null;
         }
     }
 
     private void CannotOpenFile(string path, Exception e)
     {
-        _logger.LogWarning(e, "Could not open measurements file '{Path}' ('{FullPath}') for reading", path, Path.GetFullPath(path));
+        logger.LogWarning(e, "Could not open measurements file '{Path}' ('{FullPath}') for reading", path, Path.GetFullPath(path));
     }
 
     public async Task SaveAsync(MeasurementEntry entry, CancellationToken token)
     {
         var record = _serializer.Serialize(entry);
-        var path = _filesNavigator.GetFilePath(entry.Time);
+        var path = filesNavigator.GetFilePath(entry.Time);
         EnsureDirectoryExists(path);
 
-        _logger.LogTrace("Storing record {Record} to '{FullDestinationPath}'", entry, Path.GetFullPath(path));
+        logger.LogTrace("Storing record {Record} to '{FullDestinationPath}'", entry, Path.GetFullPath(path));
 
-        await using var file = _file.AppendText(path);
+        await using var file1 = file.AppendText(path);
 
         token.ThrowIfCancellationRequested();
 
         // Do not interrupt write/flush with cancellation so that the file does not get corrupted
-        await file.WriteLineAsync(record.AsMemory(), CancellationToken.None);
-        await file.FlushAsync(CancellationToken.None);
+        await file1.WriteLineAsync(record.AsMemory(), CancellationToken.None);
+        await file1.FlushAsync(CancellationToken.None);
     }
 
     private static void EnsureDirectoryExists(string path)
