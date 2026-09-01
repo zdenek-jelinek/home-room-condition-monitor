@@ -5,7 +5,7 @@ using Rcm.Sensors.Abstractions;
 using Rcm.Sensors.Bme280;
 using Rcm.Sensors.Fakes;
 
-namespace Rcm.Web.Configuration;
+namespace Rcm.Web.Setup;
 
 public static class ModeBasedMeasurementServiceCollectionExtensions
 {

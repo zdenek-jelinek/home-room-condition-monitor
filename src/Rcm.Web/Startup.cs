@@ -6,8 +6,8 @@ using Microsoft.Extensions.Hosting;
 using Rcm.Common;
 using Rcm.Persistence;
 using Rcm.Services;
-using Rcm.Web.Configuration;
 using Rcm.Web.Extensions;
+using Rcm.Web.Setup;
 
 namespace Rcm.Web;
 
