@@ -89,7 +89,7 @@ public sealed class I2cBus : IDisposable
 
         if (_logger.IsEnabled(LogLevel.Trace))
         {
-            _logger.LogTrace("Read {ByteCount} bytes from I2C bus\n{ReadData}", read, FormatBuffer(buffer[..read]));
+            _logger.LogTrace("Read {ByteCount} bytes from I2C bus\n{ReadData}", read, Convert.ToHexString(buffer[..read]));
         }
     }
 
@@ -127,7 +127,7 @@ public sealed class I2cBus : IDisposable
 
         if (_logger.IsEnabled(LogLevel.Trace))
         {
-            _logger.LogTrace("Written {ByteCount} bytes to I2C bus\n{WrittenData}", written, FormatBuffer(data[..written]));
+            _logger.LogTrace("Written {ByteCount} bytes to I2C bus\n{WrittenData}", written, Convert.ToHexString(data[..written]));
         }
     }
 
@@ -149,11 +149,6 @@ public sealed class I2cBus : IDisposable
         _selectedDeviceAddress = address;
 
         _logger.LogTrace("Selected I2C device at {DeviceAddress:x}", address);
-    }
-
-    private static string FormatBuffer(ReadOnlySpan<byte> buffer)
-    {
-        return Convert.ToHexString(buffer);
     }
 
     public void Dispose()
