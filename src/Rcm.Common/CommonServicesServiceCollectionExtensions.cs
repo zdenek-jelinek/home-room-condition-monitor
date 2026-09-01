@@ -2,13 +2,13 @@
 using Rcm.Common.IO;
 using Rcm.Common.Temporal;
 
-namespace Rcm.Web.Configuration.Common;
+namespace Rcm.Common;
 
-public class CommonServicesInstaller : IInstaller
+public static class CommonServicesServiceCollectionExtensions
 {
-    public void Install(IServiceCollection services)
+    public static IServiceCollection AddCommonServices(this IServiceCollection services)
     {
-        services
+        return services
             .AddTransient<IClock, Clock>()
             .AddTransient<IFileAccess, FileAccessAdapter>();
     }

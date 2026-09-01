@@ -3,10 +3,10 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Rcm.Common;
 using Rcm.Persistence;
 using Rcm.Services;
 using Rcm.Web.Configuration;
-using Rcm.Web.Configuration.Common;
 using Rcm.Web.Configuration.Sensors;
 using Rcm.Web.Extensions;
 
@@ -20,7 +20,7 @@ public class Startup(IConfiguration configuration)
         services.AddRazorPages(o => o.Conventions.AddPageRoute("/Now", ""));
 
         services
-            .Install<CommonServicesInstaller>()
+            .AddCommonServices()
             .Install<ModeBasedMeasurementServicesInstaller>(configuration.GetSection("measurements:access"))
             .AddCombinedMemoryAndFilePersistence(configuration)
             .AddApplicationServices();
