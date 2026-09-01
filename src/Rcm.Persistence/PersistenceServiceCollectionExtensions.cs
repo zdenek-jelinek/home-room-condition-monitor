@@ -24,7 +24,7 @@ public static class PersistenceServiceCollectionExtensions
     private static IServiceCollection AddCommonPersistenceServices(this IServiceCollection services)
     {
         return services
-            .AddSingleton<IMeasurementsWriter>(s => s.GetRequiredService<IMeasurementsStorage>())
-            .AddSingleton<IMeasurementsReader>(s => s.GetRequiredService<IMeasurementsStorage>());
+            .AddTransient<IMeasurementsWriter>(s => s.GetRequiredService<IMeasurementsStorage>())
+            .AddTransient<IMeasurementsReader>(s => s.GetRequiredService<IMeasurementsStorage>());
     }
 }
