@@ -9,7 +9,7 @@ using Microsoft.Win32.SafeHandles;
 
 namespace Rcm.I2c;
 
-public class I2cBus : IDisposable
+public sealed class I2cBus : IDisposable
 {
     private const int OpenFlagsReadWrite = 2;
     private const int SelectI2cSlave = 0x703;
