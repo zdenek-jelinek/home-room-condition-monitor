@@ -81,7 +81,7 @@ public class MeasurementsFileAccess(ILogger<MeasurementsFileAccess> logger, Meas
 
         token.ThrowIfCancellationRequested();
 
-        // Do not interrupt write/flush with cancellation so that the file does not get corrupted
+        // Do not interrupt write/flush with cancellation to avoid corrupting the file needlessly
         await file1.WriteLineAsync(record.AsMemory(), CancellationToken.None);
         await file1.FlushAsync(CancellationToken.None);
     }
