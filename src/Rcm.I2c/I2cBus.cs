@@ -57,24 +57,10 @@ public class I2cBus : IDisposable
         return new I2cBus(logger, i2cBusHandle);
     }
 
-    private void SelectDevice(byte address)
+    public void Read(byte deviceAddress, Span<byte> buffer)
     {
-        if (_selectedDeviceAddress == address)
-        {
-            return;
-        }
-
-        var selectionResult = Ioctl(_i2cBusHandle, SelectI2cSlave, address);
-        if (selectionResult == -1)
-        {
-            throw new IOException(
-                $"Could not select I2C device at \"{address}\"",
-                new Win32Exception(Marshal.GetLastWin32Error()));
-        }
-
-        _selectedDeviceAddress = address;
-
-        _logger.LogTrace("Selected I2C device at {DeviceAddress:x}", address);
+        SelectDevice(deviceAddress);
+        Read(buffer);
     }
 
     private void Read(Span<byte> buffer)
@@ -108,10 +94,10 @@ public class I2cBus : IDisposable
         }
     }
 
-    public void Read(byte deviceAddress, Span<byte> buffer)
+    public void Write(byte deviceAddress, ReadOnlySpan<byte> data)
     {
         SelectDevice(deviceAddress);
-        Read(buffer);
+        Write(data);
     }
 
     private void Write(ReadOnlySpan<byte> data)
@@ -146,10 +132,36 @@ public class I2cBus : IDisposable
         }
     }
 
-    public void Write(byte deviceAddress, ReadOnlySpan<byte> data)
+    private static string PrintBuffer(ReadOnlySpan<byte> buffer, int length)
     {
-        SelectDevice(deviceAddress);
-        Write(data);
+        var str = new StringBuilder(2 * length);
+
+        foreach (var @byte in buffer[..length])
+        {
+            str.Append($"{@byte:X2}");
+        }
+
+        return str.ToString();
+    }
+
+    private void SelectDevice(byte address)
+    {
+        if (_selectedDeviceAddress == address)
+        {
+            return;
+        }
+
+        var selectionResult = Ioctl(_i2cBusHandle, SelectI2cSlave, address);
+        if (selectionResult == -1)
+        {
+            throw new IOException(
+                $"Could not select I2C device at \"{address}\"",
+                new Win32Exception(Marshal.GetLastWin32Error()));
+        }
+
+        _selectedDeviceAddress = address;
+
+        _logger.LogTrace("Selected I2C device at {DeviceAddress:x}", address);
     }
 
     public void Dispose()
@@ -163,18 +175,6 @@ public class I2cBus : IDisposable
         _i2cBusHandle.Dispose();
 
         _logger.LogDebug("I2C bus closed");
-    }
-
-    private static string PrintBuffer(ReadOnlySpan<byte> buffer, int length)
-    {
-        var str = new StringBuilder(2 * length);
-
-        foreach (var @byte in buffer[..length])
-        {
-            str.Append($"{@byte:X2}");
-        }
-
-        return str.ToString();
     }
 
     private class FileHandle : SafeHandleMinusOneIsInvalid
