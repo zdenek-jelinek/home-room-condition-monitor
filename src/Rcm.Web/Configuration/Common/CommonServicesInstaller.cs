@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 using Rcm.Common.IO;
 using Rcm.Common.Temporal;
 using Rcm.Persistence.Files.Navigation;
@@ -12,14 +11,13 @@ public class CommonServicesInstaller : IConfigurableInstaller
     public void Install(IServiceCollection services, IConfiguration configuration)
     {
         services
-            .AddOptions<DataStorageLocation>()
+            .AddOptions<DataStorageOptions>()
             .Bind(configuration.GetSection("dataStorage"))
             .ValidateDataAnnotations();
 
         services
             .AddTransient<IClock, Clock>()
             .AddTransient<IFileAccess, FileAccessAdapter>()
-            .AddTransient<IDataStorageLocation>(
-                sp => sp.GetRequiredService<IOptions<DataStorageLocation>>().Value);
+            .AddTransient<IDataStorageLocation, DataStorageLocation>();
     }
 }

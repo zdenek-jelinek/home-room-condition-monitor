@@ -1,31 +1,14 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
-using System.IO;
-using System.Threading;
+﻿using System.IO;
+using Microsoft.Extensions.Options;
 using Rcm.Persistence.Files.Navigation;
 
 namespace Rcm.Web.Configuration.Common;
 
-internal class DataStorageLocation : IDataStorageLocation
+internal class DataStorageLocation(IOptionsMonitor<DataStorageOptions> dataStorageOptions) : IDataStorageLocation
 {
-    private readonly Lazy<string> _fullPath;
-
-    [Required(AllowEmptyStrings = false)]
-    public string? Path { get; set; }
-
-    public DataStorageLocation()
+    public string GetDirectoryPath()
     {
-        _fullPath = new Lazy<string>(GetFullPath, LazyThreadSafetyMode.ExecutionAndPublication);
-    }
-
-    public string GetDirectoryPath() => _fullPath.Value;
-
-    private string GetFullPath()
-    {
-        var path = Path
-            ?? throw new InvalidOperationException($"{nameof(Path)} is unexpectedly null.");
-
-        var fullPath = System.IO.Path.GetFullPath(path);
+        var fullPath = Path.GetFullPath(dataStorageOptions.CurrentValue.Path);
 
         EnsureDirectoryExists(fullPath);
 
