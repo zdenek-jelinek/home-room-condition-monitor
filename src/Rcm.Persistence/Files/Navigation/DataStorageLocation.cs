@@ -4,7 +4,7 @@ using Rcm.Persistence.Files.Navigation;
 
 namespace Rcm.Web.Configuration.Common;
 
-internal class DataStorageLocation(IOptionsMonitor<DataStorageOptions> dataStorageOptions) : IDataStorageLocation
+public class DataStorageLocation(IOptionsMonitor<DataStorageOptions> dataStorageOptions) : IDataStorageLocation
 {
     public string GetDirectoryPath()
     {
