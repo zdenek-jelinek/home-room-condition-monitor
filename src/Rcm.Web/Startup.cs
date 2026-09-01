@@ -7,7 +7,6 @@ using Rcm.Common;
 using Rcm.Persistence;
 using Rcm.Services;
 using Rcm.Web.Configuration;
-using Rcm.Web.Configuration.Sensors;
 using Rcm.Web.Extensions;
 
 namespace Rcm.Web;

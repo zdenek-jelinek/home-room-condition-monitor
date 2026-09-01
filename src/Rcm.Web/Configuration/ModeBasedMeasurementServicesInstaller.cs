@@ -1,12 +1,11 @@
 ﻿using System;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Rcm.I2c;
 using Rcm.Sensors.Abstractions;
 using Rcm.Sensors.Bme280;
 using Rcm.Sensors.Fakes;
 
-namespace Rcm.Web.Configuration.Sensors;
+namespace Rcm.Web.Configuration;
 
 public class ModeBasedMeasurementServicesInstaller : IConfigurableInstaller
 {
