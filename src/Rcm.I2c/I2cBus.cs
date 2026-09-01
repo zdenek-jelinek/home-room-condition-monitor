@@ -3,7 +3,6 @@ using System.ComponentModel;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using System.Text;
 using Microsoft.Extensions.Logging;
 using Microsoft.Win32.SafeHandles;
 
@@ -90,7 +89,7 @@ public sealed class I2cBus : IDisposable
 
         if (_logger.IsEnabled(LogLevel.Trace))
         {
-            _logger.LogTrace("Read {ByteCount} bytes from I2C bus\n{ReadData}", read, PrintBuffer(buffer, read));
+            _logger.LogTrace("Read {ByteCount} bytes from I2C bus\n{ReadData}", read, FormatBuffer(buffer, read));
         }
     }
 
@@ -128,20 +127,8 @@ public sealed class I2cBus : IDisposable
 
         if (_logger.IsEnabled(LogLevel.Trace))
         {
-            _logger.LogTrace("Written {ByteCount} bytes to I2C bus\n{WrittenData}", written, PrintBuffer(data, written));
+            _logger.LogTrace("Written {ByteCount} bytes to I2C bus\n{WrittenData}", written, FormatBuffer(data, written));
         }
-    }
-
-    private static string PrintBuffer(ReadOnlySpan<byte> buffer, int length)
-    {
-        var str = new StringBuilder(2 * length);
-
-        foreach (var @byte in buffer[..length])
-        {
-            str.Append($"{@byte:X2}");
-        }
-
-        return str.ToString();
     }
 
     private void SelectDevice(byte address)
@@ -162,6 +149,11 @@ public sealed class I2cBus : IDisposable
         _selectedDeviceAddress = address;
 
         _logger.LogTrace("Selected I2C device at {DeviceAddress:x}", address);
+    }
+
+    private static string FormatBuffer(ReadOnlySpan<byte> buffer, int length)
+    {
+        return Convert.ToHexString(buffer[..length]);
     }
 
     public void Dispose()
