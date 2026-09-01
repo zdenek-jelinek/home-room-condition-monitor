@@ -1,7 +1,6 @@
 ﻿using System;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 using Rcm.I2c;
 using Rcm.Sensors.Abstractions;
 using Rcm.Sensors.Bme280;
@@ -13,20 +12,19 @@ public class ModeBasedMeasurementServicesInstaller : IConfigurableInstaller
 {
     public void Install(IServiceCollection services, IConfiguration configuration)
     {
-        var mode = new MeasurementAccessModeReader().Get(configuration);
-        switch (mode)
+        var modeSection = configuration.GetSection("mode");
+        if (string.Equals(modeSection.Value, "I2C", StringComparison.OrdinalIgnoreCase))
         {
-            case MeasurementAccessMode.I2c:
-                InstallI2cServices(services, configuration);
-                break;
-
-            case MeasurementAccessMode.Fake:
-                InstallFakeServices(services);
-                break;
-
-            default:
-                throw new NotSupportedException($"Measurement access mode {mode} is not supported");
-
+            InstallI2cServices(services, configuration);
+        }
+        else if (string.Equals(modeSection.Value, "Fake", StringComparison.OrdinalIgnoreCase))
+        {
+            InstallFakeServices(services);
+        }
+        else
+        {
+            throw new NotSupportedException(
+                $"Measurement access mode '{modeSection.Value}' is not supported. Source configuration path: '{modeSection.Path}'.");
         }
 
         InstallCommonServices(services);
