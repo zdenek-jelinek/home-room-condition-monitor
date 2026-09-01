@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Rcm.Sensors.Bme280;
 
-public class I2cAccessConfiguration : II2cAccessConfiguration
+public class I2cAccessOptions : II2cAccessConfiguration
 {
     [Required(AllowEmptyStrings = false)]
     public string? BusAddress { get; set; }

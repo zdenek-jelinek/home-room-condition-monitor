@@ -45,13 +45,13 @@ public class ModeBasedMeasurementServicesInstaller : IConfigurableInstaller
     private void InstallI2cServices(IServiceCollection services, IConfiguration measurementI2cAccessConfiguration)
     {
         services
-            .AddOptions<I2cAccessConfiguration>()
+            .AddOptions<I2cAccessOptions>()
             .Bind(measurementI2cAccessConfiguration)
             .ValidateDataAnnotations();
 
         services
             .AddSingleton<ISensorFactory, Bme280DeviceFactory>()
-            .AddTransient<II2cAccessConfiguration>(GetOptionValue<I2cAccessConfiguration>)
+            .AddTransient<II2cAccessConfiguration>(GetOptionValue<I2cAccessOptions>)
             .AddTransient<I2cBusFactory>();
     }
 
