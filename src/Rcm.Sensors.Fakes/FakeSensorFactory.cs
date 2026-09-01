@@ -1,12 +1,14 @@
-﻿using System;
-using Rcm.Common.Temporal;
+﻿using Rcm.Common.Temporal;
 using Rcm.Sensors.Abstractions;
 
 namespace Rcm.Sensors.Fakes;
 
 public class FakeSensorFactory(IClock clock) : ISensorFactory
 {
-    private readonly Lazy<ISensor> _instance = new(() => new FakeSensor(clock));
+    private FakeSensor? _instance;
 
-    public ISensor Create() => _instance.Value;
+    public ISensor Create()
+    {
+        return _instance ??= new FakeSensor(clock);
+    }
 }
