@@ -198,7 +198,7 @@ public class MeasurementsFileAccessTests
     {
         return new MeasurementsFileAccess(
             NullLogger<MeasurementsFileAccess>.Instance,
-            dataStorageLocation ?? new DataStorageLocation(DataPath),
+            new MeasurementsFilesNavigator(dataStorageLocation ?? new DataStorageLocation(DataPath)),
             fileAccess);
     }
 

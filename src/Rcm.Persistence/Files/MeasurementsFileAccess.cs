@@ -18,14 +18,11 @@ public class MeasurementsFileAccess : IMeasurementsFileAccess
     private readonly MeasurementsFilesNavigator _filesNavigator;
     private readonly MeasurementsSerializer _serializer;
 
-    public MeasurementsFileAccess(
-        ILogger<MeasurementsFileAccess> logger,
-        IDataStorageLocation dataStorageLocation,
-        IFileAccess file)
+    public MeasurementsFileAccess(ILogger<MeasurementsFileAccess> logger, MeasurementsFilesNavigator filesNavigator, IFileAccess file)
     {
         _logger = logger;
         _file = file;
-        _filesNavigator = new MeasurementsFilesNavigator(dataStorageLocation);
+        _filesNavigator = filesNavigator;
         _serializer = new MeasurementsSerializer();
     }
 

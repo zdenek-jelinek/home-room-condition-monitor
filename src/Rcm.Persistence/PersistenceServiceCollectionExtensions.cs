@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Rcm.Persistence.Abstractions;
 using Rcm.Persistence.Files;
+using Rcm.Persistence.Files.Navigation;
 
 namespace Rcm.Persistence;
 
@@ -11,6 +12,7 @@ public static class PersistenceServiceCollectionExtensions
         return services
             .AddSingleton<IMeasurementsStorage, CombinedFileAndMemoryMeasurementsStorage>()
             .AddTransient<IMeasurementsFileAccess, MeasurementsFileAccess>()
+            .AddTransient<MeasurementsFilesNavigator>()
             .AddCommonPersistenceServices();
     }
 
