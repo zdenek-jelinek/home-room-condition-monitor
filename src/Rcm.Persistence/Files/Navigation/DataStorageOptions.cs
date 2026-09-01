@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Rcm.Web.Configuration.Common;
+namespace Rcm.Persistence.Files.Navigation;
 
 public class DataStorageOptions
 {

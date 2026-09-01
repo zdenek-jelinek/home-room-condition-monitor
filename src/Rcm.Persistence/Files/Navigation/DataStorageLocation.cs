@@ -1,8 +1,7 @@
 ﻿using System.IO;
 using Microsoft.Extensions.Options;
-using Rcm.Persistence.Files.Navigation;
 
-namespace Rcm.Web.Configuration.Common;
+namespace Rcm.Persistence.Files.Navigation;
 
 public class DataStorageLocation(IOptionsMonitor<DataStorageOptions> dataStorageOptions) : IDataStorageLocation
 {
