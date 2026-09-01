@@ -8,6 +8,7 @@ public class I2cAccessConfiguration : II2cAccessConfiguration
 {
     [Required(AllowEmptyStrings = false)]
     public string? BusAddress { get; set; }
+
     [Required]
     public byte? DeviceAddress { get; set; }
 
