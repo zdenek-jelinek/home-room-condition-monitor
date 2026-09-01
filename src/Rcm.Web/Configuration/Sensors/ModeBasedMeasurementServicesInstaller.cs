@@ -15,11 +15,11 @@ public class ModeBasedMeasurementServicesInstaller : IConfigurableInstaller
         var modeSection = configuration.GetSection("mode");
         if (string.Equals(modeSection.Value, "I2C", StringComparison.OrdinalIgnoreCase))
         {
-            InstallI2cServices(services, configuration);
+            services.AddBme280Sensor(configuration);
         }
         else if (string.Equals(modeSection.Value, "Fake", StringComparison.OrdinalIgnoreCase))
         {
-            InstallFakeServices(services);
+            services.AddFakeSensor();
         }
         else
         {
@@ -33,22 +33,5 @@ public class ModeBasedMeasurementServicesInstaller : IConfigurableInstaller
     private void InstallCommonServices(IServiceCollection services)
     {
         services.AddTransient(s => s.GetRequiredService<ISensorFactory>().Create());
-    }
-
-    private void InstallFakeServices(IServiceCollection services)
-    {
-        services.AddSingleton<ISensorFactory, FakeSensorFactory>();
-    }
-
-    private void InstallI2cServices(IServiceCollection services, IConfiguration measurementI2cAccessConfiguration)
-    {
-        services
-            .AddOptions<I2cAccessOptions>()
-            .Bind(measurementI2cAccessConfiguration)
-            .ValidateDataAnnotations();
-
-        services
-            .AddSingleton<ISensorFactory, Bme280DeviceFactory>()
-            .AddTransient<I2cBusFactory>();
     }
 }
