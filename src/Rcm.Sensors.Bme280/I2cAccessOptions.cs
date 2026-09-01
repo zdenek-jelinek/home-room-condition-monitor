@@ -1,19 +1,14 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Rcm.Sensors.Bme280;
 
-public class I2cAccessOptions : II2cAccessConfiguration
+public class I2cAccessOptions
 {
     [Required(AllowEmptyStrings = false)]
-    public string? BusAddress { get; set; }
+    public required string BusAddress { get; set; }
 
     [Required]
-    public byte? DeviceAddress { get; set; }
-
-    byte II2cAccessConfiguration.DeviceAddress => DeviceAddress
-        ?? throw new InvalidOperationException($"{nameof(DeviceAddress)} is unexpectedly null.");
-
-    string II2cAccessConfiguration.I2cBusAddress => BusAddress
-        ?? throw new InvalidOperationException($"{nameof(BusAddress)} is unexpectedly null.");
+    [NotNull] // This has to be nullable for DataAnnotations validation to work, marking [NotNull] to avoid compiler warnings since this won't be null.
+    public required byte? DeviceAddress { get; set; }
 }

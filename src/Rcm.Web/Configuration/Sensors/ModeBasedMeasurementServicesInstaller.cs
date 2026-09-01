@@ -51,14 +51,6 @@ public class ModeBasedMeasurementServicesInstaller : IConfigurableInstaller
 
         services
             .AddSingleton<ISensorFactory, Bme280DeviceFactory>()
-            .AddTransient<II2cAccessConfiguration>(GetOptionValue<I2cAccessOptions>)
             .AddTransient<I2cBusFactory>();
-    }
-
-    private static T GetOptionValue<T>(IServiceProvider serviceProvider) where T : class, new()
-    {
-        return serviceProvider
-            .GetRequiredService<IOptions<T>>()
-            .Value;
     }
 }
