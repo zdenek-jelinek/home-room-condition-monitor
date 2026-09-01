@@ -3,8 +3,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Rcm.Services;
 using Rcm.Web.Configuration;
-using Rcm.Web.Configuration.Aggregates;
 using Rcm.Web.Configuration.Common;
 using Rcm.Web.Configuration.DataCollection;
 using Rcm.Web.Configuration.Sensors;
@@ -25,7 +25,7 @@ public class Startup(IConfiguration configuration)
             .Install<CommonServicesInstaller>(configuration)
             .Install<ModeBasedMeasurementServicesInstaller>(measurementsConfiguration.GetSection("access"))
             .Install<MeasurementsServicesInstaller>()
-            .Install<AggregatesServicesInstaller>();
+            .AddApplicationServices();
     }
 
     public void Configure(IApplicationBuilder application, IWebHostEnvironment environment)
