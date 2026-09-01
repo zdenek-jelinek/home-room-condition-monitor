@@ -16,8 +16,9 @@ public sealed class Bme280I2cDevice : ISensor, IDisposable
     private readonly byte _address;
     private readonly I2cBus _bus;
     private readonly IClock _clock;
-    private readonly Lazy<CompensationParameters> _compensationParameters;
     private readonly ILogger<Bme280I2cDevice> _logger;
+
+    private CompensationParameters? _compensationParameters;
 
     public Bme280I2cDevice(ILogger<Bme280I2cDevice> logger, IClock clock, I2cBus bus, byte address)
     {
@@ -25,8 +26,6 @@ public sealed class Bme280I2cDevice : ISensor, IDisposable
         _bus = bus;
         _address = address;
         _clock = clock;
-
-        _compensationParameters = new Lazy<CompensationParameters>(ReadCompensationParameters);
     }
 
     public async Task<SensorMeasurement> ReadMeasurementAsync(CancellationToken token)
@@ -40,7 +39,10 @@ public sealed class Bme280I2cDevice : ISensor, IDisposable
         var (rawPressure, rawTemperature, rawHumidity) = ReadMeasurementResults();
 
         _logger.LogDebug("Compensating measurement results");
-        return CompensateResults(rawPressure, rawTemperature, rawHumidity, _compensationParameters.Value);
+
+        var compensationParameters = _compensationParameters ??= ReadCompensationParameters();
+
+        return CompensateResults(rawPressure, rawTemperature, rawHumidity, compensationParameters);
     }
 
     private void InitiateMeasurement()
