@@ -7,9 +7,9 @@ using Rcm.Sensors.Fakes;
 
 namespace Rcm.Web.Configuration;
 
-public class ModeBasedMeasurementServicesInstaller : IConfigurableInstaller
+public static class ModeBasedMeasurementServiceCollectionExtensions
 {
-    public void Install(IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddMeasurementSensor(this IServiceCollection services, IConfiguration configuration)
     {
         var modeSection = configuration.GetSection("mode");
         if (string.Equals(modeSection.Value, "I2C", StringComparison.OrdinalIgnoreCase))
@@ -26,11 +26,8 @@ public class ModeBasedMeasurementServicesInstaller : IConfigurableInstaller
                 $"Measurement access mode '{modeSection.Value}' is not supported. Source configuration path: '{modeSection.Path}'.");
         }
 
-        InstallCommonServices(services);
+        // Register ISensor resolved via a delegate.
+        return services.AddTransient(s => s.GetRequiredService<ISensorFactory>().Create());
     }
 
-    private void InstallCommonServices(IServiceCollection services)
-    {
-        services.AddTransient(s => s.GetRequiredService<ISensorFactory>().Create());
-    }
 }

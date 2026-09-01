@@ -20,7 +20,7 @@ public class Startup(IConfiguration configuration)
 
         services
             .AddCommonServices()
-            .Install<ModeBasedMeasurementServicesInstaller>(configuration.GetSection("measurements:access"))
+            .AddMeasurementSensor(configuration.GetSection("measurements:access"))
             .AddCombinedMemoryAndFilePersistence(configuration)
             .AddApplicationServices();
     }
