@@ -19,12 +19,10 @@ public class Startup(IConfiguration configuration)
         services.AddControllers();
         services.AddRazorPages(o => o.Conventions.AddPageRoute("/Now", ""));
 
-        var measurementsConfiguration = configuration.GetSection("measurements");
-
         services
-            .Install<CommonServicesInstaller>(configuration)
-            .Install<ModeBasedMeasurementServicesInstaller>(measurementsConfiguration.GetSection("access"))
-            .AddCombinedMemoryAndFilePersistence()
+            .Install<CommonServicesInstaller>()
+            .Install<ModeBasedMeasurementServicesInstaller>(configuration.GetSection("measurements:access"))
+            .AddCombinedMemoryAndFilePersistence(configuration)
             .AddApplicationServices();
     }
 
