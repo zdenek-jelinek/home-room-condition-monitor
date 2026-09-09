@@ -215,8 +215,7 @@ public class MeasurementAggregatesAccessorTests
 
         Assert.That(
             aggregates,
-            Is.EquivalentTo(new[] { firstPartitionAggregates, secondPartitionAggregates })
-                .Using(new MeasurementAggregatesEqualityComparer()));
+            Is.EquivalentTo([firstPartitionAggregates, secondPartitionAggregates]).Using(new MeasurementAggregatesEqualityComparer()));
     }
 
     [Test]
@@ -238,8 +237,7 @@ public class MeasurementAggregatesAccessorTests
         // Then
         Assert.That(
             aggregates,
-            Is.EquivalentTo(new[] { MakeSingletonAggregates(measurementInSecondPartition) })
-                .Using(new MeasurementAggregatesEqualityComparer()));
+            Is.EquivalentTo([MakeSingletonAggregates(measurementInSecondPartition)]).Using(new MeasurementAggregatesEqualityComparer()));
     }
 
     [Test]
@@ -249,7 +247,7 @@ public class MeasurementAggregatesAccessorTests
         var aggregates = GetMeasurementAggregates(measurements: [], MakeDummyQuery());
 
         // Then
-        CollectionAssert.IsEmpty(aggregates);
+        Assert.That(aggregates, Is.Empty);
     }
 
     [Test]

@@ -73,7 +73,7 @@ public class CombinedFileAndMemoryMeasurementsStorageTests
         Assert.AreEqual(startTimeBeforeToday, fileReadStart);
         Assert.AreEqual(todayMidnight.AddSeconds(-1), fileReadEnd);
 
-        CollectionAssert.AreEquivalent(new[] { pastEntry, todaysEntry }, entries);
+        Assert.That(entries, Is.EquivalentTo([pastEntry, todaysEntry]));
     }
 
     [Test]
@@ -157,7 +157,7 @@ public class CombinedFileAndMemoryMeasurementsStorageTests
         // Then
         Assert.IsNull(spyCollectedDataFileAccess.ReadRange);
 
-        CollectionAssert.AreEquivalent(new[] { storedEntry }, entries);
+        Assert.That(entries, Is.EquivalentTo([storedEntry]));
     }
 
     [Test]
@@ -191,7 +191,7 @@ public class CombinedFileAndMemoryMeasurementsStorageTests
         Assert.AreEqual(startTimeBeforeToday, fileReadStart);
         Assert.AreEqual(todayMidnight.AddSeconds(-1), fileReadEnd);
 
-        CollectionAssert.AreEquivalent(new[] { olderEntry, todaysEntry }, entries);
+        Assert.That(entries, Is.EquivalentTo([olderEntry, todaysEntry]));
     }
 
     [Test]
@@ -215,7 +215,7 @@ public class CombinedFileAndMemoryMeasurementsStorageTests
             .ToList();
 
         // Then
-        CollectionAssert.AreEquivalent(new[] { entryStoredInFile }, readEntries);
+        Assert.That(readEntries, Is.EquivalentTo([entryStoredInFile]));
     }
 
     [Test]
@@ -243,7 +243,7 @@ public class CombinedFileAndMemoryMeasurementsStorageTests
             .ToList();
 
         // Then
-        CollectionAssert.AreEquivalent(new[] { entryPreviouslyStoredInFile, newEntry }, readEntries);
+        Assert.That(readEntries, Is.EquivalentTo([entryPreviouslyStoredInFile, newEntry]));
     }
 
     [Test]
@@ -277,7 +277,7 @@ public class CombinedFileAndMemoryMeasurementsStorageTests
             .ToList();
 
         // Then
-        CollectionAssert.AreEquivalent(new[] { entryOnStart, entryInsideRange, entryOnEnd }, entries);
+        Assert.That(entries, Is.EquivalentTo([entryOnStart, entryInsideRange, entryOnEnd]));
     }
 
     [Test]
@@ -304,7 +304,7 @@ public class CombinedFileAndMemoryMeasurementsStorageTests
             .ToList();
 
         // Then
-        CollectionAssert.AreEquivalent(new[] { entryPreviouslyStoredInFile }, readEntries);
+        Assert.That(readEntries, Is.EquivalentTo([entryPreviouslyStoredInFile]));
     }
 
     [Test]
@@ -330,7 +330,7 @@ public class CombinedFileAndMemoryMeasurementsStorageTests
             .ToList();
 
         // Then
-        CollectionAssert.AreEquivalent(new[] { entryPreviouslyStoredInFile }, readEntries);
+        Assert.That(readEntries, Is.EquivalentTo([entryPreviouslyStoredInFile]));
     }
 
     [Test]
@@ -431,7 +431,7 @@ public class CombinedFileAndMemoryMeasurementsStorageTests
         var entries = combinedStorage.GetCollectedData(startTimeOnYesterday, endTimeOnToday, CancellationToken.None);
 
         // Then
-        CollectionAssert.AreEquivalent(new[] { entryOnYesterday }, entries);
+        Assert.That(entries, Is.EquivalentTo([entryOnYesterday]));
     }
 
     [Test]

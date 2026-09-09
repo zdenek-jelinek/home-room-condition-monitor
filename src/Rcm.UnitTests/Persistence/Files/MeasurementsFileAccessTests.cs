@@ -103,8 +103,7 @@ public class MeasurementsFileAccessTests
         // Then
         Assert.That(
             readEntries,
-            Is.EquivalentTo(new[] { entryOnStart, firstEntryInMiddle, secondEntryInMiddle, entryOnEnd })
-                .Using(new MeasurementEntryEqualityComparer()));
+            Is.EquivalentTo([entryOnStart, firstEntryInMiddle, secondEntryInMiddle, entryOnEnd]).Using(new MeasurementEntryEqualityComparer()));
     }
 
     [Test]

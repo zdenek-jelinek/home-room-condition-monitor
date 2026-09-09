@@ -51,9 +51,9 @@ public class MeasurementsFilesNavigatorTests
 
         // Then
         var separator = Path.DirectorySeparatorChar;
-        CollectionAssert.AreEquivalent(
-            datesBetweenStartAndEnd.Select(date => (date, $"dataStorage{separator}measurements{separator}{date:yyyy'-'MM'-'dd}.mst")),
-            paths);
+        Assert.That(
+            paths,
+            Is.EquivalentTo(datesBetweenStartAndEnd.Select(date => (date, $"dataStorage{separator}measurements{separator}{date:yyyy'-'MM'-'dd}.mst"))));
     }
 
     private class StubDataStorageLocation(string path) : IDataStorageLocation
