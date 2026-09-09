@@ -362,11 +362,11 @@ public class MeasurementAggregatesAccessorTests
         }
     }
 
-    private class AggregatesEqualityComparer : IEqualityComparer<Rcm.Services.Aggregates.MeasurementDimensionAggregates>
+    private class AggregatesEqualityComparer : IEqualityComparer<MeasurementDimensionAggregates>
     {
         private readonly AggregateEntryEqualityComparer _entryComparer = new();
 
-        public bool Equals(Rcm.Services.Aggregates.MeasurementDimensionAggregates? x, Rcm.Services.Aggregates.MeasurementDimensionAggregates? y)
+        public bool Equals(MeasurementDimensionAggregates? x, MeasurementDimensionAggregates? y)
         {
             return _entryComparer.Equals(x?.First, y?.First)
                 && _entryComparer.Equals(x?.Min, y?.Min)
@@ -374,7 +374,7 @@ public class MeasurementAggregatesAccessorTests
                 && _entryComparer.Equals(x?.Last, y?.Last);
         }
 
-        public int GetHashCode(Rcm.Services.Aggregates.MeasurementDimensionAggregates obj)
+        public int GetHashCode(MeasurementDimensionAggregates obj)
         {
             return HashCode.Combine(
                 _entryComparer.GetHashCode(obj.First),
