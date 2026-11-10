@@ -30,13 +30,13 @@ public class PeriodicMeasurementCollectionServiceTests
         var stopwatch = Stopwatch.StartNew();
         await periodicDataCollectionService.StartAsync(CancellationToken.None);
 
-        await blockingMeasurementCollector.MeasurementStarted;
+        await blockingMeasurementCollector.WaitForPendingMeasurementAsync();
         var measuredFirstMeasurementDelay = stopwatch.ElapsedMilliseconds;
 
         stopwatch.Restart();
         blockingMeasurementCollector.Release();
 
-        await blockingMeasurementCollector.MeasurementStarted;
+        await blockingMeasurementCollector.WaitForPendingMeasurementAsync();
         var subsequentMeasurementDelay = stopwatch.ElapsedMilliseconds;
 
         // Then
@@ -59,12 +59,13 @@ public class PeriodicMeasurementCollectionServiceTests
         // When
         await periodicDataCollectionService.StartAsync(CancellationToken.None);
 
-        await blockingMeasurementCollector.MeasurementStarted;
+        await blockingMeasurementCollector.WaitForPendingMeasurementAsync();
 
-        var subsequentMeasurementIssued = await blockingMeasurementCollector.MeasurementStarted.TryWait(4 * measurementPeriod);
+        var subsequentMeasurementTask = blockingMeasurementCollector.WaitForPendingMeasurementAsync();
+        await subsequentMeasurementTask.TryWait(4 * measurementPeriod);
 
         // Then
-        Assert.IsFalse(subsequentMeasurementIssued, nameof(subsequentMeasurementIssued));
+        Assert.AreEqual(TaskStatus.WaitingForActivation, subsequentMeasurementTask.Status);
     }
 
     [Test]
@@ -110,7 +111,7 @@ public class PeriodicMeasurementCollectionServiceTests
         await periodicDataCollectionService.StartAsync(CancellationToken.None);
 
         // When
-        await blockingMeasurementCollector.MeasurementStarted;
+        await blockingMeasurementCollector.WaitForPendingMeasurementAsync();
 
         var stoppingCompleted = await periodicDataCollectionService
             .StopAsync(CancellationToken.None)
@@ -138,7 +139,7 @@ public class PeriodicMeasurementCollectionServiceTests
         await periodicDataCollectionService.StartAsync(CancellationToken.None);
 
         // When
-        await blockingMeasurementCollector.MeasurementStarted;
+        await blockingMeasurementCollector.WaitForPendingMeasurementAsync();
 
         var stoppingTask = periodicDataCollectionService.StopAsync(cancellationTokenSource.Token);
         var stoppedImmediately = stoppingTask.IsCompleted;
@@ -180,8 +181,6 @@ public class PeriodicMeasurementCollectionServiceTests
         public bool IsCancellable { get; set; }
         public bool BlocksAsynchronously { get; set; }
 
-        public Task MeasurementStarted => _startedSemaphore.WaitAsync();
-
         public async Task MeasureAsync(CancellationToken token)
         {
             _startedSemaphore.Release();
@@ -192,6 +191,11 @@ public class PeriodicMeasurementCollectionServiceTests
             }
 
             await _blockingSemaphore.WaitAsync(IsCancellable ? token : CancellationToken.None);
+        }
+
+        public Task WaitForPendingMeasurementAsync()
+        {
+            return _startedSemaphore.WaitAsync();
         }
 
         public void Release()
