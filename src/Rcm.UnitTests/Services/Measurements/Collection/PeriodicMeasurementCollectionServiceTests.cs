@@ -13,8 +13,6 @@ public class PeriodicMeasurementCollectionServiceTests
 {
     private static TimeSpan Tolerance => TimeSpan.FromMilliseconds(32);
 
-    // TODO Use TimeProvider instead of waiting for actual time to pass (Zdenek Jelinek, 28. 8. 2026)
-
     [Test]
     public async Task InvokesMeasurementWithSpecifiedTimeoutAndPeriodAfterStarting()
     {
