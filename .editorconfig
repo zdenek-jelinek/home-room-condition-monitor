@@ -4,6 +4,9 @@ root = true
 
 #### Core EditorConfig Options ####
 
+# Guidelines
+max_line_length = 120
+
 # Indentation and spacing
 indent_size = 4
 indent_style = space
