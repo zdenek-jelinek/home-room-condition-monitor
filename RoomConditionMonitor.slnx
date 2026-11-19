@@ -22,5 +22,6 @@
   <Project Path="src/Rcm.Services/Rcm.Services.csproj" />
   <Project Path="src/Rcm.Testing/Rcm.Testing.csproj" />
   <Project Path="src/Rcm.Common/Rcm.Common.csproj" />
+  <Project Path="src/Rcm.Web.Api/Rcm.Web.Api.csproj" Id="45d9851a-1e70-4b5d-b399-a6852e1084cb" />
   <Project Path="src/Rcm.Web/Rcm.Web.csproj" />
 </Solution>

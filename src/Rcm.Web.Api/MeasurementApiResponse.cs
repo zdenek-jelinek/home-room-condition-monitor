@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Rcm.Web.Controllers;
+namespace Rcm.Web.Api;
 
 public sealed class MeasurementApiResponse
 {

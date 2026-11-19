@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Rcm.Common;
 using Rcm.Services.Measurements.Retrieval;
 
-namespace Rcm.Web.Controllers;
+namespace Rcm.Web.Api;
 
 [ApiController]
 [Route("api/measurements")]

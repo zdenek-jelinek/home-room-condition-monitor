@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Rcm.Services.Aggregates;
 
-namespace Rcm.Web.Controllers;
+namespace Rcm.Web.Api;
 
 [ApiController]
 [Route("api/measurements/aggregates")]

@@ -19,6 +19,11 @@
     <ProjectReference Include="..\Rcm.I2c\Rcm.I2c.csproj" />
     <ProjectReference Include="..\Rcm.Sensors.Fakes\Rcm.Sensors.Fakes.csproj" />
     <ProjectReference Include="..\Rcm.Services\Rcm.Services.csproj" />
+    <ProjectReference Include="..\Rcm.Web.Api\Rcm.Web.Api.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Controllers\" />
   </ItemGroup>
 
   <PropertyGroup>
@@ -47,7 +52,7 @@
       <_NpmPackageFile Include="$(NpmPackageFiles)" />
     </ItemGroup>
 
-    <Copy SourceFiles="@(_NpmPackageFile)" DestinationFiles="@(_NpmPackageFile->'wwwroot\lib$([System.String]::new(%(Identity)).TrimStart('node_modules'))')" SkipUnchangedFiles="true" />
+    <Copy SourceFiles="@(_NpmPackageFile)" DestinationFiles="@(_NpmPackageFile-&gt;'wwwroot\lib$([System.String]::new(%(Identity)).TrimStart('node_modules'))')" SkipUnchangedFiles="true" />
 
   </Target>
 
