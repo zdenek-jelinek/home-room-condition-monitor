@@ -1,6 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
+  <PropertyGroup>
+    <IsTestProject>false</IsTestProject>
+  </PropertyGroup>
+
   <ItemGroup>
+    <PackageReference Include="nunit" />
     <ProjectReference Include="..\Rcm.Common\Rcm.Common.csproj" />
   </ItemGroup>
 
