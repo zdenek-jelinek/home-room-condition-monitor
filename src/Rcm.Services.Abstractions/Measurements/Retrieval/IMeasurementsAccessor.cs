@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using Rcm.Common;
 
-namespace Rcm.Services.Measurements.Retrieval;
+namespace Rcm.Services.Abstractions.Measurements.Retrieval;
 
 public interface IMeasurementsAccessor
 {

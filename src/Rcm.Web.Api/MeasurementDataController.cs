@@ -4,7 +4,7 @@ using System.Threading;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Rcm.Common;
-using Rcm.Services.Measurements.Retrieval;
+using Rcm.Services.Abstractions.Measurements.Retrieval;
 
 namespace Rcm.Web.Api;
 

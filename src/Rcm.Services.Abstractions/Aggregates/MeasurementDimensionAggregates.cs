@@ -1,4 +1,4 @@
-﻿namespace Rcm.Services.Aggregates;
+﻿namespace Rcm.Services.Abstractions.Aggregates;
 
 public sealed record class MeasurementDimensionAggregates
 {

@@ -3,6 +3,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Rcm.Persistence.Abstractions\Rcm.Persistence.Abstractions.csproj" />
     <ProjectReference Include="..\Rcm.Sensors.Abstractions\Rcm.Sensors.Abstractions.csproj" />
+    <ProjectReference Include="..\Rcm.Services.Abstractions\Rcm.Services.Abstractions.csproj" />
   </ItemGroup>
 
   <ItemGroup>

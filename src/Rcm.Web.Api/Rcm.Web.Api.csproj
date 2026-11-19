@@ -5,7 +5,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Rcm.Services\Rcm.Services.csproj" />
+    <ProjectReference Include="..\Rcm.Services.Abstractions\Rcm.Services.Abstractions.csproj" />
   </ItemGroup>
 
 </Project>

@@ -5,6 +5,7 @@ using System.Threading;
 using NUnit.Framework;
 using Rcm.Common;
 using Rcm.Persistence.Abstractions;
+using Rcm.Services.Abstractions.Aggregates;
 using Rcm.Services.Aggregates;
 
 namespace Rcm.UnitTests.Services.Aggregates;

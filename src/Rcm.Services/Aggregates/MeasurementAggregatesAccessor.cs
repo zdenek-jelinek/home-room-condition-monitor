@@ -5,6 +5,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using Rcm.Common;
 using Rcm.Persistence.Abstractions;
+using Rcm.Services.Abstractions.Aggregates;
 
 namespace Rcm.Services.Aggregates;
 

@@ -19,6 +19,7 @@
     <File Path="README.md" />
   </Folder>
   <Project Path="src/Rcm.UnitTests/Rcm.UnitTests.csproj" />
+  <Project Path="src/Rcm.Services.Abstractions/Rcm.Services.Abstractions.csproj" Id="74d2e80f-a739-41e2-b50a-2632a5588301" />
   <Project Path="src/Rcm.Services/Rcm.Services.csproj" />
   <Project Path="src/Rcm.Testing/Rcm.Testing.csproj" />
   <Project Path="src/Rcm.Common/Rcm.Common.csproj" />

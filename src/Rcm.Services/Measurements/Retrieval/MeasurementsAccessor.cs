@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using Rcm.Common;
 using Rcm.Persistence.Abstractions;
+using Rcm.Services.Abstractions.Measurements.Retrieval;
 
 namespace Rcm.Services.Measurements.Retrieval;
 
