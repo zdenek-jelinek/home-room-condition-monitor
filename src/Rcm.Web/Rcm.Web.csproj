@@ -22,10 +22,6 @@
     <ProjectReference Include="..\Rcm.Web.Api\Rcm.Web.Api.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Controllers\" />
-  </ItemGroup>
-
   <PropertyGroup>
     <!--
       The files may not exist at build evaluation time due to npm install not having run yet.
@@ -52,7 +48,7 @@
       <_NpmPackageFile Include="$(NpmPackageFiles)" />
     </ItemGroup>
 
-    <Copy SourceFiles="@(_NpmPackageFile)" DestinationFiles="@(_NpmPackageFile-&gt;'wwwroot\lib$([System.String]::new(%(Identity)).TrimStart('node_modules'))')" SkipUnchangedFiles="true" />
+    <Copy SourceFiles="@(_NpmPackageFile)" DestinationFiles="@(_NpmPackageFile->'wwwroot\lib$([System.String]::new(%(Identity)).TrimStart('node_modules'))')" SkipUnchangedFiles="true" />
 
   </Target>
 
